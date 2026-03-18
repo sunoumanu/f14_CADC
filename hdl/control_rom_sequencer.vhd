@@ -153,9 +153,55 @@ ARCHITECTURE rtl OF control_rom_sequencer IS
     -- io_sel=0=ACC for this WO, io_ctrl=write_mach triggers capture
     16 => x"000000000006",  -- io_sel=0=ACC, io_ctrl=write_mach
     
-    -- Inst 17: Halt
-    17 => x"011100000000",  -- JUMP to 17
-    
+    -- Inst 17: Continue to instruction test section
+    17 => x"011400000000",  -- JUMP to 20 (0x14)
+
+    ---------------------------------------------------------------------------
+    -- Instruction Test Section (addrs 20-60)
+    -- Exercises all NEXTCTL instruction types.
+    -- Control fields are all zero (NOP) so data path is unaffected.
+    ---------------------------------------------------------------------------
+
+    -- === Branch taken tests (testbench sets appropriate flags) ===
+    20 => x"000000000000",  -- NOP (SEQ -> PC=21)
+    21 => x"021800000000",  -- BRZ to 24 (taken when Z=1)
+    22 => x"000000000000",  -- skip
+    23 => x"000000000000",  -- skip
+    24 => x"031B00000000",  -- BRN to 27 (taken when N=1)
+    25 => x"000000000000",  -- skip
+    26 => x"000000000000",  -- skip
+    27 => x"041E00000000",  -- BRC to 30 (taken when C=1)
+    28 => x"000000000000",  -- skip
+    29 => x"000000000000",  -- skip
+    30 => x"052100000000",  -- BR_PMUB to 33 (taken when pmu_busy=1)
+    31 => x"000000000000",  -- skip
+    32 => x"000000000000",  -- skip
+    33 => x"062400000000",  -- BR_PDUB to 36 (taken when pdu_busy=1)
+    34 => x"000000000000",  -- skip
+    35 => x"000000000000",  -- skip
+
+    -- === Wait tests ===
+    36 => x"080000000000",  -- WAIT_PDU (holds while pdu_busy=1)
+    37 => x"070000000000",  -- WAIT_PMU (holds while pmu_busy=1)
+
+    -- === Subroutine tests ===
+    38 => x"092A00000000",  -- CALL to 42 (0x2A), push return addr 39
+    39 => x"013200000000",  -- JUMP to 50 (0x32) (return landing)
+    40 => x"000000000000",  -- NOP
+    41 => x"000000000000",  -- NOP
+    42 => x"0A0000000000",  -- RET (pop -> PC=39)
+
+    -- === Branch not-taken tests (testbench clears all flags) ===
+    50 => x"023C00000000",  -- BRZ to 60 (not taken, Z=0 -> PC=51)
+    51 => x"033C00000000",  -- BRN to 60 (not taken, N=0 -> PC=52)
+    52 => x"043C00000000",  -- BRC to 60 (not taken, C=0 -> PC=53)
+    53 => x"053C00000000",  -- BR_PMUB to 60 (not taken, busy=0 -> PC=54)
+    54 => x"063C00000000",  -- BR_PDUB to 60 (not taken, busy=0 -> PC=55)
+    55 => x"013700000000",  -- JUMP to 55 (halt - all tests passed)
+
+    -- === Fail trap ===
+    60 => x"013C00000000",  -- JUMP to 60 (halt - branch test failed)
+
     OTHERS => (OTHERS => '0')
   );
 

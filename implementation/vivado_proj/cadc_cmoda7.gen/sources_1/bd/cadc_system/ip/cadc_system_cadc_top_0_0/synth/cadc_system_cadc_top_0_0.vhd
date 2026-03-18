@@ -46,7 +46,7 @@
 -- 
 -- DO NOT MODIFY THIS FILE.
 
--- IP VLNV: xilinx.com:module_ref:cadc_top:1.0
+-- IP VLNV: xilinx.com:module_ref:cadc_wrapper:1.0
 -- IP Revision: 1
 
 LIBRARY ieee;
@@ -78,7 +78,7 @@ END cadc_system_cadc_top_0_0;
 ARCHITECTURE cadc_system_cadc_top_0_0_arch OF cadc_system_cadc_top_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "yes";
-  COMPONENT cadc_top IS
+  COMPONENT cadc_wrapper IS
     PORT (
       i_clk_master : IN STD_LOGIC;
       i_rst : IN STD_LOGIC;
@@ -98,13 +98,13 @@ ARCHITECTURE cadc_system_cadc_top_0_0_arch OF cadc_system_cadc_top_0_0 IS
       i_channel_active : IN STD_LOGIC;
       o_fail_detect : OUT STD_LOGIC
     );
-  END COMPONENT cadc_top;
+  END COMPONENT cadc_wrapper;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "cadc_top,Vivado 2025.1";
+  ATTRIBUTE X_CORE_INFO OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "cadc_wrapper,Vivado 2025.1";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
-  ATTRIBUTE CHECK_LICENSE_TYPE OF cadc_system_cadc_top_0_0_arch : ARCHITECTURE IS "cadc_system_cadc_top_0_0,cadc_top,{}";
+  ATTRIBUTE CHECK_LICENSE_TYPE OF cadc_system_cadc_top_0_0_arch : ARCHITECTURE IS "cadc_system_cadc_top_0_0,cadc_wrapper,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "cadc_system_cadc_top_0_0,cadc_top,{x_ipProduct=Vivado 2025.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=cadc_top,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED}";
+  ATTRIBUTE CORE_GENERATION_INFO OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "cadc_system_cadc_top_0_0,cadc_wrapper,{x_ipProduct=Vivado 2025.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=cadc_wrapper,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED}";
   ATTRIBUTE IP_DEFINITION_SOURCE : STRING;
   ATTRIBUTE IP_DEFINITION_SOURCE OF cadc_system_cadc_top_0_0_arch: ARCHITECTURE IS "module_ref";
   ATTRIBUTE X_INTERFACE_INFO : STRING;
@@ -114,7 +114,7 @@ ARCHITECTURE cadc_system_cadc_top_0_0_arch OF cadc_system_cadc_top_0_0 IS
   ATTRIBUTE X_INTERFACE_MODE OF i_rst: SIGNAL IS "slave i_rst";
   ATTRIBUTE X_INTERFACE_PARAMETER OF i_rst: SIGNAL IS "XIL_INTERFACENAME i_rst, POLARITY ACTIVE_HIGH, INSERT_VIP 0";
 BEGIN
-  U0 : cadc_top
+  U0 : cadc_wrapper
     PORT MAP (
       i_clk_master => i_clk_master,
       i_rst => i_rst,

@@ -3,7 +3,7 @@
   "ip_inst": {
     "xci_name": "cadc_system_cadc_top_0_0",
     "cell_name": "cadc_top_0",
-    "component_reference": "xilinx.com:module_ref:cadc_top:1.0",
+    "component_reference": "xilinx.com:module_ref:cadc_wrapper:1.0",
     "ip_revision": "1",
     "gen_directory": "../../../../../../cadc_cmoda7.gen/sources_1/bd/cadc_system/ip/cadc_system_cadc_top_0_0",
     "parameters": {

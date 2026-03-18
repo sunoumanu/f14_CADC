@@ -1047,7 +1047,7 @@
         }
       },
       "cadc_top_0": {
-        "vlnv": "xilinx.com:module_ref:cadc_top:1.0",
+        "vlnv": "xilinx.com:module_ref:cadc_wrapper:1.0",
         "ip_revision": "1",
         "xci_name": "cadc_system_cadc_top_0_0",
         "xci_path": "ip\\cadc_system_cadc_top_0_0\\cadc_system_cadc_top_0_0.xci",
@@ -1055,7 +1055,7 @@
         "has_run_ip_tcl": "true",
         "reference_info": {
           "ref_type": "hdl",
-          "ref_name": "cadc_top",
+          "ref_name": "cadc_wrapper",
           "boundary_crc": "0x0"
         },
         "ports": {

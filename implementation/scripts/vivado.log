@@ -1,335 +1,1075 @@
 #-----------------------------------------------------------
-# Vivado v2025.1 (64-bit)
-# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
-# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
-# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
-# Start of session at: Sun Feb 22 20:57:17 2026
-# Process ID         : 36888
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Wed Mar 18 15:06:39 2026
+# Process ID         : 9328
 # Current directory  : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts
-# Command line       : vivado.exe -mode batch -source create_project.tcl
+# Command line       : vivado.exe -mode batch -source build_artys7.tcl
 # Log file           : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts/vivado.log
 # Journal file       : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts\vivado.jou
 # Running On         : Adiuvo_Adam
 # Platform           : Windows Server 2016 or Windows 10
-# Operating System   : 26100
+# Operating System   : 26200
 # Processor Detail   : Intel(R) Core(TM) Ultra 9 285H
 # CPU Frequency      : 3686 MHz
 # CPU Physical cores : 16
 # CPU Logical cores  : 16
 # Host memory        : 33777 MB
-# Swap memory        : 27917 MB
-# Total Virtual      : 61694 MB
-# Available Virtual  : 22057 MB
+# Swap memory        : 64750 MB
+# Total Virtual      : 98527 MB
+# Available Virtual  : 332 MB
 #-----------------------------------------------------------
-source create_project.tcl
+source build_artys7.tcl
 # set script_dir [file dirname [info script]]
-# set proj_dir [file normalize "$script_dir/../vivado_proj"]
-# set hdl_dir [file normalize "$script_dir/../../hdl"]
-# set constraints_dir [file normalize "$script_dir/../constraints"]
-# set proj_name "cadc_cmoda7"
-# create_project $proj_name $proj_dir -part xc7a35tcpg236-1 -force
-# set_property target_language VHDL [current_project]
-# set_property simulator_language Mixed [current_project]
-# add_files -norecurse [glob $hdl_dir/*.vhd]
-# update_compile_order -fileset sources_1
-# set_property is_enabled true [get_files *cadc_top.vhd]
-# add_files -fileset constrs_1 -norecurse $constraints_dir/cadc_cmoda7.xdc
-# source $script_dir/create_bd.tcl
-## create_bd_design cadc_system
-Wrote  : <C:\Users\aptay\Dropbox\adiuvo\f14-CADC\implementation\vivado_proj\cadc_cmoda7.srcs\sources_1\bd\cadc_system\cadc_system.bd> 
-## create_bd_port -dir I -type clk -freq_hz 12000000 sys_clk
-## set_property CONFIG.FREQ_HZ 12000000 [get_bd_ports sys_clk]
-## create_bd_port -dir I -type rst sys_rst_n
-## set_property CONFIG.POLARITY ACTIVE_LOW [get_bd_ports sys_rst_n]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
-INFO: [Device 21-403] Loading part xc7a35tcpg236-1
-## set_property -dict [list \
-##     CONFIG.PRIM_IN_FREQ {12.000} \
-##     CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {100.000} \
-##     CONFIG.CLKOUT2_USED {true} \
-##     CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {6.000} \
-##     CONFIG.USE_LOCKED {true} \
-##     CONFIG.USE_RESET {true} \
-##     CONFIG.RESET_TYPE {ACTIVE_LOW} \
-## ] [get_bd_cells clk_wiz_0]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
-## create_bd_cell -type ip -vlnv xilinx.com:ip:jtag_axi:1.2 jtag_axi_0
-## set_property -dict [list \
-##     CONFIG.PROTOCOL {2} \
-## ] [get_bd_cells jtag_axi_0]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0
-## set_property -dict [list \
-##     CONFIG.NUM_MI {5} \
-##     CONFIG.NUM_SI {1} \
-## ] [get_bd_cells axi_interconnect_0]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_ps
-## set_property -dict [list \
-##     CONFIG.C_GPIO_WIDTH {20} \
-##     CONFIG.C_ALL_OUTPUTS {1} \
-##     CONFIG.C_DOUT_DEFAULT {0x00000000} \
-## ] [get_bd_cells axi_gpio_ps]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_qc
-## set_property -dict [list \
-##     CONFIG.C_GPIO_WIDTH {20} \
-##     CONFIG.C_ALL_OUTPUTS {1} \
-##     CONFIG.C_DOUT_DEFAULT {0x00000000} \
-## ] [get_bd_cells axi_gpio_qc]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_tat
-## set_property -dict [list \
-##     CONFIG.C_GPIO_WIDTH {20} \
-##     CONFIG.C_ALL_OUTPUTS {1} \
-##     CONFIG.C_DOUT_DEFAULT {0x00000000} \
-## ] [get_bd_cells axi_gpio_tat]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_analog
-## set_property -dict [list \
-##     CONFIG.C_GPIO_WIDTH {20} \
-##     CONFIG.C_ALL_OUTPUTS {1} \
-##     CONFIG.C_DOUT_DEFAULT {0x00000000} \
-## ] [get_bd_cells axi_gpio_analog]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_digital
-## set_property -dict [list \
-##     CONFIG.C_GPIO_WIDTH {20} \
-##     CONFIG.C_ALL_OUTPUTS {1} \
-##     CONFIG.C_GPIO2_WIDTH {1} \
-##     CONFIG.C_IS_DUAL {1} \
-##     CONFIG.C_ALL_OUTPUTS_2 {1} \
-##     CONFIG.C_DOUT_DEFAULT {0x00000000} \
-##     CONFIG.C_DOUT_DEFAULT_2 {0x00000001} \
-## ] [get_bd_cells axi_gpio_digital]
-## create_bd_cell -type module -reference clock_divider clock_divider_0
-INFO: [IP_Flow 19-5107] Inferred bus interface 'i_rst_n' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
-INFO: [IP_Flow 19-5107] Inferred bus interface 'i_clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
-INFO: [IP_Flow 19-4728] Bus Interface 'i_rst_n': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'.
-INFO: [IP_Flow 19-4728] Bus Interface 'i_clk': Added interface parameter 'ASSOCIATED_RESET' with value 'i_rst_n'.
-WARNING: [IP_Flow 19-5661] Bus Interface 'i_clk' does not have any bus interfaces associated with it.
-WARNING: [IP_Flow 19-11770] Clock interface 'i_clk' has no FREQ_HZ parameter.
-## create_bd_cell -type module -reference cadc_top cadc_top_0
-INFO: [IP_Flow 19-5107] Inferred bus interface 'i_rst' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
-## create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 ila_0
-INFO: [xilinx.com:ip:ila:6.2-6] /ila_0: AMD recommends using the System ILA IP in IP Integrator. The System ILA IP is functionally equivalent to an ILA and offers additional benefits in debugging interfaces both within IP Integrator and the Hardware Manager. Consult the Programming and Debug User Guide UG908 for further details.
-## set_property -dict [list \
-##     CONFIG.C_PROBE0_WIDTH {20} \
-##     CONFIG.C_PROBE1_WIDTH {20} \
-##     CONFIG.C_PROBE2_WIDTH {20} \
-##     CONFIG.C_PROBE3_WIDTH {20} \
-##     CONFIG.C_PROBE4_WIDTH {20} \
-##     CONFIG.C_PROBE5_WIDTH {20} \
-##     CONFIG.C_PROBE6_WIDTH {20} \
-##     CONFIG.C_PROBE7_WIDTH {1} \
-##     CONFIG.C_PROBE8_WIDTH {1} \
-##     CONFIG.C_NUM_OF_PROBES {9} \
-##     CONFIG.C_DATA_DEPTH {4096} \
-##     CONFIG.C_EN_STRG_QUAL {1} \
-##     CONFIG.C_TRIGIN_EN {false} \
-##     CONFIG.C_TRIGOUT_EN {false} \
-## ] [get_bd_cells ila_0]
-## connect_bd_net [get_bd_ports sys_clk] [get_bd_pins clk_wiz_0/clk_in1]
-## connect_bd_net [get_bd_ports sys_rst_n] [get_bd_pins clk_wiz_0/resetn]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
-## connect_bd_net [get_bd_pins clk_wiz_0/locked] [get_bd_pins proc_sys_reset_0/dcm_locked]
-## connect_bd_net [get_bd_ports sys_rst_n] [get_bd_pins proc_sys_reset_0/ext_reset_in]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins jtag_axi_0/aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/S00_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/M00_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/M01_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/M02_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/M03_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_interconnect_0/M04_ACLK]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_ps/s_axi_aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_qc/s_axi_aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_tat/s_axi_aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_analog/s_axi_aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_digital/s_axi_aclk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins ila_0/clk]
-## connect_bd_net [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins clock_divider_0/i_clk]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins clock_divider_0/i_rst_n]
-## connect_bd_net [get_bd_pins clock_divider_0/o_clk_div] [get_bd_pins cadc_top_0/i_clk_master]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins jtag_axi_0/aresetn]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/interconnect_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/S00_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M00_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M01_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M02_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M03_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M04_ARESETN]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_ps/s_axi_aresetn]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_qc/s_axi_aresetn]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_tat/s_axi_aresetn]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_analog/s_axi_aresetn]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_digital/s_axi_aresetn]
-## create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
-INFO: [BD 5-1043] It is recommended to use inline hdl version xilinx.com:inline_hdl:ilvector_logic:1.0 for the IP type xilinx.com:ip:util_vector_logic:2.0 for improved performance and reduced disk space. IPs with VLNV xilinx.com:ip:util_vector_logic:2.0 will not be supported from release 2025.2. More information on inline hdl IP is available in UG994 
-## set_property -dict [list \
-##     CONFIG.C_SIZE {1} \
-##     CONFIG.C_OPERATION {not} \
-## ] [get_bd_cells util_vector_logic_0]
-## connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins util_vector_logic_0/Op1]
-## connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins cadc_top_0/i_rst]
-## connect_bd_intf_net [get_bd_intf_pins jtag_axi_0/M_AXI] [get_bd_intf_pins axi_interconnect_0/S00_AXI]
-## connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins axi_gpio_ps/S_AXI]
-## connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M01_AXI] [get_bd_intf_pins axi_gpio_qc/S_AXI]
-## connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M02_AXI] [get_bd_intf_pins axi_gpio_tat/S_AXI]
-## connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M03_AXI] [get_bd_intf_pins axi_gpio_analog/S_AXI]
-## connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/M04_AXI] [get_bd_intf_pins axi_gpio_digital/S_AXI]
-## connect_bd_net [get_bd_pins axi_gpio_ps/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_ps]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_ps/gpio_io_o> is being overridden by the user with net <axi_gpio_ps_gpio_io_o>. This pin will not be connected as a part of interface connection <GPIO>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins axi_gpio_qc/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_qc]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_qc/gpio_io_o> is being overridden by the user with net <axi_gpio_qc_gpio_io_o>. This pin will not be connected as a part of interface connection <GPIO>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins axi_gpio_tat/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_tat]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_tat/gpio_io_o> is being overridden by the user with net <axi_gpio_tat_gpio_io_o>. This pin will not be connected as a part of interface connection <GPIO>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins axi_gpio_analog/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_analog]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_analog/gpio_io_o> is being overridden by the user with net <axi_gpio_analog_gpio_io_o>. This pin will not be connected as a part of interface connection <GPIO>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins axi_gpio_digital/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_digital]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_digital/gpio_io_o> is being overridden by the user with net <axi_gpio_digital_gpio_io_o>. This pin will not be connected as a part of interface connection <GPIO>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins axi_gpio_digital/gpio2_io_o] [get_bd_pins cadc_top_0/i_channel_active]
-WARNING: [BD 41-1306] The connection to interface pin </axi_gpio_digital/gpio2_io_o> is being overridden by the user with net <axi_gpio_digital_gpio2_io_o>. This pin will not be connected as a part of interface connection <GPIO2>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_mach] [get_bd_pins ila_0/probe0]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe0> is being overridden by the user with net <cadc_top_0_o_out_mach>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_alt] [get_bd_pins ila_0/probe1]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe1> is being overridden by the user with net <cadc_top_0_o_out_alt>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_airspd] [get_bd_pins ila_0/probe2]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe2> is being overridden by the user with net <cadc_top_0_o_out_airspd>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_vspd] [get_bd_pins ila_0/probe3]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe3> is being overridden by the user with net <cadc_top_0_o_out_vspd>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_wing] [get_bd_pins ila_0/probe4]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe4> is being overridden by the user with net <cadc_top_0_o_out_wing>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_flap] [get_bd_pins ila_0/probe5]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe5> is being overridden by the user with net <cadc_top_0_o_out_flap>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_out_glove] [get_bd_pins ila_0/probe6]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe6> is being overridden by the user with net <cadc_top_0_o_out_glove>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_bit_status] [get_bd_pins ila_0/probe7]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe7> is being overridden by the user with net <cadc_top_0_o_bit_status>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## connect_bd_net [get_bd_pins cadc_top_0/o_fail_detect] [get_bd_pins ila_0/probe8]
-WARNING: [BD 41-1306] The connection to interface pin </ila_0/probe8> is being overridden by the user with net <cadc_top_0_o_fail_detect>. This pin will not be connected as a part of interface connection <SLOT_0_AXI>, and might not recreate the connectivity as expected using the writ_bd_tcl command.
-## assign_bd_address -target_address_space /jtag_axi_0/Data [get_bd_addr_segs axi_gpio_ps/S_AXI/Reg] -force
-Slave segment '/axi_gpio_ps/S_AXI/Reg' is being assigned into address space '/jtag_axi_0/Data' at <0x4000_0000 [ 64K ]>.
-## assign_bd_address -target_address_space /jtag_axi_0/Data [get_bd_addr_segs axi_gpio_qc/S_AXI/Reg] -force
-Slave segment '/axi_gpio_qc/S_AXI/Reg' is being assigned into address space '/jtag_axi_0/Data' at <0x4001_0000 [ 64K ]>.
-## assign_bd_address -target_address_space /jtag_axi_0/Data [get_bd_addr_segs axi_gpio_tat/S_AXI/Reg] -force
-Slave segment '/axi_gpio_tat/S_AXI/Reg' is being assigned into address space '/jtag_axi_0/Data' at <0x4002_0000 [ 64K ]>.
-## assign_bd_address -target_address_space /jtag_axi_0/Data [get_bd_addr_segs axi_gpio_analog/S_AXI/Reg] -force
-Slave segment '/axi_gpio_analog/S_AXI/Reg' is being assigned into address space '/jtag_axi_0/Data' at <0x4003_0000 [ 64K ]>.
-## assign_bd_address -target_address_space /jtag_axi_0/Data [get_bd_addr_segs axi_gpio_digital/S_AXI/Reg] -force
-Slave segment '/axi_gpio_digital/S_AXI/Reg' is being assigned into address space '/jtag_axi_0/Data' at <0x4004_0000 [ 64K ]>.
-## set_property offset 0x40000000 [get_bd_addr_segs {jtag_axi_0/Data/SEG_axi_gpio_ps_Reg}]
-## set_property offset 0x40010000 [get_bd_addr_segs {jtag_axi_0/Data/SEG_axi_gpio_qc_Reg}]
-## set_property offset 0x40020000 [get_bd_addr_segs {jtag_axi_0/Data/SEG_axi_gpio_tat_Reg}]
-## set_property offset 0x40030000 [get_bd_addr_segs {jtag_axi_0/Data/SEG_axi_gpio_analog_Reg}]
-## set_property offset 0x40040000 [get_bd_addr_segs {jtag_axi_0/Data/SEG_axi_gpio_digital_Reg}]
-## regenerate_bd_layout
-## validate_bd_design
-CRITICAL WARNING: [BD 41-1343] Reset pin /clock_divider_0/i_rst_n (associated clock /clock_divider_0/i_clk) is connected to reset source /proc_sys_reset_0/peripheral_aresetn (synchronous to clock source /clk_wiz_0/clk_out1).
-This may prevent design from meeting timing. Please add Processor System Reset module to create a reset that is synchronous to the associated clock source /clk_wiz_0/clk_out2.
-INFO: [xilinx.com:ip:clk_wiz:6.0-1] /clk_wiz_0 clk_wiz propagate
-## save_bd_design
-Wrote  : <C:\Users\aptay\Dropbox\adiuvo\f14-CADC\implementation\vivado_proj\cadc_cmoda7.srcs\sources_1\bd\cadc_system\cadc_system.bd> 
-## puts "=========================================="
-==========================================
-## puts "Block design created successfully!"
-Block design created successfully!
-## puts ""
+# open_project [file normalize "$script_dir/../vivado_proj_artys7/cadc_artys7.xpr"]
+Scanning sources...
+Finished scanning sources
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vrk160:part0:1.0 available at C:/AMDDesignTools/2025.2/data/xhub/boards\XilinxBoardStore\boards\Xilinx\vrk160\1.0\board.xml as part xcvr1602-vsva2488-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vrk160:part0:1.1 available at C:/AMDDesignTools/2025.2/data/xhub/boards\XilinxBoardStore\boards\Xilinx\vrk160\1.1\board.xml as part xcvr1602-vsva2488-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at C:/AMDDesignTools/2025.2/data/xhub/boards\XilinxBoardStore\boards\Xilinx\zcu208ld\production\2.0\board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at C:/AMDDesignTools/2025.2/data/xhub/boards\XilinxBoardStore\boards\Xilinx\zcu216ld\production\2.0\board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at C:/AMDDesignTools/2025.2/data/xhub/boards\XilinxBoardStore\boards\Xilinx\zcu670ld\1.0\board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Project 1-5713] Board part '' set for the project  is not found. BoardPart property will be unset. Please select board from latest repo build 
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/AMDDesignTools/2025.2/Vivado/data/ip'.
+INFO: [Project 1-5698] Found the below utility IPs instantiated in block design C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/sources_1/bd/cadc_system/cadc_system.bd which have equivalent inline hdl with improved performance and reduced diskspace.
+It is recommended to migrate these utility IPs to inline hdl  using the command upgrade_project -migrate_to_inline_hdl.  The utility IPs may be deprecated in future releases.
+More information on inline hdl is available in UG994.
+Utility IP Component Instances:
+ cadc_system_util_vector_logic_0_0
+open_project: Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 725.312 ; gain = 284.434
+# puts ">>> Starting Synthesis..."
+>>> Starting Synthesis...
+# reset_run synth_1
+INFO: [Project 1-1160] Copying file C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/cadc_system_wrapper.dcp to C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/utils_1/imports/synth_1 and adding it to utils fileset
+# launch_runs synth_1 -jobs 8
+[Wed Mar 18 15:07:02 2026] Launched synth_1...
+Run output will be captured here: C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/runme.log
+# wait_on_run synth_1
+[Wed Mar 18 15:07:02 2026] Waiting for synth_1 to finish...
 
-## puts "AXI GPIO Address Map:"
-AXI GPIO Address Map:
-## puts "  GPIO_PS      (i_sensor_ps)      : 0x40000000"
-  GPIO_PS      (i_sensor_ps)      : 0x40000000
-## puts "  GPIO_QC      (i_sensor_qc)      : 0x40010000"
-  GPIO_QC      (i_sensor_qc)      : 0x40010000
-## puts "  GPIO_TAT     (i_sensor_tat)     : 0x40020000"
-  GPIO_TAT     (i_sensor_tat)     : 0x40020000
-## puts "  GPIO_ANALOG  (i_sensor_analog)  : 0x40030000"
-  GPIO_ANALOG  (i_sensor_analog)  : 0x40030000
-## puts "  GPIO_DIGITAL (i_sensor_digital) : 0x40040000"
-  GPIO_DIGITAL (i_sensor_digital) : 0x40040000
-## puts "    Channel 1: sensor_digital[19:0]"
-    Channel 1: sensor_digital[19:0]
-## puts "    Channel 2: channel_active[0]"
-    Channel 2: channel_active[0]
-## puts ""
+*** Running vivado
+    with args -log cadc_system_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source cadc_system_wrapper.tcl
 
-## puts "ILA Probes:"
-ILA Probes:
-## puts "  probe0: o_out_mach[19:0]"
-  probe0: o_out_mach[19:0]
-## puts "  probe1: o_out_alt[19:0]"
-  probe1: o_out_alt[19:0]
-## puts "  probe2: o_out_airspd[19:0]"
-  probe2: o_out_airspd[19:0]
-## puts "  probe3: o_out_vspd[19:0]"
-  probe3: o_out_vspd[19:0]
-## puts "  probe4: o_out_wing[19:0]"
-  probe4: o_out_wing[19:0]
-## puts "  probe5: o_out_flap[19:0]"
-  probe5: o_out_flap[19:0]
-## puts "  probe6: o_out_glove[19:0]"
-  probe6: o_out_glove[19:0]
-## puts "  probe7: o_bit_status"
-  probe7: o_bit_status
-## puts "  probe8: o_fail_detect"
-  probe8: o_fail_detect
-## puts "=========================================="
-==========================================
-# make_wrapper -files [get_files $proj_dir/$proj_name.srcs/sources_1/bd/cadc_system/cadc_system.bd] -top
-INFO: [BD 41-1662] The design 'cadc_system.bd' is already validated. Therefore parameter propagation will not be re-run.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe1'(32) to pin '/cadc_top_0/o_out_alt'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe2'(2) to pin '/cadc_top_0/o_out_airspd'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe5'(32) to pin '/cadc_top_0/o_out_flap'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe1'(32) to pin '/cadc_top_0/o_out_alt'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe2'(2) to pin '/cadc_top_0/o_out_airspd'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe5'(32) to pin '/cadc_top_0/o_out_flap'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/sim/cadc_system.vhd
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd
-# add_files -norecurse $proj_dir/$proj_name.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd
-# update_compile_order -fileset sources_1
-# set_property top cadc_system_wrapper [current_fileset]
-# update_compile_order -fileset sources_1
-# generate_target all [get_files $proj_dir/$proj_name.srcs/sources_1/bd/cadc_system/cadc_system.bd]
-INFO: [BD 41-1662] The design 'cadc_system.bd' is already validated. Therefore parameter propagation will not be re-run.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe1'(32) to pin '/cadc_top_0/o_out_alt'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe2'(2) to pin '/cadc_top_0/o_out_airspd'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe5'(32) to pin '/cadc_top_0/o_out_flap'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe1'(32) to pin '/cadc_top_0/o_out_alt'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe2'(2) to pin '/cadc_top_0/o_out_airspd'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-CRITICAL WARNING: [BD 41-2383] Width mismatch when connecting input pin '/ila_0/probe5'(32) to pin '/cadc_top_0/o_out_flap'(20) - Only lower order bits will be connected, and other input bits of this pin will be left unconnected.
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/sim/cadc_system.vhd
-VHDL Output written to : C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd
-INFO: [BD 41-1029] Generation completed for the IP Integrator block clk_wiz_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block proc_sys_reset_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block jtag_axi_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_interconnect_0/xbar .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_ps .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_qc .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_tat .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_analog .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_digital .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block clock_divider_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block cadc_top_0 .
-WARNING: [IP_Flow 19-4994] Overwriting existing constraint file 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/cadc_system_ila_0_0_ooc.xdc'
-INFO: [BD 41-1029] Generation completed for the IP Integrator block ila_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block util_vector_logic_0 .
-Exporting to file C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/hw_handoff/cadc_system.hwh
-Generated Hardware Definition File C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj/cadc_cmoda7.gen/sources_1/bd/cadc_system/synth/cadc_system.hwdef
-# puts "=========================================="
-==========================================
-# puts "Project created successfully!"
-Project created successfully!
-# puts "Project location: $proj_dir"
-Project location: C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj
-# puts "=========================================="
-==========================================
-# puts ""
 
-# puts "Next steps:"
-Next steps:
-# puts "  1. Open Vivado GUI: start_gui"
-  1. Open Vivado GUI: start_gui
-# puts "  2. Run Synthesis: launch_runs synth_1 -jobs 8"
-  2. Run Synthesis: launch_runs synth_1 -jobs 8
-# puts "  3. Run Implementation: launch_runs impl_1 -jobs 8"
-  3. Run Implementation: launch_runs impl_1 -jobs 8
-# puts "  4. Generate Bitstream: launch_runs impl_1 -to_step write_bitstream -jobs 8"
-  4. Generate Bitstream: launch_runs impl_1 -to_step write_bitstream -jobs 8
-INFO: [Common 17-206] Exiting Vivado at Sun Feb 22 20:57:45 2026...
+
+****** Vivado v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Wed Mar 18 15:07:03 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source cadc_system_wrapper.tcl -notrace
+create_project: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 663.367 ; gain = 221.758
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/AMDDesignTools/2025.2/Vivado/data/ip'.
+INFO: [Project 1-5698] Found the below utility IPs instantiated in block design C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/sources_1/bd/cadc_system/cadc_system.bd which have equivalent inline hdl with improved performance and reduced diskspace.
+It is recommended to migrate these utility IPs to inline hdl  using the command upgrade_project -migrate_to_inline_hdl.  The utility IPs may be deprecated in future releases.
+More information on inline hdl is available in UG994.
+Utility IP Component Instances:
+ cadc_system_util_vector_logic_0_0
+Command: read_checkpoint -auto_incremental -incremental C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/utils_1/imports/synth_1/cadc_system_wrapper.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/utils_1/imports/synth_1/cadc_system_wrapper.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top cadc_system_wrapper -part xc7s50csga324-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7s50'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7s50'
+INFO: [Device 21-403] Loading part xc7s50csga324-1
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 44824
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1423.895 ; gain = 542.367
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'cadc_system_wrapper' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd:22]
+INFO: [Synth 8-3491] module 'cadc_system' declared at 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1272' bound to instance 'cadc_system_i' of component 'cadc_system' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd:30]
+INFO: [Synth 8-638] synthesizing module 'cadc_system' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1283]
+INFO: [Synth 8-3491] module 'cadc_system_axi_gpio_analog_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_analog_0_stub.vhdl:6' bound to instance 'axi_gpio_analog' of component 'cadc_system_axi_gpio_analog_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1672]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_gpio_analog_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_analog_0_stub.vhdl:38]
+INFO: [Synth 8-3491] module 'cadc_system_axi_gpio_digital_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_digital_0_stub.vhdl:6' bound to instance 'axi_gpio_digital' of component 'cadc_system_axi_gpio_digital_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1695]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_gpio_digital_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_digital_0_stub.vhdl:39]
+INFO: [Synth 8-3491] module 'cadc_system_axi_gpio_ps_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_ps_0_stub.vhdl:6' bound to instance 'axi_gpio_ps' of component 'cadc_system_axi_gpio_ps_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1719]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_gpio_ps_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_ps_0_stub.vhdl:38]
+INFO: [Synth 8-3491] module 'cadc_system_axi_gpio_qc_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_qc_0_stub.vhdl:6' bound to instance 'axi_gpio_qc' of component 'cadc_system_axi_gpio_qc_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1742]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_gpio_qc_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_qc_0_stub.vhdl:38]
+INFO: [Synth 8-3491] module 'cadc_system_axi_gpio_tat_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_tat_0_stub.vhdl:6' bound to instance 'axi_gpio_tat' of component 'cadc_system_axi_gpio_tat_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1765]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_gpio_tat_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_gpio_tat_0_stub.vhdl:38]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_interconnect_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:754]
+INFO: [Synth 8-638] synthesizing module 'm00_couplers_imp_1D76A4Z' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:58]
+INFO: [Synth 8-256] done synthesizing module 'm00_couplers_imp_1D76A4Z' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'm01_couplers_imp_CWXMJ1' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:159]
+INFO: [Synth 8-256] done synthesizing module 'm01_couplers_imp_CWXMJ1' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:159]
+INFO: [Synth 8-638] synthesizing module 'm02_couplers_imp_NQV5BI' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:260]
+INFO: [Synth 8-256] done synthesizing module 'm02_couplers_imp_NQV5BI' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:260]
+INFO: [Synth 8-638] synthesizing module 'm03_couplers_imp_1K4U0C0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:361]
+INFO: [Synth 8-256] done synthesizing module 'm03_couplers_imp_1K4U0C0' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:361]
+INFO: [Synth 8-638] synthesizing module 'm04_couplers_imp_19EQ6W8' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:462]
+INFO: [Synth 8-256] done synthesizing module 'm04_couplers_imp_19EQ6W8' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:462]
+INFO: [Synth 8-638] synthesizing module 's00_couplers_imp_PW3YDF' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:567]
+INFO: [Synth 8-256] done synthesizing module 's00_couplers_imp_PW3YDF' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:567]
+INFO: [Synth 8-3491] module 'cadc_system_axi_interconnect_0_imp_xbar_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_interconnect_0_imp_xbar_0_stub.vhdl:6' bound to instance 'xbar' of component 'cadc_system_axi_interconnect_0_imp_xbar_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1156]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_axi_interconnect_0_imp_xbar_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_axi_interconnect_0_imp_xbar_0_stub.vhdl:58]
+INFO: [Synth 8-256] done synthesizing module 'cadc_system_axi_interconnect_0_0' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:754]
+INFO: [Synth 8-3491] module 'cadc_system_cadc_top_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_cadc_top_0_0_stub.vhdl:6' bound to instance 'cadc_top_0' of component 'cadc_system_cadc_top_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1909]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_cadc_top_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_cadc_top_0_0_stub.vhdl:37]
+INFO: [Synth 8-3491] module 'cadc_system_clk_wiz_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_clk_wiz_0_0_stub.vhdl:6' bound to instance 'clk_wiz_0' of component 'cadc_system_clk_wiz_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1929]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_clk_wiz_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_clk_wiz_0_0_stub.vhdl:19]
+INFO: [Synth 8-3491] module 'cadc_system_clock_divider_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_clock_divider_0_0_stub.vhdl:6' bound to instance 'clock_divider_0' of component 'cadc_system_clock_divider_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1937]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_clock_divider_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_clock_divider_0_0_stub.vhdl:23]
+INFO: [Synth 8-3491] module 'cadc_system_ila_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_ila_0_0_stub.vhdl:6' bound to instance 'ila_0' of component 'cadc_system_ila_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1943]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_ila_0_0_stub.vhdl:63]
+INFO: [Synth 8-3491] module 'cadc_system_jtag_axi_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_jtag_axi_0_0_stub.vhdl:6' bound to instance 'jtag_axi_0' of component 'cadc_system_jtag_axi_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1993]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_jtag_axi_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_jtag_axi_0_0_stub.vhdl:39]
+INFO: [Synth 8-3491] module 'cadc_system_proc_sys_reset_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_proc_sys_reset_0_0_stub.vhdl:6' bound to instance 'proc_sys_reset_0' of component 'cadc_system_proc_sys_reset_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:2017]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_proc_sys_reset_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_proc_sys_reset_0_0_stub.vhdl:28]
+INFO: [Synth 8-3491] module 'cadc_system_util_vector_logic_0_0' declared at 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_util_vector_logic_0_0_stub.vhdl:6' bound to instance 'util_vector_logic_0' of component 'cadc_system_util_vector_logic_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:2030]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_util_vector_logic_0_0' [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/realtime/cadc_system_util_vector_logic_0_0_stub.vhdl:20]
+INFO: [Synth 8-256] done synthesizing module 'cadc_system' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/synth/cadc_system.vhd:1283]
+INFO: [Synth 8-256] done synthesizing module 'cadc_system_wrapper' (0#1) [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/hdl/cadc_system_wrapper.vhd:22]
+WARNING: [Synth 8-7129] Port M_ACLK in module s00_couplers_imp_PW3YDF is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module s00_couplers_imp_PW3YDF is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module s00_couplers_imp_PW3YDF is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module s00_couplers_imp_PW3YDF is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m04_couplers_imp_19EQ6W8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m04_couplers_imp_19EQ6W8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m04_couplers_imp_19EQ6W8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m04_couplers_imp_19EQ6W8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m03_couplers_imp_1K4U0C0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m03_couplers_imp_1K4U0C0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m03_couplers_imp_1K4U0C0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m03_couplers_imp_1K4U0C0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m02_couplers_imp_NQV5BI is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m02_couplers_imp_NQV5BI is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m02_couplers_imp_NQV5BI is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m02_couplers_imp_NQV5BI is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m01_couplers_imp_CWXMJ1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m01_couplers_imp_CWXMJ1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m01_couplers_imp_CWXMJ1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m01_couplers_imp_CWXMJ1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m00_couplers_imp_1D76A4Z is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m00_couplers_imp_1D76A4Z is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m00_couplers_imp_1D76A4Z is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m00_couplers_imp_1D76A4Z is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 1555.809 ; gain = 674.281
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 1555.809 ; gain = 674.281
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 1555.809 ; gain = 674.281
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.019 . Memory (MB): peak = 1555.809 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0_in_context.xdc] for cell 'cadc_system_i/clk_wiz_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0_in_context.xdc] for cell 'cadc_system_i/clk_wiz_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0_in_context.xdc] for cell 'cadc_system_i/proc_sys_reset_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0_in_context.xdc] for cell 'cadc_system_i/proc_sys_reset_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0_in_context.xdc] for cell 'cadc_system_i/jtag_axi_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0_in_context.xdc] for cell 'cadc_system_i/jtag_axi_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_interconnect_0_imp_xbar_0/cadc_system_axi_interconnect_0_imp_xbar_0/cadc_system_axi_interconnect_0_imp_xbar_0_in_context.xdc] for cell 'cadc_system_i/axi_interconnect_0/xbar'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_interconnect_0_imp_xbar_0/cadc_system_axi_interconnect_0_imp_xbar_0/cadc_system_axi_interconnect_0_imp_xbar_0_in_context.xdc] for cell 'cadc_system_i/axi_interconnect_0/xbar'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_ps'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_ps'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_qc'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_qc'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_tat'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_tat'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_analog'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_ps_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_analog'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_digital'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0_in_context.xdc] for cell 'cadc_system_i/axi_gpio_digital'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clock_divider_0_0/cadc_system_clock_divider_0_0/cadc_system_clock_divider_0_0_in_context.xdc] for cell 'cadc_system_i/clock_divider_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clock_divider_0_0/cadc_system_clock_divider_0_0/cadc_system_clock_divider_0_0_in_context.xdc] for cell 'cadc_system_i/clock_divider_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_cadc_top_0_0/cadc_system_cadc_top_0_0/cadc_system_cadc_top_0_0_in_context.xdc] for cell 'cadc_system_i/cadc_top_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_cadc_top_0_0/cadc_system_cadc_top_0_0/cadc_system_cadc_top_0_0_in_context.xdc] for cell 'cadc_system_i/cadc_top_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/cadc_system_ila_0_0/cadc_system_ila_0_0_in_context.xdc] for cell 'cadc_system_i/ila_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/cadc_system_ila_0_0/cadc_system_ila_0_0_in_context.xdc] for cell 'cadc_system_i/ila_0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_util_vector_logic_0_0/cadc_system_util_vector_logic_0_0/cadc_system_util_vector_logic_0_0_in_context.xdc] for cell 'cadc_system_i/util_vector_logic_0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_util_vector_logic_0_0/cadc_system_util_vector_logic_0_0/cadc_system_util_vector_logic_0_0_in_context.xdc] for cell 'cadc_system_i/util_vector_logic_0'
+Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc]
+WARNING: [Vivado 12-508] No pins matched 'cadc_system_i/clock_divider_0/U0/clk_reg_reg/Q'. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:30]
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group [get_clocks -quiet clk_out1_cadc_system_clk_wiz_0_0]'. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:37]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group '. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:37]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group [get_clocks -quiet clk_out1_cadc_system_clk_wiz_0_0_1]'. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:37]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group '. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:37]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group [get_clocks -quiet clk_out2_cadc_system_clk_wiz_0_0]'. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:40]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group '. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:40]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group [get_clocks -quiet clk_out2_cadc_system_clk_wiz_0_0_1]'. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:40]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+CRITICAL WARNING: [Vivado 12-4739] set_clock_groups:No valid object(s) found for '-group '. [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc:40]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+Finished Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc]
+WARNING: [Project 1-498] One or more constraints failed evaluation while reading constraint file [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc] and the design contains unresolved black boxes. These constraints will be read post-synthesis (as long as their source constraint file is marked as used_in_implementation) and should be applied correctly then. You should review the constraints listed in the file [.Xil/cadc_system_wrapper_propImpl.xdc] and check the run log file to verify that these constraints were correctly applied.
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/cadc_system_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/cadc_system_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1577.738 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 1577.738 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1577.738 ; gain = 696.211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7s50csga324-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1577.738 ; gain = 696.211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1577.738 ; gain = 696.211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1577.738 ; gain = 696.211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 120 (col length:60)
+BRAMs: 150 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7129] Port M00_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M00_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M03_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M03_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M04_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M04_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ACLK in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ARESETN in module cadc_system_axi_interconnect_0_0 is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1577.738 ; gain = 696.211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 1727.910 ; gain = 846.383
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 1727.910 ; gain = 846.383
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 1738.754 ; gain = 857.227
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+------------------------------------------+----------+
+|      |BlackBox name                             |Instances |
++------+------------------------------------------+----------+
+|1     |cadc_system_axi_interconnect_0_imp_xbar_0 |         1|
+|2     |cadc_system_axi_gpio_analog_0             |         1|
+|3     |cadc_system_axi_gpio_digital_0            |         1|
+|4     |cadc_system_axi_gpio_ps_0                 |         1|
+|5     |cadc_system_axi_gpio_qc_0                 |         1|
+|6     |cadc_system_axi_gpio_tat_0                |         1|
+|7     |cadc_system_cadc_top_0_0                  |         1|
+|8     |cadc_system_clk_wiz_0_0                   |         1|
+|9     |cadc_system_clock_divider_0_0             |         1|
+|10    |cadc_system_ila_0_0                       |         1|
+|11    |cadc_system_jtag_axi_0_0                  |         1|
+|12    |cadc_system_proc_sys_reset_0_0            |         1|
+|13    |cadc_system_util_vector_logic_0_0         |         1|
++------+------------------------------------------+----------+
+
+Report Cell Usage: 
++------+-----------------------------------------------+------+
+|      |Cell                                           |Count |
++------+-----------------------------------------------+------+
+|1     |cadc_system_axi_gpio_analog_0_bbox             |     1|
+|2     |cadc_system_axi_gpio_digital_0_bbox            |     1|
+|3     |cadc_system_axi_gpio_ps_0_bbox                 |     1|
+|4     |cadc_system_axi_gpio_qc_0_bbox                 |     1|
+|5     |cadc_system_axi_gpio_tat_0_bbox                |     1|
+|6     |cadc_system_axi_interconnect_0_imp_xbar_0_bbox |     1|
+|7     |cadc_system_cadc_top_0_0_bbox                  |     1|
+|8     |cadc_system_clk_wiz_0_0_bbox                   |     1|
+|9     |cadc_system_clock_divider_0_0_bbox             |     1|
+|10    |cadc_system_ila_0_0_bbox                       |     1|
+|11    |cadc_system_jtag_axi_0_0_bbox                  |     1|
+|12    |cadc_system_proc_sys_reset_0_0_bbox            |     1|
+|13    |cadc_system_util_vector_logic_0_0_bbox         |     1|
+|14    |LUT1                                           |   143|
+|15    |IBUF                                           |     1|
++------+-----------------------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:25 ; elapsed = 00:00:28 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 12 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:17 ; elapsed = 00:00:25 . Memory (MB): peak = 1987.609 ; gain = 1084.152
+Synthesis Optimization Complete : Time (s): cpu = 00:00:25 ; elapsed = 00:00:28 . Memory (MB): peak = 1987.609 ; gain = 1106.082
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1987.609 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2000.469 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 2793ec6f
+INFO: [Common 17-83] Releasing license: Synthesis
+68 Infos, 38 Warnings, 8 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:29 ; elapsed = 00:00:35 . Memory (MB): peak = 2000.469 ; gain = 1284.637
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2000.469 ; gain = 0.000
+WARNING: [Runs 36-115] Could not delete directory 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/.Xil/Vivado-24804-Adiuvo_Adam/dcp0'.
+INFO: [Common 17-1381] The checkpoint 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/synth_1/cadc_system_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file cadc_system_wrapper_utilization_synth.rpt -pb cadc_system_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Mar 18 15:07:53 2026...
+[Wed Mar 18 15:07:59 2026] synth_1 finished
+wait_on_runs: Time (s): cpu = 00:00:00 ; elapsed = 00:00:57 . Memory (MB): peak = 736.984 ; gain = 0.000
+# set synth_status [get_property STATUS [get_runs synth_1]]
+# puts ">>> SYNTH_STATUS: $synth_status"
+>>> SYNTH_STATUS: synth_design Complete!
+# if {$synth_status != "synth_design Complete!"} {
+#     puts ">>> ERROR: Synthesis failed"
+#     exit 1
+# }
+# puts ">>> Starting Implementation..."
+>>> Starting Implementation...
+# launch_runs impl_1 -jobs 8
+[Wed Mar 18 15:07:59 2026] Launched impl_1...
+Run output will be captured here: C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/impl_1/runme.log
+# wait_on_run impl_1
+[Wed Mar 18 15:07:59 2026] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log cadc_system_wrapper.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source cadc_system_wrapper.tcl -notrace
+
+
+
+****** Vivado v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Wed Mar 18 15:08:05 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source cadc_system_wrapper.tcl -notrace
+create_project: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 663.656 ; gain = 221.840
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/AMDDesignTools/2025.2/Vivado/data/ip'.
+Command: link_design -top cadc_system_wrapper -part xc7s50csga324-1
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xc7s50csga324-1
+INFO: [Project 1-5699] Read binary netlist with skipMacroContent - 1
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_analog_0.dcp' for cell 'cadc_system_i/axi_gpio_analog'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0.dcp' for cell 'cadc_system_i/axi_gpio_digital'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0.dcp' for cell 'cadc_system_i/axi_gpio_ps'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_qc_0.dcp' for cell 'cadc_system_i/axi_gpio_qc'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_tat_0.dcp' for cell 'cadc_system_i/axi_gpio_tat'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_cadc_top_0_0/cadc_system_cadc_top_0_0.dcp' for cell 'cadc_system_i/cadc_top_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0.dcp' for cell 'cadc_system_i/clk_wiz_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clock_divider_0_0/cadc_system_clock_divider_0_0.dcp' for cell 'cadc_system_i/clock_divider_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/cadc_system_ila_0_0.dcp' for cell 'cadc_system_i/ila_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0.dcp' for cell 'cadc_system_i/jtag_axi_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0.dcp' for cell 'cadc_system_i/proc_sys_reset_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_util_vector_logic_0_0/cadc_system_util_vector_logic_0_0.dcp' for cell 'cadc_system_i/util_vector_logic_0'
+INFO: [Project 1-454] Reading design checkpoint 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_interconnect_0_imp_xbar_0/cadc_system_axi_interconnect_0_imp_xbar_0.dcp' for cell 'cadc_system_i/axi_interconnect_0/xbar'
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.232 . Memory (MB): peak = 963.473 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 1219 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2025.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Chipscope 16-324] Core: cadc_system_i/ila_0 UUID: 0db618dc-0418-5b71-a31c-efb33ce943dc 
+INFO: [Chipscope 16-324] Core: cadc_system_i/jtag_axi_0 UUID: a8c18bd9-7f2d-5494-8d87-ebe263600276 
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0_board.xdc] for cell 'cadc_system_i/clk_wiz_0/inst'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0_board.xdc] for cell 'cadc_system_i/clk_wiz_0/inst'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0.xdc] for cell 'cadc_system_i/clk_wiz_0/inst'
+INFO: [Timing 38-35] Done setting XDC timing constraints. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0.xdc:54]
+INFO: [Timing 38-2] Deriving generated clocks [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0.xdc:54]
+get_clocks: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1560.453 ; gain = 463.738
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_clk_wiz_0_0/cadc_system_clk_wiz_0_0.xdc] for cell 'cadc_system_i/clk_wiz_0/inst'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0_board.xdc] for cell 'cadc_system_i/proc_sys_reset_0/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/cadc_system_proc_sys_reset_0_0_board.xdc] for cell 'cadc_system_i/proc_sys_reset_0/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/jtag_axi.xdc] for cell 'cadc_system_i/jtag_axi_0/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/jtag_axi.xdc] for cell 'cadc_system_i/jtag_axi_0/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0_board.xdc] for cell 'cadc_system_i/axi_gpio_ps/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/cadc_system_axi_gpio_ps_0_board.xdc] for cell 'cadc_system_i/axi_gpio_ps/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_qc_0_board.xdc] for cell 'cadc_system_i/axi_gpio_qc/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/cadc_system_axi_gpio_qc_0_board.xdc] for cell 'cadc_system_i/axi_gpio_qc/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_tat_0_board.xdc] for cell 'cadc_system_i/axi_gpio_tat/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/cadc_system_axi_gpio_tat_0_board.xdc] for cell 'cadc_system_i/axi_gpio_tat/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_analog_0_board.xdc] for cell 'cadc_system_i/axi_gpio_analog/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/cadc_system_axi_gpio_analog_0_board.xdc] for cell 'cadc_system_i/axi_gpio_analog/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0_board.xdc] for cell 'cadc_system_i/axi_gpio_digital/U0'
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/cadc_system_axi_gpio_digital_0_board.xdc] for cell 'cadc_system_i/axi_gpio_digital/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'cadc_system_i/ila_0/U0'
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-10' -to list should not be empty. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila_impl.xdc:31]
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila_impl.xdc] for cell 'cadc_system_i/ila_0/U0'
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila.xdc] for cell 'cadc_system_i/ila_0/U0'
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-10' -to list should not be empty. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila.xdc:108]
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/ila_v6_2/constraints/ila.xdc] for cell 'cadc_system_i/ila_0/U0'
+Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc]
+Finished Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/constraints/cadc_artys7.xdc]
+INFO: [Project 1-1714] 16 XPM XDC files have been applied to the design.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-1687] 2 scoped IP constraints or related sub-commands were skipped due to synthesis logic optimizations usually triggered by constant connectivity or unconnected output pins. To review the skipped constraints and messages, run the command 'set_param netlist.IPMsgFiltering false' before opening the design.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 1560.453 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 604 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 560 instances
+  RAM64M => RAM64M (RAMD64E(x4)): 44 instances
+
+30 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:01:01 ; elapsed = 00:01:04 . Memory (MB): peak = 1560.453 ; gain = 840.270
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7s50'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7s50'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.662 . Memory (MB): peak = 1560.453 ; gain = 0.000
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 223640cb3
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.676 . Memory (MB): peak = 1560.453 ; gain = 0.000
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+
+Phase 1.1.1 Generate And Synthesize Debug Cores
+INFO: [Chipscope 16-329] Generating Script for core instance : dbg_hub 
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:xsdbm:3.0 for cell dbg_hub_CV.
+INFO: [Chipscope 16-469] Using cached IP synthesis design for IP xilinx.com:ip:xsdbm:3.0, cache-ID = ddd88978fa431581.
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2027.461 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.025 . Memory (MB): peak = 2027.461 ; gain = 0.000
+Phase 1.1.1 Generate And Synthesize Debug Cores | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Phase 1.1 Core Generation And Design Setup | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Phase 1 Initialization | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Detect if minReqCache needed
+Phase 2.1 Detect if minReqCache needed | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 2.2 Timer Update
+Phase 2.2 Timer Update | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 2.3 Timing Data Collection
+Phase 2.3 Timing Data Collection | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Phase 2 Timer Update And Timing Data Collection | Checksum: 3143bea2f
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:25 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 3 Retarget
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-138] Pushed 2 inverter(s) to 2 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 27494101f
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Retarget | Checksum: 27494101f
+INFO: [Opt 31-389] Phase Retarget created 50 cells and removed 80 cells
+INFO: [Opt 31-1021] In phase Retarget, 85 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 4 Constant propagation | Checksum: 2740f827c
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Constant propagation | Checksum: 2740f827c
+INFO: [Opt 31-389] Phase Constant propagation created 0 cells and removed 20 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 197 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 5 Sweep
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2027.461 ; gain = 0.000
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2027.461 ; gain = 0.000
+Phase 5 Sweep | Checksum: 2a338cc33
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Sweep | Checksum: 2a338cc33
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 859 cells
+INFO: [Opt 31-1021] In phase Sweep, 1556 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 6 BUFG optimization
+INFO: [Opt 31-194] Inserted BUFG cadc_system_i/clock_divider_0/U0/o_clk_div_BUFG_inst to drive 498 load(s) on clock net cadc_system_i/clock_divider_0/U0/o_clk_div_BUFG
+INFO: [Opt 31-193] Inserted 1 BUFG(s) on clock nets
+Phase 6 BUFG optimization | Checksum: 28050d74d
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+BUFG optimization | Checksum: 28050d74d
+INFO: [Opt 31-662] Phase BUFG optimization created 1 cells of which 1 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 28050d74d
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Shift Register Optimization | Checksum: 28050d74d
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+Phase 8 Post Processing Netlist | Checksum: 28050d74d
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:26 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Post Processing Netlist | Checksum: 28050d74d
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 88 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 283808d70
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:27 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.035 . Memory (MB): peak = 2027.461 ; gain = 0.000
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 283808d70
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:27 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Phase 9 Finalization | Checksum: 283808d70
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:27 . Memory (MB): peak = 2027.461 ; gain = 22.355
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |              50  |              80  |                                             85  |
+|  Constant propagation         |               0  |              20  |                                            197  |
+|  Sweep                        |               0  |             859  |                                           1556  |
+|  BUFG optimization            |               1  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                             88  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 283808d70
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:27 . Memory (MB): peak = 2027.461 ; gain = 22.355
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Pwropt 34-9] Applying IDT optimizations ...
+INFO: [Pwropt 34-10] Applying ODC optimizations ...
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+
+
+Starting PowerOpt Patch Enables Task
+INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 27 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+INFO: [Pwropt 34-201] Structural ODC has moved 0 WE to EN ports
+Number of BRAM Ports augmented: 28 newly gated: 0 Total Ports: 54
+Number of Flops added for Enable Generation: 6
+
+Ending PowerOpt Patch Enables Task | Checksum: 2b7e54f0b
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.168 . Memory (MB): peak = 2027.461 ; gain = 0.000
+Ending Power Optimization Task | Checksum: 2b7e54f0b
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:05 . Memory (MB): peak = 2027.461 ; gain = 0.000
+
+Starting Final Cleanup Task
+
+Starting Logic Optimization Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Logic Optimization Task | Checksum: 22322bd71
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2073.586 ; gain = 40.328
+Ending Final Cleanup Task | Checksum: 22322bd71
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2073.586 ; gain = 46.125
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/cadc_system_jtag_axi_0_0_impl.xdc] from IP C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.srcs/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/cadc_system_jtag_axi_0_0.xci
+Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/cadc_system_jtag_axi_0_0_impl.xdc] for cell 'cadc_system_i/jtag_axi_0/U0'
+INFO: [Timing 38-35] Done setting XDC timing constraints. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/cadc_system_jtag_axi_0_0_impl.xdc:69]
+Finished Parsing XDC File [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_jtag_axi_0_0/constraints/cadc_system_jtag_axi_0_0_impl.xdc] for cell 'cadc_system_i/jtag_axi_0/U0'
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.014 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Common 17-83] Releasing license: Implementation
+71 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:24 ; elapsed = 00:00:42 . Memory (MB): peak = 2073.586 ; gain = 513.133
+INFO: [Vivado 12-24828] Executing command : report_drc -file cadc_system_wrapper_drc_opted.rpt -pb cadc_system_wrapper_drc_opted.pb -rpx cadc_system_wrapper_drc_opted.rpx
+Command: report_drc -file cadc_system_wrapper_drc_opted.rpt -pb cadc_system_wrapper_drc_opted.pb -rpx cadc_system_wrapper_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/impl_1/cadc_system_wrapper_drc_opted.rpt.
+report_drc completed successfully
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote PlaceStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.060 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/impl_1/cadc_system_wrapper_opt.dcp' has been generated.
+INFO: [Chipscope 16-240] Debug cores have already been implemented
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7s50'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7s50'
+INFO: [Common 17-83] Releasing license: Implementation
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 2 CPUs
+
+Starting Placer Task
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 19c90df0d
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: d2100a85
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 18517ae65
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 18517ae65
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 1 Placer Initialization | Checksum: 18517ae65
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+Phase 2.1 Floorplanning | Checksum: 118b055b5
+
+Time (s): cpu = 00:00:10 ; elapsed = 00:00:07 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 1bb06ab50
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 193e1cc01
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2.4 Global Place Phase1
+Phase 2.4 Global Place Phase1 | Checksum: 1d87e2b4a
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:19 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2.5 Global Place Phase2
+
+Phase 2.5.1 UpdateTiming Before Physical Synthesis
+Phase 2.5.1 UpdateTiming Before Physical Synthesis | Checksum: 16b823ac0
+
+Time (s): cpu = 00:00:31 ; elapsed = 00:00:21 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 2.5.2 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 47 LUTNM shape to break, 529 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 5, two critical 42, total 47, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 291 nets or LUTs. Breaked 47 LUTs, combined 244 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-456] No candidate cells for DSP register optimization found in the design.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1123] No candidate cells found for Shift Register to Pipeline optimization
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1402] Pass 1: Identified 47 candidate cells for Shift Register optimization.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 10 nets or cells. Created 20 new cells, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.021 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Physopt 32-526] No candidate cells for BRAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.012 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |           47  |            244  |                   291  |           0  |           1  |  00:00:00  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register                                   |           20  |              0  |                    10  |           0  |           1  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |           67  |            244  |                   301  |           0  |           9  |  00:00:01  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.5.2 Physical Synthesis In Placer | Checksum: 1e551ea46
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:23 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 2.5 Global Place Phase2 | Checksum: 15196a06b
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:24 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 2 Global Placement | Checksum: 15196a06b
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:24 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 1bd904e10
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:25 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1dfd66a7b
+
+Time (s): cpu = 00:00:42 ; elapsed = 00:00:28 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.3 Area Swap Optimization
+Phase 3.3 Area Swap Optimization | Checksum: 1bb8493cd
+
+Time (s): cpu = 00:00:42 ; elapsed = 00:00:28 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.4 Pipeline Register Optimization
+Phase 3.4 Pipeline Register Optimization | Checksum: 1b230da70
+
+Time (s): cpu = 00:00:42 ; elapsed = 00:00:28 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.5 Fast Optimization
+Phase 3.5 Fast Optimization | Checksum: 15bcfebca
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:31 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.6 Small Shape Detail Placement
+
+Phase 3.6.1 Place Remaining
+Phase 3.6.1 Place Remaining | Checksum: 232ebaa4b
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:00:39 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 3.6 Small Shape Detail Placement | Checksum: 232ebaa4b
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:00:40 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.7 Re-assign LUT pins
+Phase 3.7 Re-assign LUT pins | Checksum: 1fc4d9099
+
+Time (s): cpu = 00:00:57 ; elapsed = 00:00:42 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.8 Pipeline Register Optimization
+Phase 3.8 Pipeline Register Optimization | Checksum: 1a2f0176c
+
+Time (s): cpu = 00:00:57 ; elapsed = 00:00:42 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3.9 Fast Optimization
+Phase 3.9 Fast Optimization | Checksum: 236032e98
+
+Time (s): cpu = 00:01:08 ; elapsed = 00:00:48 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 3 Detail Placement | Checksum: 236032e98
+
+Time (s): cpu = 00:01:08 ; elapsed = 00:00:49 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 292faa47f
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-4.271 | TNS=-483.636 |
+Phase 1 Physical Synthesis Initialization | Checksum: 26be49ff9
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.457 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+Ending Physical Synthesis Task | Checksum: 2ad65d0ca
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.511 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 4.1.1.1 BUFG Insertion | Checksum: 292faa47f
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:53 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 4.1.1.2 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=-3.534. For the most accurate timing information please run report_timing.
+Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: 2aa788cf5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 4.1 Post Commit Optimization | Checksum: 2aa788cf5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 2aa788cf5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                1x1|
+|___________|___________________|___________________|
+|      South|                1x1|                1x1|
+|___________|___________________|___________________|
+|       East|                1x1|                1x1|
+|___________|___________________|___________________|
+|       West|                1x1|                2x2|
+|___________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 2aa788cf5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 4.3 Placer Reporting | Checksum: 2aa788cf5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 2675de2c5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Ending Placer Task | Checksum: 1ccba99c5
+
+Time (s): cpu = 00:02:03 ; elapsed = 00:01:41 . Memory (MB): peak = 2073.586 ; gain = 0.000
+113 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:02:04 ; elapsed = 00:01:44 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Vivado 12-24838] Running report commands "report_control_sets, report_io, report_utilization" in parallel.
+Running report generation with 2 threads.
+INFO: [Vivado 12-24828] Executing command : report_io -file cadc_system_wrapper_io_placed.rpt
+INFO: [Vivado 12-24828] Executing command : report_control_sets -verbose -file cadc_system_wrapper_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.051 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Vivado 12-24828] Executing command : report_utilization -file cadc_system_wrapper_utilization_placed.rpt -pb cadc_system_wrapper_utilization_placed.pb
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.047 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.051 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote PlaceStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.611 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.021 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2073.586 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.712 . Memory (MB): peak = 2073.586 ; gain = 0.000
+WARNING: [Runs 36-115] Could not delete directory 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/impl_1/.Xil/Vivado-36700-Adiuvo_Adam/dcp1'.
+INFO: [Common 17-1381] The checkpoint 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/impl_1/cadc_system_wrapper_placed.dcp' has been generated.
+Command: phys_opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7s50'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7s50'
+
+Starting Initial Update Timing Task
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Vivado_Tcl 4-1435] PhysOpt_Tcl_Interface Runtime Before Starting Physical Synthesis Task | CPU: 4.00s |  WALL: 2.16s
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-3.838 | TNS=-454.662 |
+Phase 1 Physical Synthesis Initialization | Checksum: 1d335656c
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2073.586 ; gain = 0.000
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-3.838 | TNS=-454.662 |
+
+Phase 2 DSP Register Optimization
+INFO: [Physopt 32-456] No candidate cells for DSP register optimization found in the design.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Phase 2 DSP Register Optimization | Checksum: 1d335656c
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2073.586 ; gain = 0.000
+
+Phase 3 Critical Path Optimization
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-3.838 | TNS=-454.662 |
+INFO: [Physopt 32-702] Processed net cadc_system_i/ila_0/U0/ila_core_inst/u_trig/U_TM/N_DDR_MODE.G_NMU[10].U_M/allx_typeA_match_detection.ltlib_v1_0_3_allx_typeA_inst/all_in[30]. Optimizations did not improve timing on the net.
+INFO: [Physopt 32-663] Processed net cadc_system_i/clock_divider_0/U0/o_clk_div.  Re-placed instance cadc_system_i/clock_divider_0/U0/clk_reg_reg
+INFO: [Physopt 32-735] Processed net cadc_system_i/clock_divider_0/U0/o_clk_div. Optimization improves timing on the net.
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-3.806 | TNS=-450.150 |
+INFO: [Physopt 32-702] Processed net cadc_system_i/clock_divider_0/U0/o_clk_div. Optimizations did not improve timing on the net.
+INFO: [Physopt 32-663] Processed net cadc_system_i/cadc_top_0/U0/u_cadc_top/u_io/o_out_flap[15].  Re-placed instance cadc_system_i/cadc_top_0/U0/u_cadc_top/u_io/o_out_flap[15]_INST_0
+INFO: [Physopt 32-735] Processed net cadc_system_i/cadc_top_0/U0/u_cadc_top/u_io/o_out_flap[15]. Optimization improves timing on the net.
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-3.636 | TNS=-449.802 |
+
+out of memory allocating 8388640 bytes
+[Wed Mar 18 15:12:09 2026] impl_1 finished
+ERROR: [Vivado 12-13638] Failed runs(s) : 'impl_1'
+wait_on_runs: Time (s): cpu = 00:00:01 ; elapsed = 00:04:10 . Memory (MB): peak = 736.984 ; gain = 0.000
+ERROR: [Common 17-39] 'wait_on_runs' failed due to earlier errors.
+
+    while executing
+"wait_on_run impl_1"
+    (file "build_artys7.tcl" line 27)
+INFO: [Common 17-206] Exiting Vivado at Wed Mar 18 15:12:09 2026...

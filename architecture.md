@@ -15,7 +15,7 @@
 | **PMU Algorithm** | Booth's algorithm (iterative, 20 cycles) | **Parallel multiply** (single cycle at WA T0) | **FPGA optimization** — same result |
 | **PDU Algorithm** | Non-restoring division (iterative) | **Parallel divide** (single cycle) | **FPGA optimization** — same result |
 | **RAS Size** | 16×20-bit per chip (5 chips = 80 registers) | 64×20-bit (single instance) | Exceeds original capacity |
-| **Stack (subroutines)** | Not documented in original | **Not implemented** | ROM-F-012/F-013 (Should) |
+| **Stack (subroutines)** | Not documented in original | **4-level return stack implemented** | ROM-F-012/F-013 (Should) — verified |
 
 ---
 
@@ -118,18 +118,18 @@
 |--------|-------------|--------|-------|
 | ROM-F-001 | Store microprogram | ✅ **PASS** | ROM array |
 | ROM-F-002 | Sequential increment | ✅ **PASS** | |
-| ROM-F-003 | Unconditional jump | ❌ **NOT IMPL** | Demo code only |
-| ROM-F-004 | Conditional branch | ❌ **NOT IMPL** | Flags not wired |
-| ROM-F-005–006 | Wait-for-busy | ❌ **NOT IMPL** | |
+| ROM-F-003 | Unconditional jump | ✅ **PASS** | JUMP instruction verified in TB |
+| ROM-F-004 | Conditional branch | ✅ **PASS** | BRZ/BRN/BRC all tested (taken & not-taken) |
+| ROM-F-005–006 | Wait-for-busy | ✅ **PASS** | WAIT_PMU/WAIT_PDU hold & release tested |
 | ROM-F-007 | Field decode | ✅ **PASS** | Microword split |
 | ROM-F-008 | Reset/frame_mark → PC=0 | ✅ **PASS** | |
 | ROM-F-009 | Single-cycle fetch | ✅ **PASS** | |
 | ROM-F-010 | Data ROM | ⚠️ **PARTIAL** | Constants embedded |
 | ROM-F-011 | Loadable ROM | ❌ **NOT IMPL** | Fixed at synthesis |
-| ROM-F-012 | Call/return stack | ❌ **NOT IMPL** | Should priority |
-| ROM-F-013 | Stack ≥4 levels | ❌ **NOT IMPL** | |
+| ROM-F-012 | Call/return stack | ✅ **PASS** | CALL/RET with 4-level stack verified |
+| ROM-F-013 | Stack ≥4 levels | ✅ **PASS** | 4-deep return stack implemented |
 | ROM-F-014 | Registered outputs | ✅ **PASS** | |
-| ROM-F-015 | Branch-on-busy | ❌ **NOT IMPL** | |
+| ROM-F-015 | Branch-on-busy | ✅ **PASS** | BR_PMUB/BR_PDUB tested (taken & not-taken) |
 
 ### I/O Bridge (12 requirements)
 
@@ -158,10 +158,10 @@
 | SLF | 14 | **14** | 0 | 2 | 2 |
 | RAS | 8 | **8** | 0 | 2 | 2 |
 | SL | 8 | **8** | 0 | 1 | 1 |
-| ROM/Sequencer | 9 | **5** | 4 | 6 | 0 |
+| ROM/Sequencer | 9 | **9** | 0 | 6 | 5 |
 | I/O Bridge | 10 | **10** | 0 | 2 | 1 |
 | Top Level | 8 | **7** | 1 (multi-module) | 3 | 0 |
-| **TOTAL** | **85** | **78 (92%)** | 7 | 20 | 10 (50%) |
+| **TOTAL** | **85** | **82 (96%)** | 3 | 20 | 15 (75%) |
 
 ---
 
@@ -207,16 +207,17 @@
 - 19 ROM chips storing complete flight computer program
 
 **FPGA Implementation:**
-- Demo microcode with polynomial computation only
-- No jump/branch/call/return implementation
+- All 11 instruction types implemented: SEQ, JUMP, BRZ, BRN, BRC, BR_PMUB, BR_PDUB, WAIT_PMU, WAIT_PDU, CALL, RET
+- 4-level return stack for subroutine nesting
+- Demo microcode for polynomial computation plus test instructions exercising all control flow
 
-**Gaps:** ROM-F-003/004/005/006/012/013/015 not implemented. The current sequencer demonstrates datapath functionality but lacks full control flow.
+**Status:** ROM-F-003/004/005/006/012/013/015 all implemented and verified (24 testbench tests, 0 failures). Remaining gap: ROM-F-011 (loadable ROM) — ROM content is fixed at synthesis.
 
 ---
 
 ## 5. Test Coverage Summary
 
-All 68 testbench tests pass:
+All 92 testbench tests pass:
 
 | Module | Tests |
 |--------|-------|
@@ -226,9 +227,10 @@ All 68 testbench tests pass:
 | SLF | 9 |
 | RAS | 8 |
 | SL | 4 |
+| ROM/SEQUENCER | 24 |
 | IO_BRIDGE | 20 |
 | CADC_TOP | 7 |
-| **Total** | **68** |
+| **Total** | **92** |
 
 The polynomial computation `E = a3*X³ + a2*X² + a1*X + a0` executes correctly with verified outputs:
 - X=0.5 → E=0x2A000 (0.328125)
