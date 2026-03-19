@@ -8,12 +8,11 @@
   **** SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
   **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
   **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
-  **** Start of session at: Wed Mar 18 14:54:58 2026
+  **** Start of session at: Thu Mar 19 14:55:38 2026
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 
 source cadc_system_ila_0_0.tcl -notrace
-create_project: Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 663.516 ; gain = 219.371
 Command: synth_design -top cadc_system_ila_0_0 -part xc7s50csga324-1 -incremental_mode off -mode out_of_context
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7s50'
@@ -21,9 +20,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7s50'
 INFO: [Device 21-403] Loading part xc7s50csga324-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 30216
+INFO: [Synth 8-7075] Helper process launched with PID 41836
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 1410.195 ; gain = 539.371
+Starting RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1412.148 ; gain = 540.230
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-11241] undeclared symbol 'tms_int', assumed default net type 'wire' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/0568/hdl/verilog/xsdbm_v3_0_5_bs_core_ext.vh:30]
 INFO: [Synth 8-11241] undeclared symbol 'runtest_int', assumed default net type 'wire' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/0568/hdl/verilog/xsdbm_v3_0_5_bs_core_ext.vh:32]
@@ -126,7 +125,7 @@ INFO: [Synth 8-11241] undeclared symbol 'runtest_int', assumed default net type 
 INFO: [Synth 8-11241] undeclared symbol 'tms_int', assumed default net type 'wire' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/0568/hdl/verilog/xsdbm_v3_0_5_bs_core_vec.vh:275]
 INFO: [Synth 8-11241] undeclared symbol 'runtest_int', assumed default net type 'wire' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/0568/hdl/verilog/xsdbm_v3_0_5_bs_core_vec.vh:277]
 INFO: [Common 17-14] Message 'Synth 8-11241' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:105]
+INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:70]
 	Parameter C_XLNX_HW_PROBE_INFO bound to: DEFAULT - type: string 
 	Parameter C_XDEVICEFAMILY bound to: artix7 - type: string 
 	Parameter C_CORE_TYPE bound to: 1 - type: integer 
@@ -135,7 +134,7 @@ INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dr
 	Parameter C_CAPTURE_TYPE bound to: 0 - type: integer 
 	Parameter C_MU_TYPE bound to: 0 - type: integer 
 	Parameter C_TC_TYPE bound to: 0 - type: integer 
-	Parameter C_NUM_OF_PROBES bound to: 44 - type: integer 
+	Parameter C_NUM_OF_PROBES bound to: 9 - type: integer 
 	Parameter C_DATA_DEPTH bound to: 4096 - type: integer 
 	Parameter C_MAJOR_VERSION bound to: 2025 - type: integer 
 	Parameter C_MINOR_VERSION bound to: 2 - type: integer 
@@ -157,44 +156,44 @@ INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dr
 	Parameter C_EN_TIME_TAG bound to: 0 - type: integer 
 	Parameter C_TIME_TAG_WIDTH bound to: 32 - type: integer 
 	Parameter C_ILA_CLK_FREQ bound to: 100000000 - type: integer 
-	Parameter C_PROBE0_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE1_WIDTH bound to: 32 - type: integer 
-	Parameter C_PROBE2_WIDTH bound to: 2 - type: integer 
-	Parameter C_PROBE3_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE4_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE5_WIDTH bound to: 32 - type: integer 
-	Parameter C_PROBE6_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE0_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE1_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE2_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE3_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE4_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE5_WIDTH bound to: 20 - type: integer 
+	Parameter C_PROBE6_WIDTH bound to: 20 - type: integer 
 	Parameter C_PROBE7_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE8_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE9_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE10_WIDTH bound to: 32 - type: integer 
+	Parameter C_PROBE10_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE11_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE12_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE13_WIDTH bound to: 2 - type: integer 
-	Parameter C_PROBE14_WIDTH bound to: 32 - type: integer 
-	Parameter C_PROBE15_WIDTH bound to: 4 - type: integer 
+	Parameter C_PROBE13_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE14_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE15_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE16_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE17_WIDTH bound to: 3 - type: integer 
-	Parameter C_PROBE18_WIDTH bound to: 3 - type: integer 
+	Parameter C_PROBE17_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE18_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE19_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE20_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE21_WIDTH bound to: 8 - type: integer 
+	Parameter C_PROBE21_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE22_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE23_WIDTH bound to: 3 - type: integer 
-	Parameter C_PROBE24_WIDTH bound to: 2 - type: integer 
+	Parameter C_PROBE23_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE24_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE25_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE26_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE27_WIDTH bound to: 8 - type: integer 
-	Parameter C_PROBE28_WIDTH bound to: 3 - type: integer 
-	Parameter C_PROBE29_WIDTH bound to: 2 - type: integer 
+	Parameter C_PROBE27_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE28_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE29_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE30_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE31_WIDTH bound to: 4 - type: integer 
-	Parameter C_PROBE32_WIDTH bound to: 4 - type: integer 
-	Parameter C_PROBE33_WIDTH bound to: 4 - type: integer 
-	Parameter C_PROBE34_WIDTH bound to: 4 - type: integer 
+	Parameter C_PROBE31_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE32_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE33_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE34_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE35_WIDTH bound to: 1 - type: integer 
-	Parameter C_PROBE36_WIDTH bound to: 4 - type: integer 
-	Parameter C_PROBE37_WIDTH bound to: 4 - type: integer 
+	Parameter C_PROBE36_WIDTH bound to: 1 - type: integer 
+	Parameter C_PROBE37_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE38_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE39_WIDTH bound to: 1 - type: integer 
 	Parameter C_PROBE40_WIDTH bound to: 1 - type: integer 
@@ -1190,41 +1189,41 @@ INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dr
 	Parameter C_PROBE6_MU_CNT bound to: 2 - type: integer 
 	Parameter C_PROBE7_MU_CNT bound to: 2 - type: integer 
 	Parameter C_PROBE8_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE9_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE10_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE11_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE12_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE13_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE14_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE15_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE16_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE17_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE18_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE19_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE20_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE21_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE22_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE23_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE24_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE25_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE26_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE27_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE28_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE29_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE30_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE31_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE32_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE33_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE34_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE35_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE36_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE37_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE38_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE39_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE40_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE41_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE42_MU_CNT bound to: 2 - type: integer 
-	Parameter C_PROBE43_MU_CNT bound to: 2 - type: integer 
+	Parameter C_PROBE9_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE10_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE11_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE12_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE13_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE14_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE15_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE16_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE17_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE18_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE19_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE20_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE21_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE22_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE23_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE24_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE25_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE26_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE27_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE28_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE29_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE30_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE31_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE32_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE33_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE34_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE35_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE36_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE37_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE38_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE39_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE40_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE41_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE42_MU_CNT bound to: 1 - type: integer 
+	Parameter C_PROBE43_MU_CNT bound to: 1 - type: integer 
 	Parameter C_PROBE44_MU_CNT bound to: 1 - type: integer 
 	Parameter C_PROBE45_MU_CNT bound to: 1 - type: integer 
 	Parameter C_PROBE46_MU_CNT bound to: 1 - type: integer 
@@ -2214,41 +2213,41 @@ INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dr
 	Parameter C_PROBE6_TYPE bound to: 0 - type: integer 
 	Parameter C_PROBE7_TYPE bound to: 0 - type: integer 
 	Parameter C_PROBE8_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE9_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE10_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE11_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE12_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE13_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE14_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE15_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE16_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE17_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE18_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE19_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE20_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE21_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE22_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE23_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE24_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE25_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE26_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE27_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE28_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE29_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE30_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE31_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE32_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE33_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE34_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE35_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE36_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE37_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE38_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE39_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE40_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE41_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE42_TYPE bound to: 0 - type: integer 
-	Parameter C_PROBE43_TYPE bound to: 0 - type: integer 
+	Parameter C_PROBE9_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE10_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE11_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE12_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE13_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE14_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE15_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE16_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE17_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE18_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE19_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE20_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE21_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE22_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE23_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE24_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE25_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE26_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE27_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE28_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE29_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE30_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE31_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE32_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE33_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE34_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE35_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE36_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE37_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE38_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE39_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE40_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE41_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE42_TYPE bound to: 1 - type: integer 
+	Parameter C_PROBE43_TYPE bound to: 1 - type: integer 
 	Parameter C_PROBE44_TYPE bound to: 1 - type: integer 
 	Parameter C_PROBE45_TYPE bound to: 1 - type: integer 
 	Parameter C_PROBE46_TYPE bound to: 1 - type: integer 
@@ -3229,7 +3228,7 @@ INFO: [Synth 8-638] synthesizing module 'cadc_system_ila_0_0' [c:/Users/aptay/Dr
 	Parameter C_PROBE1021_TYPE bound to: 1 - type: integer 
 	Parameter C_PROBE1022_TYPE bound to: 1 - type: integer 
 	Parameter C_PROBE1023_TYPE bound to: 1 - type: integer 
-INFO: [Synth 8-3491] module 'ila_v6_2_19_ila' declared at 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/3556/hdl/ila_v6_2_syn_rfs.v:6191' bound to instance 'U0' of component 'ila_v6_2_19_ila' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:4290]
+INFO: [Synth 8-3491] module 'ila_v6_2_19_ila' declared at 'c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ipshared/3556/hdl/ila_v6_2_syn_rfs.v:6191' bound to instance 'U0' of component 'ila_v6_2_19_ila' [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:4255]
 INFO: [Synth 8-6157] synthesizing module 'CFGLUT5' [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:3131]
 INFO: [Synth 8-6155] done synthesizing module 'CFGLUT5' (0#1) [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:3131]
 INFO: [Synth 8-6157] synthesizing module 'CARRY4' [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:3094]
@@ -3242,82 +3241,9 @@ INFO: [Synth 8-6157] synthesizing module 'SRLC16E' [C:/AMDDesignTools/2025.2/Viv
 INFO: [Synth 8-6155] done synthesizing module 'SRLC16E' (0#1) [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165423]
 INFO: [Synth 8-6157] synthesizing module 'FDRE' [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396]
 INFO: [Synth 8-6155] done synthesizing module 'FDRE' (0#1) [C:/AMDDesignTools/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396]
-INFO: [Synth 8-256] done synthesizing module 'cadc_system_ila_0_0' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:105]
-INFO: [Synth 8-3848] Net sl_iport0 in module/entity cadc_system_ila_0_0 does not have driver. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:4287]
+INFO: [Synth 8-256] done synthesizing module 'cadc_system_ila_0_0' (0#1) [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:70]
+INFO: [Synth 8-3848] Net sl_iport0 in module/entity cadc_system_ila_0_0 does not have driver. [c:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.gen/sources_1/bd/cadc_system/ip/cadc_system_ila_0_0/synth/cadc_system_ila_0_0.vhd:4252]
 INFO: [Synth 8-7129] Port CLKB in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[215] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[214] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[213] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[212] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[211] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[210] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[209] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[208] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[207] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[206] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[205] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[204] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[203] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[202] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[201] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[200] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[199] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[198] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[197] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[196] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[195] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[194] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[193] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[192] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[191] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[190] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[189] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[188] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[187] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[186] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[185] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[184] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[183] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[182] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[181] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[180] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[179] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[178] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[177] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[176] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[175] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[174] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[173] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[172] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[171] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[170] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[169] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[168] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[167] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[166] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[165] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[164] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[163] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[162] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[161] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[160] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[159] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[158] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[157] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[156] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[155] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[154] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[153] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[152] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[151] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[150] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[149] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[148] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[147] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[146] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[145] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[144] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
-INFO: [Synth 8-7129] Port DOUTA_I[143] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTA_I[142] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTA_I[141] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTA_I[140] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
@@ -3344,21 +3270,94 @@ INFO: [Synth 8-7129] Port DOUTA_I[120] in module blk_mem_gen_v8_4_12_blk_mem_out
 INFO: [Synth 8-7129] Port DOUTA_I[119] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTA_I[118] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTA_I[117] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[116] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[115] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[114] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[113] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[112] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[111] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[110] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[109] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[108] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[107] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[106] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[105] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[104] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[103] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[102] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[101] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[100] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[99] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[98] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[97] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[96] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[95] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[94] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[93] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[92] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[91] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[90] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[89] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[88] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[87] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[86] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[85] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[84] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[83] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[82] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[81] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[80] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[79] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[78] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[77] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[76] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[75] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[74] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[73] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[72] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[71] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[70] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[69] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[68] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[67] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[66] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[65] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[64] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[63] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[62] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[61] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[60] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[59] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[58] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[57] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[56] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[55] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[54] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[53] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[52] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[51] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[50] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[49] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[48] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[47] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[46] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[45] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
+INFO: [Synth 8-7129] Port DOUTA_I[44] in module blk_mem_gen_v8_4_12_blk_mem_output_block is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:36 ; elapsed = 00:00:41 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished RTL Elaboration : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:36 ; elapsed = 00:00:41 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:36 ; elapsed = 00:00:41 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.341 . Memory (MB): peak = 2014.062 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 910 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.103 . Memory (MB): peak = 1996.082 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 352 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
@@ -3374,29 +3373,29 @@ Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_p
 Finished Parsing XDC File [C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/cadc_system_ila_0_0_synth_1/dont_touch.xdc]
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.012 . Memory (MB): peak = 2014.062 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 1996.082 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 653 instances were transformed.
-  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 560 instances
-  CFGLUT5 => SRLC32E: 93 instances
+  A total of 255 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 232 instances
+  CFGLUT5 => SRLC32E: 23 instances
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.520 . Memory (MB): peak = 2014.062 ; gain = 0.000
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.154 . Memory (MB): peak = 1996.082 ; gain = 0.000
 INFO: [Designutils 20-5008] Incremental synthesis strategy off
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:01:40 ; elapsed = 00:01:49 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Constraint Validation : Time (s): cpu = 00:00:36 ; elapsed = 00:00:39 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7s50csga324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:01:40 ; elapsed = 00:01:49 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:36 ; elapsed = 00:00:39 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:01:40 ; elapsed = 00:01:49 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:36 ; elapsed = 00:00:39 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s'
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized0'
@@ -3419,76 +3418,6 @@ INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in modul
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized17'
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized18'
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized19'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized20'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized21'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized22'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized23'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized24'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized25'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized26'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized27'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized28'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized29'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized30'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized31'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized32'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized33'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized34'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized35'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized36'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized37'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized38'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized39'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized40'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized41'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized42'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized43'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized44'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized45'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized46'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized47'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized48'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized49'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized50'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized51'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized52'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized53'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized54'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized55'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized56'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized57'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized58'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized59'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized60'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized61'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized62'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized63'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized64'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized65'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized66'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized67'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized68'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized69'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized70'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized71'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized72'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized73'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized74'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized75'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized76'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized77'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized78'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized79'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized80'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized81'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized82'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized83'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized84'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized85'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized86'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized87'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized88'
-INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'xsdbs_v1_0_5_reg_p2s__parameterized89'
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'ltlib_v1_0_3_generic_memrd'
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
@@ -3682,636 +3611,6 @@ INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using e
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
 ---------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized20'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized21'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized22'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized23'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized24'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized25'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized26'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized27'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized28'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized29'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized30'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized31'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized32'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized33'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized34'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized35'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized36'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized37'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized38'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized39'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized40'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized41'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized42'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized43'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized44'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized45'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized46'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized47'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized48'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized49'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized50'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized51'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized52'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized53'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized54'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized55'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized56'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized57'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized58'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized59'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized60'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized61'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized62'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized63'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized64'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized65'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized66'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized67'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized68'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized69'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized70'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized71'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized72'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized73'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized74'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized75'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized76'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized77'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized78'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized79'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized80'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized81'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized82'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized83'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized84'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized85'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized86'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized87'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized88'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                    IDLE |                             0001 |                             0001
-                     REG |                             0010 |                             0010
-                     P2S |                             0100 |                             0100
-                     S2P |                             1000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'xsdbs_v1_0_5_reg_p2s__parameterized89'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
               RESET_ADDR |                          0000001 |                          0000001
             REQUEST_READ |                          0000010 |                          0000010
            WAIT_READ_ACK |                          0000100 |                          0000100
@@ -4322,7 +3621,7 @@ INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using e
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'ltlib_v1_0_3_generic_memrd'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:01:45 ; elapsed = 00:01:55 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:38 ; elapsed = 00:00:40 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -4343,25 +3642,25 @@ Finished Part Resource Summary
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:34 ; elapsed = 00:02:47 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:47 ; elapsed = 00:00:51 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:02:43 ; elapsed = 00:02:58 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:52 ; elapsed = 00:00:56 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:02:45 ; elapsed = 00:03:00 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Timing Optimization : Time (s): cpu = 00:00:53 ; elapsed = 00:00:56 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:02:50 ; elapsed = 00:03:06 . Memory (MB): peak = 2014.062 ; gain = 1143.238
+Finished Technology Mapping : Time (s): cpu = 00:00:54 ; elapsed = 00:00:58 . Memory (MB): peak = 1996.082 ; gain = 1124.164
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -4379,37 +3678,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:02:56 ; elapsed = 00:03:12 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished IO Insertion : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:02:56 ; elapsed = 00:03:12 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:57 ; elapsed = 00:03:13 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:02:57 ; elapsed = 00:03:13 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:02:57 ; elapsed = 00:03:14 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:02:57 ; elapsed = 00:03:14 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -4425,52 +3724,50 @@ Report Cell Usage:
 +------+---------+------+
 |      |Cell     |Count |
 +------+---------+------+
-|1     |CARRY4   |   242|
-|2     |CFGLUT5  |   653|
-|3     |LUT1     |   115|
-|4     |LUT2     |   594|
-|5     |LUT3     |   368|
-|6     |LUT4     |  1793|
-|7     |LUT5     |   331|
-|8     |LUT6     |  1079|
-|9     |MUXF7    |   229|
-|10    |MUXF8    |    81|
-|11    |RAMB36E1 |    24|
-|12    |SRL16E   |   219|
-|13    |SRLC16E  |     2|
-|14    |SRLC32E  |    17|
-|15    |FDRE     |  6537|
-|16    |FDSE     |    16|
+|1     |CARRY4   |    90|
+|2     |CFGLUT5  |   255|
+|3     |LUT1     |    46|
+|4     |LUT2     |   241|
+|5     |LUT3     |   147|
+|6     |LUT4     |   437|
+|7     |LUT5     |   188|
+|8     |LUT6     |   458|
+|9     |MUXF7    |    20|
+|10    |RAMB36E1 |    16|
+|11    |SRL16E   |   146|
+|12    |SRLC16E  |     2|
+|13    |SRLC32E  |    17|
+|14    |FDRE     |  2807|
+|15    |FDSE     |    10|
 +------+---------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:02:57 ; elapsed = 00:03:14 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:01:25 ; elapsed = 00:02:15 . Memory (MB): peak = 2135.152 ; gain = 1264.328
-Synthesis Optimization Complete : Time (s): cpu = 00:02:57 ; elapsed = 00:03:14 . Memory (MB): peak = 2135.152 ; gain = 1264.328
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:25 ; elapsed = 00:00:48 . Memory (MB): peak = 2086.641 ; gain = 1214.723
+Synthesis Optimization Complete : Time (s): cpu = 00:00:57 ; elapsed = 00:01:01 . Memory (MB): peak = 2086.641 ; gain = 1214.723
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.203 . Memory (MB): peak = 2135.152 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 1229 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.052 . Memory (MB): peak = 2086.641 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 381 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2148.004 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 2102.492 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 653 instances were transformed.
-  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 560 instances
-  CFGLUT5 => SRLC32E: 93 instances
+  A total of 255 instances were transformed.
+  CFGLUT5 => CFGLUT5 (SRL16E, SRLC32E): 232 instances
+  CFGLUT5 => SRLC32E: 23 instances
 
-Synth Design complete | Checksum: 6e8284d
+Synth Design complete | Checksum: de1b2acb
 INFO: [Common 17-83] Releasing license: Synthesis
-420 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+280 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:03:07 ; elapsed = 00:03:26 . Memory (MB): peak = 2148.004 ; gain = 1448.957
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.023 . Memory (MB): peak = 2148.004 ; gain = 0.000
+synth_design: Time (s): cpu = 00:01:01 ; elapsed = 00:01:06 . Memory (MB): peak = 2102.492 ; gain = 1405.344
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2102.492 ; gain = 0.000
 INFO: [Common 17-1381] The checkpoint 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/cadc_system_ila_0_0_synth_1/cadc_system_ila_0_0.dcp' has been generated.
-INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP cadc_system_ila_0_0, cache-ID = 9abb25ca7ba1fda5
-INFO: [Coretcl 2-1174] Renamed 633 cell refs.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.050 . Memory (MB): peak = 2148.004 ; gain = 0.000
-WARNING: [Runs 36-115] Could not delete directory 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/cadc_system_ila_0_0_synth_1/.Xil/Vivado-39112-Adiuvo_Adam/dcp1'.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP cadc_system_ila_0_0, cache-ID = 1a4aa84be61d652c
+INFO: [Coretcl 2-1174] Renamed 255 cell refs.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 2102.492 ; gain = 0.000
 INFO: [Common 17-1381] The checkpoint 'C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/vivado_proj_artys7/cadc_artys7.runs/cadc_system_ila_0_0_synth_1/cadc_system_ila_0_0.dcp' has been generated.
 INFO: [Vivado 12-24828] Executing command : report_utilization -file cadc_system_ila_0_0_utilization_synth.rpt -pb cadc_system_ila_0_0_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Wed Mar 18 14:58:52 2026...
+INFO: [Common 17-206] Exiting Vivado at Thu Mar 19 14:56:58 2026...

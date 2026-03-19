@@ -54,14 +54,11 @@
 
 module cadc_system_sv (
   (* X_INTERFACE_IGNORE = "true" *)
-  input wire sys_clk,
-  (* X_INTERFACE_IGNORE = "true" *)
-  input wire sys_rst_n
+  input wire sys_clk
 );
 
   cadc_system inst (
-    .sys_clk(sys_clk),
-    .sys_rst_n(sys_rst_n)
+    .sys_clk(sys_clk)
   );
 
 endmodule

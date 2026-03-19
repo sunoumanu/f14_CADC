@@ -148,9 +148,13 @@ BEGIN
         v_saved_mach := out_mach;
         REPORT "  Input X = 0x40000 (0.5)" SEVERITY NOTE;
         REPORT "  Result E = 0x" & TO_HSTRING(out_mach) SEVERITY NOTE;
+        REPORT "  Expected = 0x2A000 (0.328125)" SEVERITY NOTE;
 
-        IF out_mach /= x"00000" THEN
-            REPORT "  PASSED: Polynomial computed non-zero result" SEVERITY NOTE;
+        IF out_mach = x"2A000" THEN
+            REPORT "  PASSED: Result matches expected 0x2A000" SEVERITY NOTE;
+        ELSIF out_mach /= x"00000" THEN
+            REPORT "  FAILED: Non-zero but wrong (expected 0x2A000, got 0x" & TO_HSTRING(out_mach) & ")" SEVERITY ERROR;
+            fail_count <= fail_count + 1;
         ELSE
             REPORT "  FAILED: Output still zero - microprogram may not have executed" SEVERITY ERROR;
             fail_count <= fail_count + 1;
@@ -200,13 +204,16 @@ BEGIN
 
         REPORT "  Input X = 0x20000 (0.25)" SEVERITY NOTE;
         REPORT "  Result E = 0x" & TO_HSTRING(out_mach) SEVERITY NOTE;
+        REPORT "  Expected = 0x16400 (0.173828)" SEVERITY NOTE;
 
-        IF out_mach /= x"00000" AND out_mach /= v_saved_mach THEN
-            REPORT "  PASSED: Different input produces different result" SEVERITY NOTE;
-        ELSIF out_mach = v_saved_mach THEN
-            REPORT "  INFO: Same result as previous (may be coincidence or issue)" SEVERITY NOTE;
+        IF out_mach = x"16400" THEN
+            REPORT "  PASSED: Result matches expected 0x16400" SEVERITY NOTE;
+        ELSIF out_mach /= x"00000" THEN
+            REPORT "  FAILED: Non-zero but wrong (expected 0x16400, got 0x" & TO_HSTRING(out_mach) & ")" SEVERITY ERROR;
+            fail_count <= fail_count + 1;
         ELSE
-            REPORT "  INFO: Result is zero" SEVERITY NOTE;
+            REPORT "  FAILED: Output is zero" SEVERITY ERROR;
+            fail_count <= fail_count + 1;
         END IF;
 
         -----------------------------------------------------------------------
@@ -232,11 +239,16 @@ BEGIN
 
         REPORT "  Input X = 0x60000 (0.75)" SEVERITY NOTE;
         REPORT "  Result E = 0x" & TO_HSTRING(out_mach) SEVERITY NOTE;
+        REPORT "  Expected = 0x44C00 (0.537109)" SEVERITY NOTE;
 
-        IF out_mach /= x"00000" THEN
-            REPORT "  PASSED: Non-zero result for X=0.75" SEVERITY NOTE;
+        IF out_mach = x"44C00" THEN
+            REPORT "  PASSED: Result matches expected 0x44C00" SEVERITY NOTE;
+        ELSIF out_mach /= x"00000" THEN
+            REPORT "  FAILED: Non-zero but wrong (expected 0x44C00, got 0x" & TO_HSTRING(out_mach) & ")" SEVERITY ERROR;
+            fail_count <= fail_count + 1;
         ELSE
-            REPORT "  INFO: Result is zero" SEVERITY NOTE;
+            REPORT "  FAILED: Output is zero" SEVERITY ERROR;
+            fail_count <= fail_count + 1;
         END IF;
 
         -----------------------------------------------------------------------

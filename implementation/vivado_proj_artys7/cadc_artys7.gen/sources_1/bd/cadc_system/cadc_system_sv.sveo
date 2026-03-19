@@ -66,8 +66,7 @@
 
 // INST_TAG     ------ Begin cut for WRAPPER INSTANTIATION Template ------
 cadc_system_sv your_instance_name (
-  .sys_clk(sys_clk), // input wire sys_clk
-  .sys_rst_n(sys_rst_n) // input wire sys_rst_n
+  .sys_clk(sys_clk) // input wire sys_clk
 );
 // INST_TAG_END ------  End cut for WRAPPER INSTANTIATION Template  ------
 

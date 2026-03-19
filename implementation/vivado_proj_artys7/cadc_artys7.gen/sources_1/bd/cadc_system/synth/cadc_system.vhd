@@ -2,7 +2,7 @@
 --Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
---Date        : Wed Mar 18 14:52:11 2026
+--Date        : Thu Mar 19 14:55:33 2026
 --Host        : Adiuvo_Adam running 64-bit major release  (build 9200)
 --Command     : generate_target cadc_system.bd
 --Design      : cadc_system
@@ -1271,11 +1271,10 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity cadc_system is
   port (
-    sys_clk : in STD_LOGIC;
-    sys_rst_n : in STD_LOGIC
+    sys_clk : in STD_LOGIC
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of cadc_system : entity is "cadc_system,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=cadc_system,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=20,numReposBlks=13,numNonXlnxBlks=0,numHierBlks=7,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,synth_mode=Hierarchical}";
+  attribute CORE_GENERATION_INFO of cadc_system : entity is "cadc_system,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=cadc_system,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=21,numReposBlks=14,numNonXlnxBlks=0,numHierBlks=7,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,synth_mode=Hierarchical}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of cadc_system : entity is "cadc_system.hwdef";
 end cadc_system;
@@ -1286,8 +1285,8 @@ architecture STRUCTURE of cadc_system is
     resetn : in STD_LOGIC;
     clk_in1 : in STD_LOGIC;
     clk_out1 : out STD_LOGIC;
-    locked : out STD_LOGIC;
-    clk_out2 : out STD_LOGIC
+    clk_out2 : out STD_LOGIC;
+    locked : out STD_LOGIC
   );
   end component cadc_system_clk_wiz_0_0;
   component cadc_system_proc_sys_reset_0_0 is
@@ -1481,50 +1480,15 @@ architecture STRUCTURE of cadc_system is
   component cadc_system_ila_0_0 is
   port (
     clk : in STD_LOGIC;
-    probe0 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe1 : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    probe2 : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    probe3 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe4 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe5 : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    probe6 : in STD_LOGIC_VECTOR ( 0 to 0 );
+    probe0 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe1 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe2 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe3 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe4 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe5 : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    probe6 : in STD_LOGIC_VECTOR ( 19 downto 0 );
     probe7 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe8 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe9 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe10 : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    probe11 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe12 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe13 : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    probe14 : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    probe15 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe16 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe17 : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    probe18 : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    probe19 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe20 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe21 : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    probe22 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe23 : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    probe24 : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    probe25 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe26 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe27 : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    probe28 : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    probe29 : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    probe30 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe31 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe32 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe33 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe34 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe35 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe36 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe37 : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    probe38 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe39 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe40 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe41 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe42 : in STD_LOGIC_VECTOR ( 0 to 0 );
-    probe43 : in STD_LOGIC_VECTOR ( 0 to 0 )
+    probe8 : in STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component cadc_system_ila_0_0;
   component cadc_system_util_vector_logic_0_0 is
@@ -1658,6 +1622,7 @@ architecture STRUCTURE of cadc_system is
   signal jtag_axi_0_M_AXI_WVALID : STD_LOGIC;
   signal proc_sys_reset_0_interconnect_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
   signal proc_sys_reset_0_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal sys_rst_n_1 : STD_LOGIC_VECTOR ( 0 to 0 );
   signal util_vector_logic_0_Res : STD_LOGIC_VECTOR ( 0 to 0 );
   signal NLW_proc_sys_reset_0_mb_reset_UNCONNECTED : STD_LOGIC;
   signal NLW_proc_sys_reset_0_bus_struct_reset_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
@@ -1666,8 +1631,6 @@ architecture STRUCTURE of cadc_system is
   attribute X_INTERFACE_INFO of sys_clk : signal is "xilinx.com:signal:clock:1.0 CLK.SYS_CLK CLK";
   attribute X_INTERFACE_PARAMETER : string;
   attribute X_INTERFACE_PARAMETER of sys_clk : signal is "XIL_INTERFACENAME CLK.SYS_CLK, CLK_DOMAIN cadc_system_sys_clk, FREQ_HZ 12000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
-  attribute X_INTERFACE_INFO of sys_rst_n : signal is "xilinx.com:signal:reset:1.0 RST.SYS_RST_N RST";
-  attribute X_INTERFACE_PARAMETER of sys_rst_n : signal is "XIL_INTERFACENAME RST.SYS_RST_N, INSERT_VIP 0, POLARITY ACTIVE_LOW";
 begin
 axi_gpio_analog: component cadc_system_axi_gpio_analog_0
      port map (
@@ -1932,7 +1895,7 @@ clk_wiz_0: component cadc_system_clk_wiz_0_0
       clk_out1 => clk_wiz_0_clk_out1,
       clk_out2 => clk_wiz_0_clk_out2,
       locked => clk_wiz_0_locked,
-      resetn => sys_rst_n
+      resetn => sys_rst_n_1(0)
     );
 clock_divider_0: component cadc_system_clock_divider_0_0
      port map (
@@ -1943,53 +1906,17 @@ clock_divider_0: component cadc_system_clock_divider_0_0
 ila_0: component cadc_system_ila_0_0
      port map (
       clk => clk_wiz_0_clk_out1,
-      probe0(0) => cadc_top_0_o_out_mach(0),
-      probe1(31 downto 20) => B"000000000000",
+      probe0(19 downto 0) => cadc_top_0_o_out_mach(19 downto 0),
       probe1(19 downto 0) => cadc_top_0_o_out_alt(19 downto 0),
-      probe10(31 downto 0) => B"00000000000000000000000000000000",
-      probe11(0) => '0',
-      probe12(0) => '0',
-      probe13(1 downto 0) => B"00",
-      probe14(31 downto 0) => B"00000000000000000000000000000000",
-      probe15(3 downto 0) => B"1111",
-      probe16(0) => '0',
-      probe17(2 downto 0) => B"000",
-      probe18(2 downto 0) => B"000",
-      probe19(0) => '0',
-      probe2(1 downto 0) => cadc_top_0_o_out_airspd(1 downto 0),
-      probe20(0) => '0',
-      probe21(7 downto 0) => B"00000000",
-      probe22(0) => '0',
-      probe23(2 downto 0) => B"010",
-      probe24(1 downto 0) => B"01",
-      probe25(0) => '0',
-      probe26(0) => '0',
-      probe27(7 downto 0) => B"00000000",
-      probe28(2 downto 0) => B"010",
-      probe29(1 downto 0) => B"01",
-      probe3(0) => cadc_top_0_o_out_vspd(0),
-      probe30(0) => '0',
-      probe31(3 downto 0) => B"0011",
-      probe32(3 downto 0) => B"0011",
-      probe33(3 downto 0) => B"0000",
-      probe34(3 downto 0) => B"0000",
-      probe35(0) => '0',
-      probe36(3 downto 0) => B"0000",
-      probe37(3 downto 0) => B"0000",
-      probe38(0) => '0',
-      probe39(0) => '0',
-      probe4(0) => cadc_top_0_o_out_wing(0),
-      probe40(0) => '0',
-      probe41(0) => '0',
-      probe42(0) => '0',
-      probe43(0) => '0',
-      probe5(31 downto 20) => B"000000000000",
+      probe2(19 downto 0) => cadc_top_0_o_out_airspd(19 downto 0),
+      probe3(19 downto 0) => cadc_top_0_o_out_vspd(19 downto 0),
+      probe4(19 downto 0) => cadc_top_0_o_out_wing(19 downto 0),
       probe5(19 downto 0) => cadc_top_0_o_out_flap(19 downto 0),
-      probe6(0) => cadc_top_0_o_out_glove(0),
+      probe6(19 downto 0) => cadc_top_0_o_out_glove(19 downto 0),
       probe7(0) => cadc_top_0_o_bit_status,
-      probe8(0) => cadc_top_0_o_fail_detect,
-      probe9(0) => '0'
+      probe8(0) => cadc_top_0_o_fail_detect
     );
+  sys_rst_n_1 <= B"1";
 jtag_axi_0: component cadc_system_jtag_axi_0_0
      port map (
       aclk => clk_wiz_0_clk_out1,
@@ -2019,7 +1946,7 @@ proc_sys_reset_0: component cadc_system_proc_sys_reset_0_0
       aux_reset_in => '1',
       bus_struct_reset(0) => NLW_proc_sys_reset_0_bus_struct_reset_UNCONNECTED(0),
       dcm_locked => clk_wiz_0_locked,
-      ext_reset_in => sys_rst_n,
+      ext_reset_in => sys_rst_n_1(0),
       interconnect_aresetn(0) => proc_sys_reset_0_interconnect_aresetn(0),
       mb_debug_sys_rst => '0',
       mb_reset => NLW_proc_sys_reset_0_mb_reset_UNCONNECTED,

@@ -53,8 +53,7 @@
 -- COMP_TAG     ------ Begin cut for COMPONENT Declaration ------
 COMPONENT cadc_system
   PORT (
-    sys_clk : IN STD_LOGIC;
-    sys_rst_n : IN STD_LOGIC
+    sys_clk : IN STD_LOGIC
   );
 END COMPONENT;
 -- COMP_TAG_END ------  End cut for COMPONENT Declaration  ------
@@ -65,8 +64,7 @@ END COMPONENT;
 -- INST_TAG     ------ Begin cut for INSTANTIATION Template ------
 your_instance_name : cadc_system
   PORT MAP (
-    sys_clk => sys_clk,
-    sys_rst_n => sys_rst_n
+    sys_clk => sys_clk
   );
 -- INST_TAG_END ------  End cut for INSTANTIATION Template  ------
 

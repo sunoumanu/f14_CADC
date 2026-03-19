@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x550BD2FADE46863C",
+      "boundary_crc": "0xE84639F2971B4378",
       "device": "xc7s50csga324-1",
       "gen_directory": "../../../../cadc_artys7.gen/sources_1/bd/cadc_system",
       "name": "cadc_system",
@@ -31,7 +31,8 @@
       "clock_divider_0": "",
       "cadc_top_0": "",
       "ila_0": "",
-      "util_vector_logic_0": ""
+      "util_vector_logic_0": "",
+      "ilconstant_0": ""
     },
     "ports": {
       "sys_clk": {
@@ -56,19 +57,6 @@
           "PHASE": {
             "value": "0.0",
             "value_src": "default"
-          }
-        }
-      },
-      "sys_rst_n": {
-        "type": "rst",
-        "direction": "I",
-        "parameters": {
-          "INSERT_VIP": {
-            "value": "0",
-            "value_src": "default"
-          },
-          "POLARITY": {
-            "value": "ACTIVE_LOW"
           }
         }
       }
@@ -1259,29 +1247,32 @@
           "C_EN_STRG_QUAL": {
             "value": "1"
           },
+          "C_MONITOR_TYPE": {
+            "value": "Native"
+          },
           "C_NUM_OF_PROBES": {
-            "value": "44"
+            "value": "9"
           },
           "C_PROBE0_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE1_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE2_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE3_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE4_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE5_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE6_WIDTH": {
-            "value": "1"
+            "value": "20"
           },
           "C_PROBE7_WIDTH": {
             "value": "1"
@@ -1312,6 +1303,9 @@
             "value": "1"
           }
         }
+      },
+      "ilconstant_0": {
+        "vlnv": "xilinx.com:inline_hdl:ilconstant:1.0"
       }
     },
     "interface_nets": {
@@ -1514,7 +1508,7 @@
       },
       "sys_rst_n_1": {
         "ports": [
-          "sys_rst_n",
+          "ilconstant_0/dout",
           "clk_wiz_0/resetn",
           "proc_sys_reset_0/ext_reset_in"
         ]

@@ -42,7 +42,7 @@ EAStep()
 }
 
 # pre-commands:
-/bin/touch .phys_opt_design.begin.rst
+/bin/touch .init_design.begin.rst
 EAStep vivado -log cadc_system_wrapper.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source cadc_system_wrapper.tcl -notrace
 
 

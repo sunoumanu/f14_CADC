@@ -54,8 +54,7 @@
 
 // INST_TAG     ------ Begin cut for INSTANTIATION Template ------
 cadc_system your_instance_name (
-  .sys_clk(sys_clk), // input wire sys_clk
-  .sys_rst_n(sys_rst_n) // input wire sys_rst_n
+  .sys_clk(sys_clk) // input wire sys_clk
 );
 // INST_TAG_END ------  End cut for INSTANTIATION Template  ------
 
