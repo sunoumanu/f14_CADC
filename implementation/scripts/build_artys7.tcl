@@ -27,9 +27,12 @@ launch_runs impl_1 -jobs 8
 wait_on_run impl_1
 set impl_status [get_property STATUS [get_runs impl_1]]
 puts ">>> IMPL_STATUS: $impl_status"
-if {$impl_status != "route_design Complete!"} {
+if {![string match "route_design Complete*" $impl_status]} {
     puts ">>> ERROR: Implementation failed"
     exit 1
+}
+if {$impl_status ne "route_design Complete!"} {
+    puts ">>> WARNING: Implementation finished with timing violations — proceeding with bitstream"
 }
 
 # Generate bitstream

@@ -64,6 +64,7 @@ ARCHITECTURE rtl OF timing_generator IS
   SIGNAL s_t18_reg   : STD_LOGIC := '0';  -- Registered T18
   SIGNAL s_t19_reg   : STD_LOGIC := '0';  -- Registered T19
   SIGNAL s_word_type_reg : STD_LOGIC := '0';  -- Registered word type
+  SIGNAL s_frame_mark_reg : STD_LOGIC := '0';  -- Registered frame mark (phi2-aligned)
 
 BEGIN
 
@@ -87,6 +88,7 @@ BEGIN
         s_t18_reg   <= '0';
         s_t19_reg   <= '0';
         s_word_type_reg <= '0';
+        s_frame_mark_reg <= '0';
       ELSE
         -- Default bit_clk low
         s_bit_clk <= '0';
@@ -116,6 +118,13 @@ BEGIN
             s_t18_reg <= '1' WHEN s_bit_cnt = 18 ELSE '0';
             s_t19_reg <= '1' WHEN s_bit_cnt = 19 ELSE '0';
             s_word_type_reg <= s_word_sel;
+            -- Frame mark: registered here so it aligns with phi2 in the
+            -- sequencer's PC update (phi2='1' fires one phase later)
+            IF s_bit_cnt = 19 AND s_word_sel = '1' AND s_op_cnt = 511 THEN
+              s_frame_mark_reg <= '1';
+            ELSE
+              s_frame_mark_reg <= '0';
+            END IF;
             
           WHEN "11" =>
             -- Phi2 active - advance bit counter at end
@@ -163,7 +172,6 @@ BEGIN
   o_word_type  <= s_word_type_reg;  -- Registered for phi2 alignment
   o_word_mark  <= '1' WHEN (s_bit_cnt = 18 AND s_phase_cnt = "00") ELSE '0';
   o_op_count   <= STD_LOGIC_VECTOR(s_op_cnt);
-  o_frame_mark <= '1' WHEN (s_bit_cnt = 19 AND s_word_sel = '1' AND 
-                            s_op_cnt = 511 AND s_phase_cnt = "11") ELSE '0';
+  o_frame_mark <= s_frame_mark_reg;
 
 END ARCHITECTURE rtl;
