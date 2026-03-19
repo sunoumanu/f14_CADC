@@ -88,175 +88,198 @@ BEGIN
             WAIT FOR 1 ns;
         END PROCEDURE;
 
+        PROCEDURE check20(
+            actual   : IN std_logic_vector(19 DOWNTO 0);
+            expected : IN std_logic_vector(19 DOWNTO 0);
+            name     : IN STRING
+        ) IS
+        BEGIN
+            test_count <= test_count + 1;
+            WAIT FOR 0 ns;
+            IF actual /= expected THEN
+                REPORT name & " FAILED: got 0x" & to_hstring(UNSIGNED(actual)) &
+                       " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
+                fail_count <= fail_count + 1;
+            ELSE
+                REPORT name & " PASSED" SEVERITY NOTE;
+            END IF;
+        END PROCEDURE;
+
+        PROCEDURE check1(
+            actual   : IN std_logic;
+            expected : IN std_logic;
+            name     : IN STRING
+        ) IS
+        BEGIN
+            test_count <= test_count + 1;
+            WAIT FOR 0 ns;
+            IF actual /= expected THEN
+                REPORT name & " FAILED: got " & STD_LOGIC'image(actual) &
+                       " expected " & STD_LOGIC'image(expected) SEVERITY ERROR;
+                fail_count <= fail_count + 1;
+            ELSE
+                REPORT name & " PASSED" SEVERITY NOTE;
+            END IF;
+        END PROCEDURE;
+
     BEGIN
-        -- Reset
         rst <= '1';
         WAIT FOR 5 * CLK_PERIOD;
         rst <= '0';
         WAIT FOR CLK_PERIOD;
 
-        -- ====== Sensor Input Tests ======
-
-        -- IO-T-001: Read static pressure
+        -----------------------------------------------------------------------
+        -- 5.1 Sensor Input Tests
+        -----------------------------------------------------------------------
         do_io("0001", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"11111"
-            REPORT "IO-T-001 FAILED: Ps read" SEVERITY ERROR;
-        REPORT "IO-T-001: Read Ps PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"11111", "IO-T-001: Read Ps");
 
-        -- IO-T-002: Read dynamic pressure
         do_io("0010", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"22222"
-            REPORT "IO-T-002 FAILED: Qc read" SEVERITY ERROR;
-        REPORT "IO-T-002: Read Qc PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"22222", "IO-T-002: Read Qc");
 
-        -- IO-T-003: Read temperature
         do_io("0011", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"33333"
-            REPORT "IO-T-003 FAILED: TAT read" SEVERITY ERROR;
-        REPORT "IO-T-003: Read TAT PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"33333", "IO-T-003: Read TAT");
 
-        -- IO-T-004: Read analog
         do_io("0100", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"44444"
-            REPORT "IO-T-004 FAILED: analog read" SEVERITY ERROR;
-        REPORT "IO-T-004: Read analog PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"44444", "IO-T-004: Read analog");
 
-        -- IO-T-005: Read digital
         do_io("0101", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"55555"
-            REPORT "IO-T-005 FAILED: digital read" SEVERITY ERROR;
-        REPORT "IO-T-005: Read digital PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"55555", "IO-T-005: Read digital");
 
-        -- IO-T-006: Sensor change between reads
+        -- IO-T-006: Sensor changes between reads
         sensor_ps <= x"AAAAA";
         do_io("0001", x"00000");
-        test_count <= test_count + 1;
-        ASSERT io_data_out = x"AAAAA"
-            REPORT "IO-T-006 FAILED: sensor change" SEVERITY ERROR;
-        REPORT "IO-T-006: Sensor change PASSED" SEVERITY NOTE;
+        check20(io_data_out, x"AAAAA", "IO-T-006: Sensor change");
 
-        -- ====== Display/Actuator Output Tests ======
-
-        -- IO-T-010: Write Mach
+        -----------------------------------------------------------------------
+        -- 5.2 Display/Actuator Output Tests
+        -----------------------------------------------------------------------
         do_io("0110", x"ABCDE");
-        test_count <= test_count + 1;
-        ASSERT out_mach = x"ABCDE"
-            REPORT "IO-T-010 FAILED: Mach write" SEVERITY ERROR;
-        REPORT "IO-T-010: Write Mach PASSED" SEVERITY NOTE;
+        check20(out_mach, x"ABCDE", "IO-T-010: Write Mach");
 
-        -- IO-T-011: Write Altitude
         do_io("0111", x"12345");
-        test_count <= test_count + 1;
-        ASSERT out_alt = x"12345"
-            REPORT "IO-T-011 FAILED: Alt write" SEVERITY ERROR;
-        REPORT "IO-T-011: Write Alt PASSED" SEVERITY NOTE;
+        check20(out_alt, x"12345", "IO-T-011: Write Alt");
 
-        -- IO-T-012: Write Airspeed
         do_io("1000", x"67890");
-        test_count <= test_count + 1;
-        ASSERT out_airspd = x"67890"
-            REPORT "IO-T-012 FAILED: Airspeed write" SEVERITY ERROR;
-        REPORT "IO-T-012: Write Airspeed PASSED" SEVERITY NOTE;
+        check20(out_airspd, x"67890", "IO-T-012: Write Airspd");
 
-        -- IO-T-013: Write VSPD
         do_io("1001", x"FEDCB");
-        test_count <= test_count + 1;
-        ASSERT out_vspd = x"FEDCB"
-            REPORT "IO-T-013 FAILED: VSPD write" SEVERITY ERROR;
-        REPORT "IO-T-013: Write VSPD PASSED" SEVERITY NOTE;
+        check20(out_vspd, x"FEDCB", "IO-T-013: Write VSPD");
 
-        -- IO-T-014: Write Wing
         do_io("1010", x"11111");
-        test_count <= test_count + 1;
-        ASSERT out_wing = x"11111"
-            REPORT "IO-T-014 FAILED: Wing write" SEVERITY ERROR;
-        REPORT "IO-T-014: Write Wing PASSED" SEVERITY NOTE;
+        check20(out_wing, x"11111", "IO-T-014: Write Wing");
 
-        -- IO-T-015: Write Flap
         do_io("1011", x"22222");
-        test_count <= test_count + 1;
-        ASSERT out_flap = x"22222"
-            REPORT "IO-T-015 FAILED: Flap write" SEVERITY ERROR;
-        REPORT "IO-T-015: Write Flap PASSED" SEVERITY NOTE;
+        check20(out_flap, x"22222", "IO-T-015: Write Flap");
 
-        -- IO-T-016: Write Glove
         do_io("1100", x"33333");
-        test_count <= test_count + 1;
-        ASSERT out_glove = x"33333"
-            REPORT "IO-T-016 FAILED: Glove write" SEVERITY ERROR;
-        REPORT "IO-T-016: Write Glove PASSED" SEVERITY NOTE;
+        check20(out_glove, x"33333", "IO-T-016: Write Glove");
 
-        -- IO-T-017: Write BIT
         do_io("1101", x"00001");
-        test_count <= test_count + 1;
-        ASSERT out_bit_status = '1'
-            REPORT "IO-T-017 FAILED: BIT write" SEVERITY ERROR;
-        REPORT "IO-T-017: Write BIT PASSED" SEVERITY NOTE;
+        check1(out_bit_status, '1', "IO-T-017: Write BIT");
 
-        -- ====== Hold / NOP Tests ======
-
-        -- IO-T-020: NOP doesn't change outputs
+        -----------------------------------------------------------------------
+        -- 5.3 Hold / NOP Tests
+        -----------------------------------------------------------------------
         do_io("0000", x"FFFFF");
-        test_count <= test_count + 1;
-        ASSERT out_mach = x"ABCDE"
-            REPORT "IO-T-020 FAILED: NOP changed Mach" SEVERITY ERROR;
-        REPORT "IO-T-020: NOP no-change PASSED" SEVERITY NOTE;
+        check20(out_mach, x"ABCDE", "IO-T-020: NOP no-change");
 
-        -- IO-T-021: Output holds after write
         WAIT FOR 5 * CLK_PERIOD;
-        test_count <= test_count + 1;
-        ASSERT out_alt = x"12345"
-            REPORT "IO-T-021 FAILED: output didn't hold" SEVERITY ERROR;
-        REPORT "IO-T-021: Output hold PASSED" SEVERITY NOTE;
+        check20(out_alt, x"12345", "IO-T-021: Output hold");
 
-        -- IO-T-022: Write to one channel doesn't affect others
-        do_io("0110", x"99999");  -- Write Mach again
-        test_count <= test_count + 1;
-        ASSERT out_alt = x"12345"
-            REPORT "IO-T-022a FAILED: Alt changed on Mach write" SEVERITY ERROR;
-        ASSERT out_airspd = x"67890"
-            REPORT "IO-T-022b FAILED: Airspd changed on Mach write" SEVERITY ERROR;
-        REPORT "IO-T-022: Channel independence PASSED" SEVERITY NOTE;
+        do_io("0110", x"99999");
+        check20(out_alt, x"12345", "IO-T-022a: Alt after Mach write");
+        check20(out_airspd, x"67890", "IO-T-022b: Airspd after Mach write");
 
-        -- ====== Redundancy Tests ======
+        -----------------------------------------------------------------------
+        -- 5.4 Channel Independence Tests
+        -----------------------------------------------------------------------
+        -- IO-T-030: Write to each output independently, only targeted changes
+        -- Reset first, then write each one and verify others remain 0
+        rst <= '1';
+        WAIT UNTIL rising_edge(clk);
+        rst <= '0';
+        WAIT FOR CLK_PERIOD;
 
-        -- IO-T-030: channel_active = 0 -> outputs tri-stated (zero)
+        do_io("0110", x"AAAAA");  -- Write Mach only
+        check20(out_mach, x"AAAAA", "IO-T-030a: Mach written");
+        check20(out_alt, x"00000", "IO-T-030b: Alt still 0");
+        check20(out_airspd, x"00000", "IO-T-030c: Airspd still 0");
+        check20(out_vspd, x"00000", "IO-T-030d: VSPD still 0");
+        check20(out_wing, x"00000", "IO-T-030e: Wing still 0");
+        check20(out_flap, x"00000", "IO-T-030f: Flap still 0");
+        check20(out_glove, x"00000", "IO-T-030g: Glove still 0");
+
+        -- IO-T-031: Read from each input independently
+        sensor_ps      <= x"11111";
+        sensor_qc      <= x"22222";
+        sensor_tat     <= x"33333";
+        sensor_analog  <= x"44444";
+        sensor_digital <= x"55555";
+
+        do_io("0001", x"00000");
+        check20(io_data_out, x"11111", "IO-T-031a: Read Ps only");
+        do_io("0010", x"00000");
+        check20(io_data_out, x"22222", "IO-T-031b: Read Qc after Ps");
+        do_io("0100", x"00000");
+        check20(io_data_out, x"44444", "IO-T-031c: Read analog after Qc");
+
+        -----------------------------------------------------------------------
+        -- 5.5 Redundancy/Channel Active Tests
+        -----------------------------------------------------------------------
+        -- IO-T-040: Active channel drives outputs
+        channel_active <= '1';
+        do_io("0110", x"BBBBB");
+        WAIT FOR 5 ns;
+        check20(out_mach, x"BBBBB", "IO-T-040: Active drives output");
+
+        -- IO-T-041: Inactive channel zeroes outputs
         channel_active <= '0';
         WAIT FOR 5 ns;
-        test_count <= test_count + 1;
-        ASSERT out_mach = x"00000"
-            REPORT "IO-T-030 FAILED: output not gated" SEVERITY ERROR;
-        REPORT "IO-T-030: Channel inactive gating PASSED" SEVERITY NOTE;
+        check20(out_mach, x"00000", "IO-T-041a: Inactive zeroes Mach");
+        check1(out_bit_status, '0', "IO-T-041b: Inactive zeroes BIT");
 
-        -- Restore
+        -- Restore and verify
         channel_active <= '1';
         WAIT FOR 5 ns;
-        test_count <= test_count + 1;
-        ASSERT out_mach = x"99999"
-            REPORT "IO-T-031 FAILED: output not restored" SEVERITY ERROR;
-        REPORT "IO-T-031: Channel active restore PASSED" SEVERITY NOTE;
+        check20(out_mach, x"BBBBB", "IO-T-041c: Restored after active");
 
-        -- ====== Reset Test ======
+        -- IO-T-042: Failure detection (currently hardcoded to '0')
+        check1(fail_detect, '0', "IO-T-042: Fail detect default");
 
+        -----------------------------------------------------------------------
+        -- 5.6 Reset Tests
+        -----------------------------------------------------------------------
+        -- Write to all outputs first
+        do_io("0110", x"AAAAA");
+        do_io("0111", x"BBBBB");
+        do_io("1000", x"CCCCC");
+        do_io("1001", x"DDDDD");
+        do_io("1010", x"EEEEE");
+        do_io("1011", x"FFFFF");
+        do_io("1100", x"12345");
+        do_io("1101", x"00001");
+
+        -- IO-T-050: Reset clears all outputs
         rst <= '1';
         WAIT UNTIL rising_edge(clk);
         rst <= '0';
         WAIT FOR 1 ns;
-        test_count <= test_count + 1;
-        ASSERT out_mach = x"00000"
-            REPORT "IO-T-RST FAILED: Mach not cleared" SEVERITY ERROR;
-        ASSERT out_alt = x"00000"
-            REPORT "IO-T-RST FAILED: Alt not cleared" SEVERITY ERROR;
-        REPORT "IO-T-RST: Reset clears outputs PASSED" SEVERITY NOTE;
+        check20(out_mach, x"00000", "IO-T-050a: Reset Mach");
+        check20(out_alt, x"00000", "IO-T-050b: Reset Alt");
+        check20(out_airspd, x"00000", "IO-T-050c: Reset Airspd");
+        check20(out_vspd, x"00000", "IO-T-050d: Reset VSPD");
+        check20(out_wing, x"00000", "IO-T-050e: Reset Wing");
+        check20(out_flap, x"00000", "IO-T-050f: Reset Flap");
+        check20(out_glove, x"00000", "IO-T-050g: Reset Glove");
 
-        WAIT FOR 5 * CLK_PERIOD;
+        -- IO-T-051: Reset clears BIT status
+        check1(out_bit_status, '0', "IO-T-051: Reset BIT status");
 
+        -----------------------------------------------------------------------
         -- Summary
+        -----------------------------------------------------------------------
+        WAIT FOR 5 * CLK_PERIOD;
         REPORT "======================================" SEVERITY NOTE;
         REPORT "I/O Bridge Testbench Complete" SEVERITY NOTE;
         REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;

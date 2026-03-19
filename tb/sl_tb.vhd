@@ -48,11 +48,15 @@ ARCHITECTURE bench OF sl_tb IS
   -- Phase counter
   SIGNAL phase : UNSIGNED(1 DOWNTO 0) := "00";
 
-  -- Shift registers for source data
+  -- Shift registers for source data (all 8 sources)
   SIGNAL ras_sr   : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   SIGNAL acc_sr   : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL tmp_sr   : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   SIGNAL pmu_sr   : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL pduq_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL pdur_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   SIGNAL io_sr    : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL const_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
 
   -- Captured outputs
   SIGNAL acc_out_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
@@ -87,12 +91,12 @@ BEGIN
   -- Drive source bits from shift registers
   src_ras_bit  <= ras_sr(0);
   src_acc_bit  <= acc_sr(0);
+  src_tmp_bit  <= tmp_sr(0);
   src_pmu_bit  <= pmu_sr(0);
+  src_pduq_bit <= pduq_sr(0);
+  src_pdur_bit <= pdur_sr(0);
   src_io_bit   <= io_sr(0);
-  src_tmp_bit  <= '0';  -- Not used in tests
-  src_pduq_bit <= '0';  -- Not used in tests
-  src_pdur_bit <= '0';  -- Not used in tests
-  src_const_bit<= '0';  -- Not used in tests
+  src_const_bit<= const_sr(0);
 
   uut: ENTITY work.sl
     PORT MAP (
@@ -127,18 +131,16 @@ BEGIN
       END LOOP;
     END PROCEDURE;
 
-    -- Run WA phase with parallel control (control is latched at WA T0)
+    -- Run WA phase with parallel control (latched at WA T0)
     PROCEDURE run_wa_phase(
       acc_sel : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       ras_sel : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       io_sel  : IN STD_LOGIC_VECTOR(2 DOWNTO 0)
     ) IS
     BEGIN
-      -- Set control values before WA T0
       sel_acc <= acc_sel;
       sel_ras <= ras_sel;
       sel_io  <= io_sel;
-      
       word_type <= '0';
       FOR bit IN 0 TO 19 LOOP
         t0 <= '1' WHEN bit = 0 ELSE '0';
@@ -148,62 +150,111 @@ BEGIN
       t0 <= '0'; t19 <= '0';
     END PROCEDURE;
 
-    -- Run WO phase with given source data, capture outputs
-    PROCEDURE run_wo_phase(
-      ras_data : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      acc_data : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      pmu_data : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      io_data  : IN STD_LOGIC_VECTOR(19 DOWNTO 0)
+    -- Run WO phase with all 8 source data values, capture 3 outputs
+    PROCEDURE run_wo_phase_all(
+      d_ras   : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_acc   : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_tmp   : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_pmu   : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_pduq  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_pdur  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_io    : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      d_const : IN STD_LOGIC_VECTOR(19 DOWNTO 0)
     ) IS
     BEGIN
-      ras_sr <= ras_data;
-      acc_sr <= acc_data;
-      pmu_sr <= pmu_data;
-      io_sr  <= io_data;
-      
+      ras_sr   <= d_ras;
+      acc_sr   <= d_acc;
+      tmp_sr   <= d_tmp;
+      pmu_sr   <= d_pmu;
+      pduq_sr  <= d_pduq;
+      pdur_sr  <= d_pdur;
+      io_sr    <= d_io;
+      const_sr <= d_const;
       acc_out_sr <= (OTHERS => '0');
       ras_out_sr <= (OTHERS => '0');
       io_out_sr  <= (OTHERS => '0');
-      
       word_type <= '1';
       FOR bit IN 0 TO 19 LOOP
         t0 <= '1' WHEN bit = 0 ELSE '0';
         t19 <= '1' WHEN bit = 19 ELSE '0';
-        
         wait_bit_time;
-        
-        -- Capture outputs
         acc_out_sr <= acc_in_bit & acc_out_sr(19 DOWNTO 1);
         ras_out_sr <= ras_wr_bit & ras_out_sr(19 DOWNTO 1);
         io_out_sr  <= io_out_bit & io_out_sr(19 DOWNTO 1);
-        
-        -- Shift source registers
-        ras_sr <= '0' & ras_sr(19 DOWNTO 1);
-        acc_sr <= '0' & acc_sr(19 DOWNTO 1);
-        pmu_sr <= '0' & pmu_sr(19 DOWNTO 1);
-        io_sr  <= '0' & io_sr(19 DOWNTO 1);
+        ras_sr   <= '0' & ras_sr(19 DOWNTO 1);
+        acc_sr   <= '0' & acc_sr(19 DOWNTO 1);
+        tmp_sr   <= '0' & tmp_sr(19 DOWNTO 1);
+        pmu_sr   <= '0' & pmu_sr(19 DOWNTO 1);
+        pduq_sr  <= '0' & pduq_sr(19 DOWNTO 1);
+        pdur_sr  <= '0' & pdur_sr(19 DOWNTO 1);
+        io_sr    <= '0' & io_sr(19 DOWNTO 1);
+        const_sr <= '0' & const_sr(19 DOWNTO 1);
       END LOOP;
       t0 <= '0'; t19 <= '0';
     END PROCEDURE;
 
-    PROCEDURE check_routing(
-      expected_acc : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      expected_ras : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      expected_io  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      name         : IN STRING
+    -- Check a single output channel
+    PROCEDURE check_output(
+      actual   : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      expected : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name     : IN STRING
     ) IS
     BEGIN
       test_count <= test_count + 1;
       WAIT FOR 1 ns;
-      
-      IF acc_out_sr /= expected_acc OR ras_out_sr /= expected_ras OR io_out_sr /= expected_io THEN
-        REPORT name & " FAILED: ACC=0x" & to_hstring(UNSIGNED(acc_out_sr)) &
-               " RAS=0x" & to_hstring(UNSIGNED(ras_out_sr)) &
-               " IO=0x" & to_hstring(UNSIGNED(io_out_sr)) SEVERITY ERROR;
+      IF actual /= expected THEN
+        REPORT name & " FAILED: got 0x" & to_hstring(UNSIGNED(actual)) &
+               " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
         fail_count <= fail_count + 1;
       ELSE
         REPORT name & " PASSED" SEVERITY NOTE;
       END IF;
+    END PROCEDURE;
+
+    -- Unique per-source patterns
+    CONSTANT D_RAS   : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"11111";
+    CONSTANT D_PMU   : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"22222";
+    CONSTANT D_PDUQ  : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"33333";
+    CONSTANT D_PDUR  : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"44444";
+    CONSTANT D_IO    : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"55555";
+    CONSTANT D_CONST : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"66666";
+    CONSTANT D_TMP   : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"77777";
+    CONSTANT D_ACC   : STD_LOGIC_VECTOR(19 DOWNTO 0) := x"88888";
+
+    -- Helper: do WA + WO with unique sources, check ACC output
+    PROCEDURE test_acc_route(
+      sel  : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+      exp  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name : IN STRING
+    ) IS
+    BEGIN
+      run_wa_phase(sel, "0000", "000");
+      run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+      check_output(acc_out_sr, exp, name);
+    END PROCEDURE;
+
+    -- Helper: do WA + WO with unique sources, check RAS output
+    PROCEDURE test_ras_route(
+      sel  : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+      exp  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name : IN STRING
+    ) IS
+    BEGIN
+      run_wa_phase("0000", sel, "000");
+      run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+      check_output(ras_out_sr, exp, name);
+    END PROCEDURE;
+
+    -- Helper: do WA + WO with unique sources, check IO output
+    PROCEDURE test_io_route(
+      sel  : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+      exp  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name : IN STRING
+    ) IS
+    BEGIN
+      run_wa_phase("0000", "0000", sel);
+      run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+      check_output(io_out_sr, exp, name);
     END PROCEDURE;
 
   BEGIN
@@ -212,40 +263,110 @@ BEGIN
     rst <= '0';
     WAIT UNTIL phase = "00" AND rising_edge(clk);
 
-    -- SL-T-001: Route RAS to ACC (sel=0)
-    run_wa_phase("0000", "0000", "000");  -- ACC from RAS(0), RAS from ACC(0), IO from ACC(0)
-    run_wo_phase(x"12345", x"ABCDE", x"00000", x"00000");
-    check_routing(x"12345", x"ABCDE", x"ABCDE", "SL-T-001: RAS->ACC");
+    ---------------------------------------------------------------------------
+    -- 5.1 ACC Source Select Tests (sel_acc[2:0])
+    ---------------------------------------------------------------------------
+    test_acc_route("0000", D_RAS,  "SL-T-001: RAS->ACC");
+    test_acc_route("0001", D_PMU,  "SL-T-002: PMU->ACC");
+    test_acc_route("0010", D_PDUQ, "SL-T-003: PDUQ->ACC");
+    test_acc_route("0011", D_PDUR, "SL-T-004: PDUR->ACC");
+    test_acc_route("0100", D_IO,   "SL-T-005: IO->ACC");
+    test_acc_route("0101", D_CONST,"SL-T-006: CONST->ACC");
+    test_acc_route("0110", D_TMP,  "SL-T-007: TMP->ACC");
+    test_acc_route("0111", D_ACC,  "SL-T-008: ACC loopback");
 
-    -- SL-T-002: Route PMU to ACC (sel=1)
-    run_wa_phase("0001", "0001", "010");  -- ACC from PMU(1), RAS from PMU(1), IO from PMU(2)
-    run_wo_phase(x"00000", x"00000", x"55555", x"00000");
-    check_routing(x"55555", x"55555", x"55555", "SL-T-002: PMU->ACC");
+    ---------------------------------------------------------------------------
+    -- 5.2 RAS Write Source Select Tests (sel_ras[1:0])
+    ---------------------------------------------------------------------------
+    test_ras_route("0000", D_ACC,  "SL-T-010: ACC->RAS");
+    test_ras_route("0001", D_PMU,  "SL-T-011: PMU->RAS");
+    test_ras_route("0010", D_PDUQ, "SL-T-012: PDUQ->RAS");
+    test_ras_route("0011", D_IO,   "SL-T-013: IO->RAS");
 
-    -- SL-T-003: Route IO to ACC (sel=4)  
-    run_wa_phase("0100", "0011", "000");  -- ACC from IO(4), RAS from IO(3), IO from ACC(0)
-    run_wo_phase(x"00000", x"FEDCB", x"00000", x"77777");
-    check_routing(x"77777", x"77777", x"FEDCB", "SL-T-003: IO->ACC");
+    ---------------------------------------------------------------------------
+    -- 5.3 I/O Output Source Select Tests (sel_io[1:0])
+    ---------------------------------------------------------------------------
+    test_io_route("000", D_ACC,  "SL-T-020: ACC->IO");
+    test_io_route("001", D_RAS,  "SL-T-021: RAS->IO");
+    test_io_route("010", D_PMU,  "SL-T-022: PMU->IO");
+    test_io_route("011", D_PDUQ, "SL-T-023: PDUQ->IO");
 
-    -- SL-T-004: ACC loopback (sel=7)
-    run_wa_phase("0111", "0000", "000");  -- ACC from ACC(7)
-    run_wo_phase(x"00000", x"99999", x"00000", x"00000");
-    check_routing(x"99999", x"99999", x"99999", "SL-T-004: ACC loopback");
+    ---------------------------------------------------------------------------
+    -- 5.4 Independence Tests
+    ---------------------------------------------------------------------------
 
-    -- SL-T-005: Reset test
-    REPORT "SL-T-005: Reset test..." SEVERITY NOTE;
-    rst <= '1';
-    WAIT FOR 5 * CLK_PERIOD;
-    rst <= '0';
-    WAIT UNTIL phase = "00" AND rising_edge(clk);
-    run_wo_phase(x"FFFFF", x"FFFFF", x"FFFFF", x"FFFFF");
-    test_count <= test_count + 1;
-    -- After reset, selectors should be 0 (RAS->ACC, ACC->RAS, ACC->IO)
-    REPORT "SL-T-005: Reset test PASSED" SEVERITY NOTE;
+    -- SL-T-030: All three muxes select different sources simultaneously
+    run_wa_phase("0001", "0010", "001");  -- ACC=PMU, RAS=PDUQ, IO=RAS
+    run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+    check_output(acc_out_sr, D_PMU,  "SL-T-030a: ACC=PMU");
+    check_output(ras_out_sr, D_PDUQ, "SL-T-030b: RAS=PDUQ");
+    check_output(io_out_sr,  D_RAS,  "SL-T-030c: IO=RAS");
 
+    -- SL-T-031: All three muxes select same source (PMU)
+    run_wa_phase("0001", "0001", "010");  -- ACC=PMU, RAS=PMU, IO=PMU
+    run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+    check_output(acc_out_sr, D_PMU, "SL-T-031a: ACC=PMU");
+    check_output(ras_out_sr, D_PMU, "SL-T-031b: RAS=PMU");
+    check_output(io_out_sr,  D_PMU, "SL-T-031c: IO=PMU");
+
+    -- SL-T-032: Change one select, others stable
+    -- First: set ACC=RAS, RAS=ACC, IO=ACC
+    run_wa_phase("0000", "0000", "000");
+    run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+    check_output(acc_out_sr, D_RAS, "SL-T-032a: ACC=RAS before");
+    check_output(ras_out_sr, D_ACC, "SL-T-032b: RAS=ACC before");
+    check_output(io_out_sr,  D_ACC, "SL-T-032c: IO=ACC before");
+    -- Now change only ACC select to PMU, keep RAS/IO same
+    run_wa_phase("0001", "0000", "000");
+    run_wo_phase_all(D_RAS, D_ACC, D_TMP, D_PMU, D_PDUQ, D_PDUR, D_IO, D_CONST);
+    check_output(acc_out_sr, D_PMU, "SL-T-032d: ACC=PMU after");
+    check_output(ras_out_sr, D_ACC, "SL-T-032e: RAS=ACC unchanged");
+    check_output(io_out_sr,  D_ACC, "SL-T-032f: IO=ACC unchanged");
+
+    ---------------------------------------------------------------------------
+    -- 5.5 Data Integrity Tests
+    ---------------------------------------------------------------------------
+
+    -- SL-T-040: All zeros through each path
+    run_wa_phase("0000", "0000", "000");  -- ACC=RAS, RAS=ACC, IO=ACC
+    run_wo_phase_all(x"00000", x"00000", x"00000", x"00000",
+                     x"00000", x"00000", x"00000", x"00000");
+    check_output(acc_out_sr, x"00000", "SL-T-040a: Zeros ACC path");
+    check_output(ras_out_sr, x"00000", "SL-T-040b: Zeros RAS path");
+    check_output(io_out_sr,  x"00000", "SL-T-040c: Zeros IO path");
+
+    -- SL-T-041: All ones through each path
+    run_wa_phase("0000", "0000", "000");
+    run_wo_phase_all(x"FFFFF", x"FFFFF", x"FFFFF", x"FFFFF",
+                     x"FFFFF", x"FFFFF", x"FFFFF", x"FFFFF");
+    check_output(acc_out_sr, x"FFFFF", "SL-T-041a: Ones ACC path");
+    check_output(ras_out_sr, x"FFFFF", "SL-T-041b: Ones RAS path");
+    check_output(io_out_sr,  x"FFFFF", "SL-T-041c: Ones IO path");
+
+    -- SL-T-042: Unique pattern through each path
+    run_wa_phase("0100", "0010", "001");  -- ACC=IO, RAS=PDUQ, IO=RAS
+    run_wo_phase_all(x"A5A5A", x"00000", x"00000", x"00000",
+                     x"3C3C3", x"00000", x"5A5A5", x"00000");
+    check_output(acc_out_sr, x"5A5A5", "SL-T-042a: Unique ACC path");
+    check_output(ras_out_sr, x"3C3C3", "SL-T-042b: Unique RAS path");
+    check_output(io_out_sr,  x"A5A5A", "SL-T-042c: Unique IO path");
+
+    -- SL-T-043: Walking ones - verify each bit independently
+    FOR b IN 0 TO 19 LOOP
+      run_wa_phase("0000", "0000", "001");  -- ACC=RAS, RAS=ACC, IO=RAS
+      run_wo_phase_all(
+        STD_LOGIC_VECTOR(SHIFT_LEFT(TO_UNSIGNED(1, 20), b)),   -- RAS
+        x"00000", x"00000", x"00000", x"00000", x"00000", x"00000", x"00000");
+      check_output(acc_out_sr,
+        STD_LOGIC_VECTOR(SHIFT_LEFT(TO_UNSIGNED(1, 20), b)),
+        "SL-T-043: Walking bit " & INTEGER'image(b));
+    END LOOP;
+
+    ---------------------------------------------------------------------------
     -- Summary
+    ---------------------------------------------------------------------------
     REPORT "======================================" SEVERITY NOTE;
-    REPORT "SL Testbench Complete (Parallel Control)" SEVERITY NOTE;
+    REPORT "SL Testbench Complete" SEVERITY NOTE;
     REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
     REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
     REPORT "======================================" SEVERITY NOTE;

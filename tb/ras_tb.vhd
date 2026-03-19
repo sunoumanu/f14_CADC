@@ -90,12 +90,6 @@ BEGIN
         WAIT UNTIL rising_edge(clk);
       END LOOP;
     END PROCEDURE;
-    
-    -- Wait until just before phi2 (phase = "01")
-    PROCEDURE wait_pre_phi2 IS
-    BEGIN
-      WAIT UNTIL rising_edge(clk) AND phase = "01";
-    END PROCEDURE;
 
     -- Run WA phase with parallel addresses (latched at T0)
     PROCEDURE run_wa_phase(
@@ -103,10 +97,8 @@ BEGIN
       w_addr : IN STD_LOGIC_VECTOR(5 DOWNTO 0)
     ) IS
     BEGIN
-      -- Set addresses before WA phase
       rd_addr <= r_addr;
       wr_addr <= w_addr;
-      
       word_type <= '0';
       FOR bit IN 0 TO 19 LOOP
         t0 <= '1' WHEN bit = 0 ELSE '0';
@@ -124,32 +116,16 @@ BEGIN
       VARIABLE v_rd_data : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
     BEGIN
       v_wr := wr_data;
-      
-      -- Set up WO signals
       word_type <= '1';
       v_rd_data := (OTHERS => '0');
-      
       FOR bit IN 0 TO 19 LOOP
-        IF bit = 0 THEN
-          t0 <= '1';
-        ELSE
-          t0 <= '0';
-        END IF;
-        IF bit = 19 THEN
-          t19 <= '1';
-        ELSE
-          t19 <= '0';
-        END IF;
+        IF bit = 0 THEN t0 <= '1'; ELSE t0 <= '0'; END IF;
+        IF bit = 19 THEN t19 <= '1'; ELSE t19 <= '0'; END IF;
         wr_data_bit <= v_wr(0);
-        
         wait_bit_time;
-        
-        -- Capture output after bit time 
         v_rd_data := rd_data_bit & v_rd_data(19 DOWNTO 1);
-        
         v_wr := '0' & v_wr(19 DOWNTO 1);
       END LOOP;
-      
       rd_data_sr <= v_rd_data;
       t0 <= '0'; t19 <= '0';
     END PROCEDURE;
@@ -165,22 +141,19 @@ BEGIN
       write_en <= '0';
     END PROCEDURE;
 
+    -- Read and check against expected value
     PROCEDURE read_mem(
       addr     : IN INTEGER;
       expected : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
       name     : IN STRING
     ) IS
-      VARIABLE diff : INTEGER;
     BEGIN
       write_en <= '0';
       run_wa_phase(STD_LOGIC_VECTOR(TO_UNSIGNED(addr, 6)), "000000");
       run_wo_phase(x"00000");
-      
       test_count <= test_count + 1;
       WAIT FOR 1 ns;
-      
-      diff := ABS(to_integer(SIGNED(rd_data_sr)) - to_integer(SIGNED(expected)));
-      IF diff > 0 THEN
+      IF rd_data_sr /= expected THEN
         REPORT name & " FAILED: got 0x" & to_hstring(UNSIGNED(rd_data_sr)) &
                " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
         fail_count <= fail_count + 1;
@@ -189,47 +162,185 @@ BEGIN
       END IF;
     END PROCEDURE;
 
+    -- Simultaneous read + write in one WA/WO cycle
+    PROCEDURE read_write_mem(
+      r_addr   : IN INTEGER;
+      w_addr   : IN INTEGER;
+      wr_data  : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      expected : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name     : IN STRING
+    ) IS
+    BEGIN
+      write_en <= '1';
+      run_wa_phase(STD_LOGIC_VECTOR(TO_UNSIGNED(r_addr, 6)),
+                   STD_LOGIC_VECTOR(TO_UNSIGNED(w_addr, 6)));
+      run_wo_phase(wr_data);
+      write_en <= '0';
+      test_count <= test_count + 1;
+      WAIT FOR 1 ns;
+      IF rd_data_sr /= expected THEN
+        REPORT name & " FAILED: got 0x" & to_hstring(UNSIGNED(rd_data_sr)) &
+               " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
+        fail_count <= fail_count + 1;
+      ELSE
+        REPORT name & " PASSED (0x" & to_hstring(UNSIGNED(rd_data_sr)) & ")" SEVERITY NOTE;
+      END IF;
+    END PROCEDURE;
+
+    VARIABLE v_data : STD_LOGIC_VECTOR(19 DOWNTO 0);
+
   BEGIN
     rst <= '1';
     WAIT FOR 5 * CLK_PERIOD;
     rst <= '0';
     WAIT UNTIL phase = "00" AND rising_edge(clk);
 
-    -- RAS-T-001: Write and read address 0
-    write_mem(0, x"12345");
-    read_mem(0, x"12345", "RAS-T-001: Addr 0 write/read");
+    ---------------------------------------------------------------------------
+    -- 5.1 Basic Read/Write Tests
+    ---------------------------------------------------------------------------
 
-    -- RAS-T-002: Write and read address 63 (max)
+    -- RAS-T-001: Write then read same address
+    write_mem(7, x"12345");
+    read_mem(7, x"12345", "RAS-T-001: Write/read same addr");
+
+    -- RAS-T-002: Write to address 0, read back
+    write_mem(0, x"ABCDE");
+    read_mem(0, x"ABCDE", "RAS-T-002: Addr 0 write/read");
+
+    -- RAS-T-003: Write to max address (63), read back
     write_mem(63, x"FEDCB");
-    read_mem(63, x"FEDCB", "RAS-T-002: Addr 63 write/read");
+    read_mem(63, x"FEDCB", "RAS-T-003: Addr 63 write/read");
 
-    -- RAS-T-003: Multiple locations
-    write_mem(10, x"AAAAA");
-    write_mem(20, x"55555");
-    write_mem(30, x"0F0F0");
-    read_mem(10, x"AAAAA", "RAS-T-003a: Addr 10");
-    read_mem(20, x"55555", "RAS-T-003b: Addr 20");
-    read_mem(30, x"0F0F0", "RAS-T-003c: Addr 30");
+    -- RAS-T-004: Write all ones (0xFFFFF), read back
+    write_mem(1, x"FFFFF");
+    read_mem(1, x"FFFFF", "RAS-T-004: All ones pattern");
 
-    -- RAS-T-004: Overwrite
-    write_mem(5, x"11111");
-    write_mem(5, x"22222");
-    read_mem(5, x"22222", "RAS-T-004: Overwrite");
+    -- RAS-T-005: Write alternating pattern, read back
+    write_mem(2, x"AAAAA");
+    read_mem(2, x"AAAAA", "RAS-T-005a: Alternating 0xAAAAA");
+    write_mem(3, x"55555");
+    read_mem(3, x"55555", "RAS-T-005b: Alternating 0x55555");
 
-    -- RAS-T-005: Read doesn't modify
-    read_mem(5, x"22222", "RAS-T-005: Read again");
+    ---------------------------------------------------------------------------
+    -- 5.2 Address Independence Tests
+    ---------------------------------------------------------------------------
 
-    -- RAS-T-006: Reset clears RAM
-    REPORT "RAS-T-006: Reset test..." SEVERITY NOTE;
+    -- RAS-T-010: Write different data to adjacent addresses
+    write_mem(20, x"11111");
+    write_mem(21, x"22222");
+    write_mem(22, x"33333");
+    read_mem(20, x"11111", "RAS-T-010a: Adjacent addr 20");
+    read_mem(21, x"22222", "RAS-T-010b: Adjacent addr 21");
+    read_mem(22, x"33333", "RAS-T-010c: Adjacent addr 22");
+
+    -- RAS-T-011: Write to all 64 addresses sequentially, read all back
+    FOR i IN 0 TO 63 LOOP
+      v_data := STD_LOGIC_VECTOR(TO_UNSIGNED(i * 1025 + 42, 20));  -- unique per addr
+      write_mem(i, v_data);
+    END LOOP;
+    FOR i IN 0 TO 63 LOOP
+      v_data := STD_LOGIC_VECTOR(TO_UNSIGNED(i * 1025 + 42, 20));
+      read_mem(i, v_data, "RAS-T-011: Addr " & INTEGER'image(i));
+    END LOOP;
+
+    -- RAS-T-012: Overwrite a location, new value replaces old
+    write_mem(10, x"DEAD0");
+    write_mem(10, x"BEEF0");
+    read_mem(10, x"BEEF0", "RAS-T-012: Overwrite");
+
+    -- RAS-T-013: Unwritten locations retain initial value (0 after reset)
     rst <= '1';
     WAIT FOR 5 * CLK_PERIOD;
     rst <= '0';
     WAIT UNTIL phase = "00" AND rising_edge(clk);
-    read_mem(5, x"00000", "RAS-T-006: After reset");
+    write_mem(5, x"12345");  -- write only addr 5
+    read_mem(0, x"00000", "RAS-T-013a: Unwritten addr 0");
+    read_mem(10, x"00000", "RAS-T-013b: Unwritten addr 10");
+    read_mem(63, x"00000", "RAS-T-013c: Unwritten addr 63");
+    read_mem(5, x"12345", "RAS-T-013d: Written addr 5 ok");
 
+    ---------------------------------------------------------------------------
+    -- 5.3 Concurrent Access Tests
+    ---------------------------------------------------------------------------
+
+    -- RAS-T-020: Simultaneous read/write different addresses
+    -- Pre-load addr 40 with known value, then read 40 while writing 41
+    rst <= '1';
+    WAIT FOR 5 * CLK_PERIOD;
+    rst <= '0';
+    WAIT UNTIL phase = "00" AND rising_edge(clk);
+    write_mem(40, x"AAAA0");
+    -- Read addr 40 (expect old value) while writing addr 41
+    read_write_mem(40, 41, x"BBBB0", x"AAAA0", "RAS-T-020a: Read 40 during write 41");
+    -- Verify write to 41 succeeded
+    read_mem(41, x"BBBB0", "RAS-T-020b: Verify write to 41");
+    -- Verify 40 unchanged
+    read_mem(40, x"AAAA0", "RAS-T-020c: Verify 40 unchanged");
+
+    -- RAS-T-021: Read-during-write same address (read returns old value)
+    write_mem(50, x"11110");
+    read_write_mem(50, 50, x"22220", x"11110", "RAS-T-021a: Read old from 50");
+    -- Verify new value was written
+    read_mem(50, x"22220", "RAS-T-021b: Verify new value at 50");
+
+    ---------------------------------------------------------------------------
+    -- 5.4 Reset Tests
+    ---------------------------------------------------------------------------
+
+    -- RAS-T-030: Reset after writing data, spot check reads 0
+    write_mem(0, x"FFFFF");
+    write_mem(32, x"AAAAA");
+    write_mem(63, x"55555");
+    rst <= '1';
+    WAIT FOR 5 * CLK_PERIOD;
+    rst <= '0';
+    WAIT UNTIL phase = "00" AND rising_edge(clk);
+    read_mem(0, x"00000", "RAS-T-030a: Reset clears addr 0");
+    read_mem(32, x"00000", "RAS-T-030b: Reset clears addr 32");
+    read_mem(63, x"00000", "RAS-T-030c: Reset clears addr 63");
+
+    -- RAS-T-031: Reset clears all 64 locations
+    FOR i IN 0 TO 63 LOOP
+      write_mem(i, x"FFFFF");
+    END LOOP;
+    rst <= '1';
+    WAIT FOR 5 * CLK_PERIOD;
+    rst <= '0';
+    WAIT UNTIL phase = "00" AND rising_edge(clk);
+    FOR i IN 0 TO 63 LOOP
+      read_mem(i, x"00000", "RAS-T-031: Reset addr " & INTEGER'image(i));
+    END LOOP;
+
+    ---------------------------------------------------------------------------
+    -- 5.5 Write Enable Tests
+    ---------------------------------------------------------------------------
+
+    -- RAS-T-040: Write disabled, data unchanged
+    rst <= '1';
+    WAIT FOR 5 * CLK_PERIOD;
+    rst <= '0';
+    WAIT UNTIL phase = "00" AND rising_edge(clk);
+    write_mem(15, x"CAFE0");
+    -- Attempt write with write_en = '0'
+    write_en <= '0';
+    run_wa_phase("000000", STD_LOGIC_VECTOR(TO_UNSIGNED(15, 6)));
+    run_wo_phase(x"DEAD0");
+    -- Read back - should still be CAFE0
+    read_mem(15, x"CAFE0", "RAS-T-040: Write disabled preserves data");
+
+    -- RAS-T-041: Write enabled for one cycle only, only targeted location changes
+    write_mem(25, x"11110");
+    write_mem(26, x"22220");
+    -- Now write only to 25
+    write_mem(25, x"33330");
+    read_mem(25, x"33330", "RAS-T-041a: Targeted write updated");
+    read_mem(26, x"22220", "RAS-T-041b: Non-targeted unchanged");
+
+    ---------------------------------------------------------------------------
     -- Summary
+    ---------------------------------------------------------------------------
     REPORT "======================================" SEVERITY NOTE;
-    REPORT "RAS Testbench Complete (Parallel Addresses)" SEVERITY NOTE;
+    REPORT "RAS Testbench Complete" SEVERITY NOTE;
     REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
     REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
     REPORT "======================================" SEVERITY NOTE;

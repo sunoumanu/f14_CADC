@@ -42,8 +42,9 @@ ARCHITECTURE rtl OF pdu IS
   SIGNAL s_divisor_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   
   -- Output shift registers (shift out during WO)
-  SIGNAL s_quotient_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
-  SIGNAL s_remainder_sr: STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  -- 21 bits: loaded as {data[19:0], '0'} so all 20 data bits shift out
+  SIGNAL s_quotient_sr : STD_LOGIC_VECTOR(20 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL s_remainder_sr: STD_LOGIC_VECTOR(20 DOWNTO 0) := (OTHERS => '0');
   
   -- Latched operands for computation
   SIGNAL s_dividend_lat: STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
@@ -89,8 +90,8 @@ BEGIN
         -- WO: Shift in operands (LSB first), shift out results
         s_dividend_sr  <= i_dividend_bit & s_dividend_sr(19 DOWNTO 1);
         s_divisor_sr   <= i_divisor_bit & s_divisor_sr(19 DOWNTO 1);
-        s_quotient_sr  <= '0' & s_quotient_sr(19 DOWNTO 1);
-        s_remainder_sr <= '0' & s_remainder_sr(19 DOWNTO 1);
+        s_quotient_sr  <= '0' & s_quotient_sr(20 DOWNTO 1);
+        s_remainder_sr <= '0' & s_remainder_sr(20 DOWNTO 1);
         
         -- At end of WO (T19), latch operands for next computation
         IF i_t19 = '1' THEN
@@ -98,9 +99,10 @@ BEGIN
           s_divisor_lat  <= i_divisor_bit & s_divisor_sr(19 DOWNTO 1);
         END IF;
       ELSIF s_compute_done = '1' THEN
-        -- Load computed results into output shift registers (simplified)
-        s_quotient_sr <= s_quot_reg;
-        s_remainder_sr <= STD_LOGIC_VECTOR(s_partial_rem(19 DOWNTO 0));
+        -- Load computed results into 21-bit output shift registers
+        -- Extra '0' LSB ensures all 20 data bits shift out before depletion
+        s_quotient_sr <= s_quot_reg & '0';
+        s_remainder_sr <= STD_LOGIC_VECTOR(s_partial_rem(19 DOWNTO 0)) & '0';
       END IF;
     END IF;
   END PROCESS shift_proc;
@@ -158,9 +160,9 @@ BEGIN
           WHEN SETUP =>
             IF i_phi2 = '1' THEN
               -- Q1.19 fractional division
-              -- For Q1.19: quotient = (dividend * 2^20) / divisor (extra bit for proper scaling)
-              -- Scale dividend by 2^20 for fractional result using SHIFT_LEFT
-              v_dividend_scaled := SHIFT_LEFT(RESIZE(s_abs_dividend, 40), 20);
+              -- quotient = (dividend * 2^19) / divisor
+              -- Scale dividend by 2^19 for fractional result using SHIFT_LEFT
+              v_dividend_scaled := SHIFT_LEFT(RESIZE(s_abs_dividend, 40), 19);
               
               -- Perform division
               IF s_abs_divisor /= 0 THEN
@@ -170,9 +172,13 @@ BEGIN
                 v_quot := (OTHERS => '0');
               END IF;
               
-              -- Store results
+              -- Apply sign correction: negate quotient if signs differ
+              IF s_dividend_neg /= s_divisor_neg THEN
+                s_quot_reg <= STD_LOGIC_VECTOR(-SIGNED(v_quot));
+              ELSE
+                s_quot_reg <= v_quot;
+              END IF;
               s_partial_rem <= (OTHERS => '0');
-              s_quot_reg <= v_quot;
               s_state <= DONE;
             END IF;
             

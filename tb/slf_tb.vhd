@@ -56,7 +56,9 @@ ARCHITECTURE bench OF slf_tb IS
   SIGNAL phase : UNSIGNED(1 DOWNTO 0) := "00";
 
   -- Captured results
-  SIGNAL result_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL result_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL acc_cap_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL tmp_cap_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
 
   SIGNAL test_count : INTEGER := 0;
   SIGNAL fail_count : INTEGER := 0;
@@ -119,22 +121,17 @@ BEGIN
     ) IS
       VARIABLE cw : STD_LOGIC_VECTOR(6 DOWNTO 0);
     BEGIN
-      -- Build control word: bits 0-3 = ALU_OP, 4 = acc_we, 5 = tmp_we, 6 = flags_we
       cw := write_flags & write_tmp & write_acc & op;
-      
       word_type <= '0';
       FOR bit IN 0 TO 19 LOOP
         t0  <= '1' WHEN bit = 0 ELSE '0';
         t18 <= '1' WHEN bit = 18 ELSE '0';
         t19 <= '1' WHEN bit = 19 ELSE '0';
-        
-        -- Shift out control word bits 0-6 during WA T0-T6
         IF bit < 7 THEN
           cw_bit <= cw(bit);
         ELSE
           cw_bit <= '0';
         END IF;
-        
         wait_bit_time;
       END LOOP;
       t0 <= '0'; t18 <= '0'; t19 <= '0';
@@ -148,57 +145,96 @@ BEGIN
     BEGIN
       v_data := data_val;
       word_type <= '1';
-      result_sr <= (OTHERS => '0');
-      
+      result_sr  <= (OTHERS => '0');
+      acc_cap_sr <= (OTHERS => '0');
+      tmp_cap_sr <= (OTHERS => '0');
       FOR bit IN 0 TO 19 LOOP
         t0  <= '1' WHEN bit = 0 ELSE '0';
         t18 <= '1' WHEN bit = 18 ELSE '0';
         t19 <= '1' WHEN bit = 19 ELSE '0';
         data_bit <= v_data(0);
-        
-        -- Wait for phi2 to capture result bit
         WAIT UNTIL rising_edge(clk) AND phase = "01";
-        result_sr <= result_bit & result_sr(19 DOWNTO 1);
-        
-        -- Wait rest of bit time
-        WAIT UNTIL rising_edge(clk);  -- phase "10" - phi2
-        WAIT UNTIL rising_edge(clk);  -- phase "11"
-        WAIT UNTIL rising_edge(clk);  -- phase "00"
-        
+        result_sr  <= result_bit & result_sr(19 DOWNTO 1);
+        acc_cap_sr <= acc_bit & acc_cap_sr(19 DOWNTO 1);
+        tmp_cap_sr <= tmp_bit & tmp_cap_sr(19 DOWNTO 1);
+        WAIT UNTIL rising_edge(clk);
+        WAIT UNTIL rising_edge(clk);
+        WAIT UNTIL rising_edge(clk);
         v_data := '0' & v_data(19 DOWNTO 1);
       END LOOP;
       t0 <= '0'; t18 <= '0'; t19 <= '0';
     END PROCEDURE;
 
-    PROCEDURE do_alu_op(
-      op            : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-      data_in       : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      expected      : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      name          : IN STRING;
-      write_acc     : IN STD_LOGIC := '1';
-      write_flags   : IN STD_LOGIC := '1'
+    -- Load ACC with a value (2 WA/WO cycles)
+    PROCEDURE load_acc(
+      val : IN STD_LOGIC_VECTOR(19 DOWNTO 0)
     ) IS
-      VARIABLE diff : INTEGER;
     BEGIN
-      -- Phase 1: Send input data first (with NOP)
       run_wa_phase(c_op_nop, '0', '0', '0');
-      run_wo_phase(data_in);
-      
-      -- Phase 2: Compute with proper operation
-      run_wa_phase(op, write_acc, '0', write_flags);
-      run_wo_phase(x"00000");  -- Read result
-      
+      run_wo_phase(val);
+      run_wa_phase(c_op_load, '1', '0', '0');
+      run_wo_phase(x"00000");
+    END PROCEDURE;
+
+    -- Execute op with input data, check result
+    PROCEDURE do_op(
+      op       : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+      input    : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      expected : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name     : IN STRING;
+      acc_we   : IN STD_LOGIC := '1';
+      tmp_we   : IN STD_LOGIC := '0';
+      flags_we : IN STD_LOGIC := '1'
+    ) IS
+    BEGIN
+      run_wa_phase(c_op_nop, '0', '0', '0');
+      run_wo_phase(input);
+      run_wa_phase(op, acc_we, tmp_we, flags_we);
+      run_wo_phase(x"00000");
       test_count <= test_count + 1;
       WAIT FOR 1 ns;
-      
-      diff := ABS(to_integer(SIGNED(result_sr)) - to_integer(SIGNED(expected)));
-      IF diff > 2 THEN
+      IF result_sr /= expected THEN
         REPORT name & " FAILED: got 0x" & to_hstring(UNSIGNED(result_sr)) &
-               " expected 0x" & to_hstring(UNSIGNED(expected)) &
-               " diff=" & INTEGER'image(diff) SEVERITY ERROR;
+               " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
         fail_count <= fail_count + 1;
       ELSE
         REPORT name & " PASSED (0x" & to_hstring(UNSIGNED(result_sr)) & ")" SEVERITY NOTE;
+      END IF;
+    END PROCEDURE;
+
+    -- Check flags
+    PROCEDURE check_flags(
+      exp_z : IN STD_LOGIC;
+      exp_n : IN STD_LOGIC;
+      exp_c : IN STD_LOGIC;
+      name  : IN STRING
+    ) IS
+    BEGIN
+      test_count <= test_count + 1;
+      WAIT FOR 1 ns;
+      IF flag_z /= exp_z OR flag_n /= exp_n OR flag_c /= exp_c THEN
+        REPORT name & " FLAGS FAILED: Z=" & STD_LOGIC'image(flag_z) &
+               " N=" & STD_LOGIC'image(flag_n) & " C=" & STD_LOGIC'image(flag_c) SEVERITY ERROR;
+        fail_count <= fail_count + 1;
+      ELSE
+        REPORT name & " FLAGS PASSED" SEVERITY NOTE;
+      END IF;
+    END PROCEDURE;
+
+    -- Check TMP register (captured during last WO)
+    PROCEDURE check_tmp(
+      expected : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      name     : IN STRING
+    ) IS
+    BEGIN
+      test_count <= test_count + 1;
+      WAIT FOR 1 ns;
+      IF tmp_cap_sr /= expected THEN
+        REPORT name & " TMP FAILED: got 0x" & to_hstring(UNSIGNED(tmp_cap_sr)) &
+               " expected 0x" & to_hstring(UNSIGNED(expected)) SEVERITY ERROR;
+        fail_count <= fail_count + 1;
+      ELSE
+        REPORT name & " TMP PASSED" SEVERITY NOTE;
       END IF;
     END PROCEDURE;
 
@@ -208,30 +244,202 @@ BEGIN
     rst <= '0';
     WAIT UNTIL phase = "00" AND rising_edge(clk);
 
-    -- SLF-T-001: Load ACC with 0x12345
-    do_alu_op(c_op_load, x"12345", x"12345", "SLF-T-001: LOAD ACC");
+    ---------------------------------------------------------------------------
+    -- 5.1 ADD Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-001: 0 + 0
+    load_acc(x"00000");
+    do_op(c_op_add, x"00000", x"00000", "SLF-T-001: 0+0");
+    check_flags('1', '0', '0', "SLF-T-001");
 
-    -- SLF-T-002: Add 0x00001 to ACC (0x12345 + 0x00001 = 0x12346)
-    do_alu_op(c_op_add, x"00001", x"12346", "SLF-T-002: ADD");
+    -- SLF-T-002: 0.5 + 0.25 = 0.75
+    load_acc(x"40000");
+    do_op(c_op_add, x"20000", x"60000", "SLF-T-002: 0.5+0.25");
+    check_flags('0', '0', '0', "SLF-T-002");
 
-    -- SLF-T-003: Subtract 0x00002 from ACC (0x12346 - 0x00002 = 0x12344)
-    do_alu_op(c_op_sub, x"00002", x"12344", "SLF-T-003: SUB");
+    -- SLF-T-003: 0.5 + 0.5 = overflow negative
+    load_acc(x"40000");
+    do_op(c_op_add, x"40000", x"80000", "SLF-T-003: 0.5+0.5 overflow");
+    check_flags('0', '1', '0', "SLF-T-003");
 
-    -- SLF-T-004: AND with mask
-    do_alu_op(c_op_load, x"AAAAA", x"AAAAA", "SLF-T-004a: Load 0xAAAAA");
-    do_alu_op(c_op_and, x"0F0F0", x"0A0A0", "SLF-T-004b: AND");
+    -- SLF-T-004: -0.5 + (-0.5) = -1.0 with carry
+    load_acc(x"C0000");
+    do_op(c_op_add, x"C0000", x"80000", "SLF-T-004: -0.5+(-0.5)");
+    check_flags('0', '1', '1', "SLF-T-004");
 
-    -- SLF-T-005: OR
-    do_alu_op(c_op_load, x"0A0A0", x"0A0A0", "SLF-T-005a: Load");
-    do_alu_op(c_op_or, x"50505", x"5A5A5", "SLF-T-005b: OR");
+    -- SLF-T-005: 0.5 + (-0.25) = 0.25 with carry
+    load_acc(x"40000");
+    do_op(c_op_add, x"E0000", x"20000", "SLF-T-005: 0.5+(-0.25)");
+    check_flags('0', '0', '1', "SLF-T-005");
 
-    -- SLF-T-006: NOT
-    do_alu_op(c_op_load, x"00000", x"00000", "SLF-T-006a: Load 0");
-    do_alu_op(c_op_not, x"00000", x"FFFFF", "SLF-T-006b: NOT");
+    ---------------------------------------------------------------------------
+    -- 5.2 SUB Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-010: 0 - 0
+    load_acc(x"00000");
+    do_op(c_op_sub, x"00000", x"00000", "SLF-T-010: 0-0");
+    check_flags('1', '0', '0', "SLF-T-010");
 
+    -- SLF-T-011: 0.5 - 0.25 = 0.25
+    load_acc(x"40000");
+    do_op(c_op_sub, x"20000", x"20000", "SLF-T-011: 0.5-0.25");
+    check_flags('0', '0', '0', "SLF-T-011");
+
+    -- SLF-T-012: 0.25 - 0.5 = -0.25 with borrow
+    load_acc(x"20000");
+    do_op(c_op_sub, x"40000", x"E0000", "SLF-T-012: 0.25-0.5");
+    check_flags('0', '1', '1', "SLF-T-012");
+
+    ---------------------------------------------------------------------------
+    -- 5.3 Logic Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-020: AND all ones
+    load_acc(x"FFFFF");
+    do_op(c_op_and, x"FFFFF", x"FFFFF", "SLF-T-020: AND all ones");
+
+    -- SLF-T-021: AND with zero
+    load_acc(x"FFFFF");
+    do_op(c_op_and, x"00000", x"00000", "SLF-T-021: AND with zero");
+
+    -- SLF-T-022: OR all zeros
+    load_acc(x"00000");
+    do_op(c_op_or, x"00000", x"00000", "SLF-T-022: OR all zeros");
+
+    -- SLF-T-023: OR complementary
+    load_acc(x"AAAAA");
+    do_op(c_op_or, x"55555", x"FFFFF", "SLF-T-023: OR complementary");
+
+    -- SLF-T-024: XOR same = 0
+    load_acc(x"12345");
+    do_op(c_op_xor, x"12345", x"00000", "SLF-T-024: XOR same");
+
+    -- SLF-T-025: NOT zero = all ones
+    load_acc(x"00000");
+    do_op(c_op_not, x"00000", x"FFFFF", "SLF-T-025: NOT zero");
+
+    ---------------------------------------------------------------------------
+    -- 5.4 Shift Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-030: SHL positive (sign-preserving): 0.25 -> 0.5
+    load_acc(x"20000");
+    do_op(c_op_shl, x"00000", x"40000", "SLF-T-030: SHL positive");
+
+    -- SLF-T-031: SHL negative (sign-preserving): -0.25 -> -0.5
+    load_acc(x"E0000");
+    do_op(c_op_shl, x"00000", x"C0000", "SLF-T-031: SHL negative");
+
+    -- SLF-T-032: SHR positive: 0.5 -> 0.25
+    load_acc(x"40000");
+    do_op(c_op_shr, x"00000", x"20000", "SLF-T-032: SHR positive");
+
+    -- SLF-T-033: SHR negative (sign extend): most-neg -> sign-extended
+    load_acc(x"80000");
+    do_op(c_op_shr, x"00000", x"C0000", "SLF-T-033: SHR negative");
+
+    ---------------------------------------------------------------------------
+    -- 5.5 Gray/Binary Conversion Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-040: Gray->Bin: 0x00000 -> 0x00000
+    do_op(c_op_gray2bin, x"00000", x"00000", "SLF-T-040: Gray2Bin 0");
+
+    -- SLF-T-041: Gray->Bin: 0x00001 -> 0x00001
+    do_op(c_op_gray2bin, x"00001", x"00001", "SLF-T-041: Gray2Bin 1");
+
+    -- SLF-T-042: Gray->Bin: 0x00003 -> 0x00002
+    do_op(c_op_gray2bin, x"00003", x"00002", "SLF-T-042: Gray2Bin 3->2");
+
+    -- SLF-T-043: Gray->Bin with larger pattern (0x00005 -> gray2bin check)
+    -- Gray 0x00005 = 0b...0101: bin(19)=0, then XOR cascade
+    -- b19=0, b18=0^0=0, b17=0^0=0, ..., b2=0^1=1, b1=1^0=1, b0=1^1=0
+    -- So gray 0x00005 -> binary 0x00006
+    do_op(c_op_gray2bin, x"00005", x"00006", "SLF-T-043: Gray2Bin pattern");
+
+    -- SLF-T-044: Bin->Gray->Bin roundtrip
+    load_acc(x"A5A5A");
+    -- BIN2GRAY
+    do_op(c_op_bin2gray, x"00000", x"F7777", "SLF-T-044a: Bin2Gray");
+    -- result_sr now has gray value (0xF7F7F), feed it to GRAY2BIN
+    do_op(c_op_gray2bin, result_sr, x"A5A5A", "SLF-T-044b: roundtrip");
+
+    -- SLF-T-045: Gray->Bin->Gray roundtrip
+    -- Start with gray value 0x55555
+    do_op(c_op_gray2bin, x"55555", x"66666", "SLF-T-045a: Gray2Bin");
+    -- result_sr has binary value, load to ACC for BIN2GRAY
+    load_acc(result_sr);
+    do_op(c_op_bin2gray, x"00000", x"55555", "SLF-T-045b: roundtrip");
+
+    ---------------------------------------------------------------------------
+    -- 5.6 Unary/Other Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-050: NEG of +0.5
+    load_acc(x"40000");
+    do_op(c_op_neg, x"00000", x"C0000", "SLF-T-050: NEG +0.5");
+
+    -- SLF-T-051: NEG of -0.5
+    load_acc(x"C0000");
+    do_op(c_op_neg, x"00000", x"40000", "SLF-T-051: NEG -0.5");
+
+    -- SLF-T-052: NEG of 0
+    load_acc(x"00000");
+    do_op(c_op_neg, x"00000", x"00000", "SLF-T-052: NEG 0");
+
+    -- SLF-T-053: ABS of +0.5
+    load_acc(x"40000");
+    do_op(c_op_abs, x"00000", x"40000", "SLF-T-053: ABS +0.5");
+
+    -- SLF-T-054: ABS of -0.5
+    load_acc(x"C0000");
+    do_op(c_op_abs, x"00000", x"40000", "SLF-T-054: ABS -0.5");
+
+    -- SLF-T-055: LOAD value
+    do_op(c_op_load, x"ABCDE", x"ABCDE", "SLF-T-055: LOAD");
+
+    -- SLF-T-056: STORE_TMP
+    load_acc(x"12345");
+    -- Execute STORE_TMP with tmp_we=1; result = ACC
+    do_op(c_op_store_tmp, x"00000", x"12345", "SLF-T-056: STORE_TMP result", '1', '1', '0');
+    -- Verify TMP was captured during that WO phase
+    check_tmp(x"12345", "SLF-T-056: TMP value");
+
+    ---------------------------------------------------------------------------
+    -- 5.7 Register Enable Tests
+    ---------------------------------------------------------------------------
+    -- SLF-T-060: ACC hold when write disabled
+    load_acc(x"55555");
+    -- Do ADD with acc_we=0, flags_we=0
+    do_op(c_op_add, x"11111", x"66666", "SLF-T-060a: ADD result computed", '0', '0', '0');
+    -- ACC should still be 0x55555 - read it via NOP
+    do_op(c_op_nop, x"00000", x"55555", "SLF-T-060b: ACC unchanged");
+
+    -- SLF-T-061: TMP hold when write disabled
+    -- First set TMP via STORE_TMP with tmp_we=1
+    load_acc(x"AAAAA");
+    do_op(c_op_store_tmp, x"00000", x"AAAAA", "SLF-T-061a: Set TMP", '1', '1', '0');
+    -- Now do operation with tmp_we=0
+    load_acc(x"11111");
+    do_op(c_op_store_tmp, x"00000", x"11111", "SLF-T-061b: STORE no write", '1', '0', '0');
+    -- Read TMP - should still be 0xAAAAA
+    -- Need to do a WO cycle to capture TMP output
+    run_wa_phase(c_op_nop, '0', '0', '0');
+    run_wo_phase(x"00000");
+    run_wa_phase(c_op_nop, '0', '0', '0');
+    run_wo_phase(x"00000");
+    check_tmp(x"AAAAA", "SLF-T-061c: TMP unchanged");
+
+    -- SLF-T-062: Flags hold when write disabled
+    -- Set flags via an ADD that produces known flags
+    load_acc(x"00000");
+    do_op(c_op_add, x"00000", x"00000", "SLF-T-062a: Set Z flag", '1', '0', '1');
+    check_flags('1', '0', '0', "SLF-T-062b: Z=1 set");
+    -- Now do op with flags_we=0 that would change flags
+    do_op(c_op_add, x"40000", x"40000", "SLF-T-062c: ADD no flag write", '1', '0', '0');
+    check_flags('1', '0', '0', "SLF-T-062d: Flags unchanged");
+
+    ---------------------------------------------------------------------------
     -- Summary
+    ---------------------------------------------------------------------------
     REPORT "======================================" SEVERITY NOTE;
-    REPORT "SLF Testbench Complete (Bit-Serial)" SEVERITY NOTE;
+    REPORT "SLF Testbench Complete" SEVERITY NOTE;
     REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
     REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
     REPORT "======================================" SEVERITY NOTE;

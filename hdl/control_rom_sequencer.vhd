@@ -197,10 +197,21 @@ ARCHITECTURE rtl OF control_rom_sequencer IS
     52 => x"043C00000000",  -- BRC to 60 (not taken, C=0 -> PC=53)
     53 => x"053C00000000",  -- BR_PMUB to 60 (not taken, busy=0 -> PC=54)
     54 => x"063C00000000",  -- BR_PDUB to 60 (not taken, busy=0 -> PC=55)
-    55 => x"013700000000",  -- JUMP to 55 (halt - all tests passed)
+    55 => x"014600000000",  -- JUMP to 70 (0x46) -> nested call tests
 
     -- === Fail trap ===
     60 => x"013C00000000",  -- JUMP to 60 (halt - branch test failed)
+
+    -- === Nested subroutine tests ===
+    70 => x"095000000000",  -- CALL to 80 (0x50), push 71
+    71 => x"015A00000000",  -- JUMP to 90 (0x5A) -> halt after nested test
+
+    80 => x"095500000000",  -- CALL to 85 (0x55), push 81 (nested call)
+    81 => x"0A0000000000",  -- RET -> pop 71
+
+    85 => x"0A0000000000",  -- RET -> pop 81
+
+    90 => x"015A00000000",  -- JUMP to 90 (halt - nested tests passed)
 
     OTHERS => (OTHERS => '0')
   );

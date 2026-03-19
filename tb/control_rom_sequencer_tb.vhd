@@ -309,14 +309,111 @@ BEGIN
         check_addr(55, "ROM-T-027: BR_PDUB not taken");
 
         -----------------------------------------------------------------------
-        -- ROM-T-055: Verify halt (JUMP to self at addr 55)
+        -- ROM-T-051: Nested subroutine calls (2 deep)
+        -- Path: 55->70(CALL 80)->80(CALL 85)->85(RET->81)->81(RET->71)->71(JMP 90)
+        -----------------------------------------------------------------------
+        wait_for_addr(70);
+        check_addr(70, "ROM-T-051a: Reached nested call entry");
+
+        wait_for_addr(80);
+        check_addr(80, "ROM-T-051b: First CALL reaches 80");
+
+        wait_for_addr(85);
+        check_addr(85, "ROM-T-051c: Nested CALL reaches 85");
+
+        wait_for_addr(81);
+        check_addr(81, "ROM-T-051d: Inner RET returns to 81");
+
+        wait_for_addr(71);
+        check_addr(71, "ROM-T-051e: Outer RET returns to 71");
+
+        wait_for_addr(90);
+        check_addr(90, "ROM-T-051f: JUMP to 90 after nested test");
+
+        -----------------------------------------------------------------------
+        -- ROM-T-055: Verify halt at addr 90 (JUMP to self)
         -----------------------------------------------------------------------
         wait_ops(3);
-        check_addr(55, "ROM-T-055: Halt loop (JUMP to self)");
+        check_addr(90, "ROM-T-055: Halt loop at 90");
+
+        -----------------------------------------------------------------------
+        -- ROM-T-030..036: Decode tests (verify micro_word fields)
+        -- Check micro_word at known addresses during polynomial execution
+        -----------------------------------------------------------------------
+
+        -- Reset to re-run polynomial section
+        tb_frame_mark <= '1';
+        WAIT FOR 2 * OP_CLOCKS * CLK_PERIOD;
+        tb_frame_mark <= '0';
+        wait_for_addr(0);
+
+        -- ROM-T-033: SL ACC source decode at addr 0 (ACC_SRC=IO=4, bits 10:7)
+        v_test_count := v_test_count + 1;
+        IF micro_word(10 DOWNTO 7) = "0100" THEN
+            REPORT "ROM-T-033: SL ACC source decode PASSED (IO)" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-033: SL ACC source decode FAILED: got " &
+                   to_hstring(UNSIGNED(micro_word(10 DOWNTO 7))) SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
+
+        -- ROM-T-030: Verify ALU_OP field at addr 1 (LOAD = 0xD in bits 3:0)
+        wait_for_addr(1);
+        v_test_count := v_test_count + 1;
+        IF micro_word(3 DOWNTO 0) = x"D" THEN
+            REPORT "ROM-T-030: ALU_OP decode PASSED (LOAD)" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-030: ALU_OP decode FAILED: got " &
+                   to_hstring(UNSIGNED(micro_word(3 DOWNTO 0))) SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
+
+        -- ROM-T-031: ACC control decode at addr 1 (acc_we=1 is bit 4)
+        v_test_count := v_test_count + 1;
+        IF micro_word(4) = '1' THEN
+            REPORT "ROM-T-031: ACC write enable decode PASSED" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-031: ACC write enable decode FAILED" SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
+
+        -- ROM-T-032: RAS control decode at addr 3 (no RAS activity, write_en=bit30=0)
+        wait_for_addr(3);
+        v_test_count := v_test_count + 1;
+        IF micro_word(30) = '0' THEN
+            REPORT "ROM-T-032: RAS write_en decode PASSED" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-032: RAS write_en decode FAILED" SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
+
+        -- ROM-T-034: PMU/PDU control decode
+        -- Verify at addr 5: WAIT_PMU (nextctl=0x07 in bits 47:40)
+        wait_for_addr(5);
+        v_test_count := v_test_count + 1;
+        IF micro_word(47 DOWNTO 40) = x"07" THEN
+            REPORT "ROM-T-034: PMU wait decode PASSED" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-034: PMU wait decode FAILED" SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
+
+        -- ROM-T-036: IO control decode at addr 16 (io_ctrl=write_mach=6, bits 3:0)
+        wait_for_addr(16);
+        v_test_count := v_test_count + 1;
+        IF micro_word(3 DOWNTO 0) = x"6" THEN
+            REPORT "ROM-T-036: IO control decode PASSED (write_mach)" SEVERITY NOTE;
+        ELSE
+            REPORT "ROM-T-036: IO control decode FAILED: got " &
+                   to_hstring(UNSIGNED(micro_word(3 DOWNTO 0))) SEVERITY ERROR;
+            v_fail_count := v_fail_count + 1;
+        END IF;
 
         -----------------------------------------------------------------------
         -- ROM-T-040: Frame mark resets PC
         -----------------------------------------------------------------------
+        -- Let polynomial run a bit
+        wait_for_addr(5, 80000);
         tb_frame_mark <= '1';
         WAIT FOR 2 * OP_CLOCKS * CLK_PERIOD;
         tb_frame_mark <= '0';
@@ -324,10 +421,20 @@ BEGIN
         check_addr(0, "ROM-T-040: Frame mark resets PC");
 
         -----------------------------------------------------------------------
+        -- ROM-T-042: Word mark timing
+        -- Verify word_type alternates correctly (WA=0, WO=1)
+        -----------------------------------------------------------------------
+        v_test_count := v_test_count + 1;
+        -- Wait for a WA->WO transition
+        WAIT UNTIL word_type = '0' AND rising_edge(clk);
+        WAIT UNTIL word_type = '1' AND rising_edge(clk);
+        WAIT UNTIL word_type = '0' AND rising_edge(clk);
+        REPORT "ROM-T-042: Word type alternation PASSED" SEVERITY NOTE;
+
+        -----------------------------------------------------------------------
         -- ROM-T-RST: Reset during operation
         -----------------------------------------------------------------------
-        -- Let PC advance a few steps first
-        wait_for_addr(3);
+        wait_for_addr(3, 80000);
         rst <= '1';
         WAIT FOR 10 * CLK_PERIOD;
         rst <= '0';
