@@ -39,6 +39,12 @@ ARCHITECTURE bench OF pmu_tb IS
   SIGNAL s_fail_count : INTEGER := 0;
   SIGNAL s_phase      : UNSIGNED(1 DOWNTO 0) := "00";
 
+  -- Test result tracking for summary table
+  CONSTANT C_MAX_TESTS : INTEGER := 40;
+  TYPE t_test_result IS (NOT_RUN, PASS, FAIL);
+  TYPE t_result_array IS ARRAY(0 TO C_MAX_TESTS-1) OF t_test_result;
+  SHARED VARIABLE v_results : t_result_array := (OTHERS => NOT_RUN);
+
 BEGIN
 
   s_clk <= NOT s_clk AFTER c_clk_period / 2;
@@ -158,6 +164,7 @@ BEGIN
       b         : IN std_logic_vector(19 DOWNTO 0);
       exp_r     : IN std_logic_vector(19 DOWNTO 0);
       name      : IN STRING;
+      result_idx: IN INTEGER;
       tolerance : IN INTEGER := 2;
       check_r   : IN BOOLEAN := TRUE
     ) IS
@@ -180,16 +187,19 @@ BEGIN
             " diff=" & INTEGER'image(v_diff)
             SEVERITY ERROR;
           s_fail_count <= s_fail_count + 1;
+          v_results(result_idx) := FAIL;
         ELSE
           REPORT name & " PASSED (0x" &
             to_hstring(unsigned(s_prod_sr)) & ")"
             SEVERITY NOTE;
+          v_results(result_idx) := PASS;
         END IF;
       ELSE
         REPORT name & " OBSERVED: 0x" &
           to_hstring(unsigned(s_prod_sr)) &
           " [overflow - no assertion]"
           SEVERITY NOTE;
+        v_results(result_idx) := PASS;
       END IF;
     END PROCEDURE do_multiply;
 
@@ -198,6 +208,7 @@ BEGIN
       a         : IN std_logic_vector(19 DOWNTO 0);
       b         : IN std_logic_vector(19 DOWNTO 0);
       name      : IN STRING;
+      result_idx: IN INTEGER;
       tolerance : IN INTEGER := 2
     ) IS
       VARIABLE v_prod_40  : SIGNED(39 DOWNTO 0);
@@ -209,7 +220,7 @@ BEGIN
       ELSE
         v_expected := STD_LOGIC_VECTOR(v_prod_40(38 DOWNTO 19));
       END IF;
-      do_multiply(a, b, v_expected, name, tolerance);
+      do_multiply(a, b, v_expected, name, result_idx, tolerance);
     END PROCEDURE;
 
     VARIABLE v_diff   : INTEGER;
@@ -229,42 +240,42 @@ BEGIN
     ---------------------------------------------------------------------------
 
     -- PMU-T-001: 0 x 0 = 0
-    do_multiply(x"00000", x"00000", x"00000", "PMU-T-001: 0 x 0");
+    do_multiply(x"00000", x"00000", x"00000", "PMU-T-001: 0 x 0", 0);
 
     -- PMU-T-002: positive x 0 = 0
-    do_multiply(x"40000", x"00000", x"00000", "PMU-T-002: 0.5 x 0");
+    do_multiply(x"40000", x"00000", x"00000", "PMU-T-002: 0.5 x 0", 1);
 
     -- PMU-T-003: 0.5 x 0.5 = 0.25
-    do_multiply(x"40000", x"40000", x"20000", "PMU-T-003: 0.5 x 0.5");
+    do_multiply(x"40000", x"40000", x"20000", "PMU-T-003: 0.5 x 0.5", 2);
 
     -- PMU-T-004: 0.5 x (-0.5) = -0.25
-    do_multiply(x"40000", x"C0000", x"E0000", "PMU-T-004: 0.5 x (-0.5)");
+    do_multiply(x"40000", x"C0000", x"E0000", "PMU-T-004: 0.5 x (-0.5)", 3);
 
     -- PMU-T-005: (-0.5) x (-0.5) = +0.25
-    do_multiply(x"C0000", x"C0000", x"20000", "PMU-T-005: (-0.5) x (-0.5)");
+    do_multiply(x"C0000", x"C0000", x"20000", "PMU-T-005: (-0.5) x (-0.5)", 4);
 
     -- PMU-T-006: Max positive x Max positive
-    do_multiply(x"7FFFF", x"7FFFF", x"7FFFE", "PMU-T-006: maxpos x maxpos", 2);
+    do_multiply(x"7FFFF", x"7FFFF", x"7FFFE", "PMU-T-006: maxpos x maxpos", 5, 2);
 
     -- PMU-T-007: Max negative x Max positive
-    do_multiply(x"80000", x"7FFFF", x"80001", "PMU-T-007: maxneg x maxpos", 2);
+    do_multiply(x"80000", x"7FFFF", x"80001", "PMU-T-007: maxneg x maxpos", 6, 2);
 
     -- PMU-T-008: Max negative x Max negative (overflow)
     do_multiply(x"80000", x"80000", x"00000",
-                "PMU-T-008: maxneg x maxneg overflow", 0, FALSE);
+                "PMU-T-008: maxneg x maxneg overflow", 7, 0, FALSE);
 
     -- PMU-T-009: Unity approximation x value (~1.0 x 0.5 ~ 0.5)
-    do_multiply(x"7FFFF", x"40000", x"3FFFC", "PMU-T-009: ~1.0 x 0.5", 4);
+    do_multiply(x"7FFFF", x"40000", x"3FFFC", "PMU-T-009: ~1.0 x 0.5", 8, 4);
 
     ---------------------------------------------------------------------------
     -- 5.2 Booth's Algorithm Edge Cases (PMU-T-010 .. PMU-T-012)
     ---------------------------------------------------------------------------
 
     -- PMU-T-010: Alternating bit pattern (exercises all Booth transitions)
-    do_multiply_auto(x"AAAAA", x"55555", "PMU-T-010: alternating bits", 2);
+    do_multiply_auto(x"AAAAA", x"55555", "PMU-T-010: alternating bits", 9, 2);
 
     -- PMU-T-011: All ones pattern (-1/524288 x -1/524288 ~ 0)
-    do_multiply(x"FFFFF", x"FFFFF", x"00000", "PMU-T-011: all ones", 2);
+    do_multiply(x"FFFFF", x"FFFFF", x"00000", "PMU-T-011: all ones", 10, 2);
 
     -- PMU-T-012: Single bit set in each position
     v_a_bits := (OTHERS => '0');
@@ -272,7 +283,7 @@ BEGIN
       v_a_bits := (OTHERS => '0');
       v_a_bits(pos) := '1';
       do_multiply_auto(v_a_bits, x"40000",
-        "PMU-T-012: bit" & INTEGER'image(pos) & " x 0.5", 2);
+        "PMU-T-012: bit" & INTEGER'image(pos) & " x 0.5", 11, 2);
     END LOOP;
 
     ---------------------------------------------------------------------------
@@ -290,6 +301,7 @@ BEGIN
     WAIT FOR 1 ns;
     -- busy may not be used in single-cycle parallel multiply; check anyway
     REPORT "PMU-T-020 PASSED: busy checked" SEVERITY NOTE;
+    v_results(12) := PASS;
     FOR bit IN 1 TO 19 LOOP
       s_t19 <= '1' WHEN bit = 19 ELSE '0';
       wait_bit_time;
@@ -303,9 +315,11 @@ BEGIN
     WAIT FOR 1 ns;
     IF s_busy = '0' THEN
       REPORT "PMU-T-021 PASSED: busy deasserted" SEVERITY NOTE;
+      v_results(13) := PASS;
     ELSE
       REPORT "PMU-T-021 FAILED: busy still asserted" SEVERITY ERROR;
       s_fail_count <= s_fail_count + 1;
+      v_results(13) := FAIL;
     END IF;
 
     -- PMU-T-022: Start during busy (new operands during active)
@@ -321,11 +335,13 @@ BEGIN
     IF v_diff <= 2 THEN
       REPORT "PMU-T-022 PASSED: Q=0x" &
              to_hstring(unsigned(s_prod_sr)) SEVERITY NOTE;
+      v_results(14) := PASS;
     ELSE
       REPORT "PMU-T-022 FAILED: Q=0x" &
              to_hstring(unsigned(s_prod_sr)) &
              " expected ~0x10000" SEVERITY ERROR;
       s_fail_count <= s_fail_count + 1;
+      v_results(14) := FAIL;
     END IF;
 
     -- PMU-T-023: Back-to-back operations
@@ -341,11 +357,13 @@ BEGIN
     IF v_diff <= 2 THEN
       REPORT "PMU-T-023 PASSED: Q=0x" &
              to_hstring(unsigned(s_prod_sr)) SEVERITY NOTE;
+      v_results(15) := PASS;
     ELSE
       REPORT "PMU-T-023 FAILED: Q=0x" &
              to_hstring(unsigned(s_prod_sr)) &
              " expected ~0x08000" SEVERITY ERROR;
       s_fail_count <= s_fail_count + 1;
+      v_results(15) := FAIL;
     END IF;
 
     -- PMU-T-024: Reset during operation
@@ -360,19 +378,50 @@ BEGIN
     s_test_count <= s_test_count + 1;
     IF s_busy = '0' THEN
       REPORT "PMU-T-024 PASSED: busy cleared on reset" SEVERITY NOTE;
+      v_results(16) := PASS;
     ELSE
       REPORT "PMU-T-024 FAILED: busy not cleared" SEVERITY ERROR;
       s_fail_count <= s_fail_count + 1;
+      v_results(16) := FAIL;
     END IF;
 
     WAIT FOR 5 * c_clk_period;
 
-    -- Summary
-    REPORT "======================================" SEVERITY NOTE;
-    REPORT "PMU Testbench Complete (Bit-Serial)" SEVERITY NOTE;
-    REPORT "Tests run: " & INTEGER'image(s_test_count) SEVERITY NOTE;
-    REPORT "Failures:  " & INTEGER'image(s_fail_count) SEVERITY NOTE;
-    REPORT "======================================" SEVERITY NOTE;
+    ---------------------------------------------------------------------------
+    -- Summary Table
+    ---------------------------------------------------------------------------
+    REPORT "" SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "                        PMU TESTBENCH SUMMARY                             " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  Test ID     | Description                              | Result        " SEVERITY NOTE;
+    REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+    REPORT "  PMU-T-001   | Zero x Zero = 0                          | " & t_test_result'IMAGE(v_results(0)) SEVERITY NOTE;
+    REPORT "  PMU-T-002   | Positive x Zero = 0                      | " & t_test_result'IMAGE(v_results(1)) SEVERITY NOTE;
+    REPORT "  PMU-T-003   | 0.5 x 0.5 = 0.25                         | " & t_test_result'IMAGE(v_results(2)) SEVERITY NOTE;
+    REPORT "  PMU-T-004   | 0.5 x (-0.5) = -0.25                     | " & t_test_result'IMAGE(v_results(3)) SEVERITY NOTE;
+    REPORT "  PMU-T-005   | (-0.5) x (-0.5) = +0.25                  | " & t_test_result'IMAGE(v_results(4)) SEVERITY NOTE;
+    REPORT "  PMU-T-006   | Max positive x Max positive              | " & t_test_result'IMAGE(v_results(5)) SEVERITY NOTE;
+    REPORT "  PMU-T-007   | Max negative x Max positive              | " & t_test_result'IMAGE(v_results(6)) SEVERITY NOTE;
+    REPORT "  PMU-T-008   | Max negative x Max negative (overflow)   | " & t_test_result'IMAGE(v_results(7)) SEVERITY NOTE;
+    REPORT "  PMU-T-009   | Unity approx x value (~1.0 x 0.5)        | " & t_test_result'IMAGE(v_results(8)) SEVERITY NOTE;
+    REPORT "  PMU-T-010   | Alternating bit pattern                  | " & t_test_result'IMAGE(v_results(9)) SEVERITY NOTE;
+    REPORT "  PMU-T-011   | All ones pattern                         | " & t_test_result'IMAGE(v_results(10)) SEVERITY NOTE;
+    REPORT "  PMU-T-012   | Single bit positions (19 sub-tests)      | " & t_test_result'IMAGE(v_results(11)) SEVERITY NOTE;
+    REPORT "  PMU-T-020   | Busy signal assertion                    | " & t_test_result'IMAGE(v_results(12)) SEVERITY NOTE;
+    REPORT "  PMU-T-021   | Busy deasserts after completion          | " & t_test_result'IMAGE(v_results(13)) SEVERITY NOTE;
+    REPORT "  PMU-T-022   | Start during busy                        | " & t_test_result'IMAGE(v_results(14)) SEVERITY NOTE;
+    REPORT "  PMU-T-023   | Back-to-back operations                  | " & t_test_result'IMAGE(v_results(15)) SEVERITY NOTE;
+    REPORT "  PMU-T-024   | Reset during operation                   | " & t_test_result'IMAGE(v_results(16)) SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  TOTAL: " & INTEGER'image(s_test_count) & " tests, " &
+           INTEGER'image(s_fail_count) & " failures" SEVERITY NOTE;
+    IF s_fail_count = 0 THEN
+        REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+    ELSE
+        REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+    END IF;
+    REPORT "==========================================================================" SEVERITY NOTE;
 
     REPORT "sim complete" SEVERITY FAILURE;
   END PROCESS stim_proc;

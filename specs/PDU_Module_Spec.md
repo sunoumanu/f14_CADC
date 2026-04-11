@@ -10,7 +10,7 @@
 | Device Count | 1,241 transistors |
 | Function | 20-bit signed fractional division |
 | Algorithm | Non-restoring division |
-| I/O Style | Serial input, parallel internal, serial output (original); Parallel for FPGA |
+| I/O Style | Bit-serial I/O with parallel internal computation |
 
 ### 2. Functional Description
 
@@ -34,9 +34,13 @@ After all 20 iterations:
 - **Pre-condition:** |Dividend| < |Divisor| to avoid overflow (result > 1.0)
 - If |A| ≥ |B|, the result overflows and behavior is undefined (software must ensure valid inputs)
 
-#### 2.3 Timing
-- Division executes during the WA word time (20 bit times) in the original design
-- For FPGA: multi-cycle operation (up to 20+ cycles), signaled by `busy`/`done`
+#### 2.3 Timing (Bit-Serial Architecture)
+The PDU operates on the same timing as all CADC modules:
+- **WO (Word Out):** Operands shift in serially (20 bits LSB-first), previous quotient/remainder shift out
+- **WO T19:** Operands latched for computation  
+- **WA (Word A):** Parallel non-restoring division computes new quotient and remainder
+- **Next WO:** Results shift out while new operands shift in
+- `busy` asserts during WA computation phase
 
 ### 3. Interface Specification
 
@@ -44,16 +48,18 @@ After all 20 iterations:
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset (active high) |
-| `start` | Input | 1 | Start division pulse |
-| `dividend` | Input | 20 | Dividend (20-bit signed fractional) |
-| `divisor` | Input | 20 | Divisor (20-bit signed fractional) |
-| `quotient` | Output | 20 | Quotient (20-bit signed fractional) |
-| `remainder` | Output | 20 | Remainder (20-bit signed fractional) |
-| `busy` | Output | 1 | High while division in progress |
-| `done` | Output | 1 | Pulses high for one cycle when result valid |
-| `div_by_zero` | Output | 1 | Asserted if divisor is zero |
+| `i_clk` | Input | 1 | System clock (1.5 MHz master) |
+| `i_rst` | Input | 1 | Synchronous reset (active high) |
+| `i_phi2` | Input | 1 | Phase 2 clock — shift on rising edge |
+| `i_word_type` | Input | 1 | '0'=WA (compute), '1'=WO (shift I/O) |
+| `i_t0` | Input | 1 | First bit time of word (bit 0) |
+| `i_t19` | Input | 1 | Last bit time of word (bit 19) |
+| `i_dividend_bit` | Input | 1 | Serial dividend input (during WO) |
+| `i_divisor_bit` | Input | 1 | Serial divisor input (during WO) |
+| `o_quotient_bit` | Output | 1 | Serial quotient output (during WO) |
+| `o_remainder_bit` | Output | 1 | Serial remainder output (during WO) |
+| `o_busy` | Output | 1 | High during WA computation phase |
+| `o_div_by_zero` | Output | 1 | Asserted if divisor is zero |
 
 #### 3.2 VHDL Entity Declaration
 
@@ -64,16 +70,22 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity pdu is
     port (
-        clk         : in  std_logic;
-        rst         : in  std_logic;
-        start       : in  std_logic;
-        dividend    : in  std_logic_vector(19 downto 0);
-        divisor     : in  std_logic_vector(19 downto 0);
-        quotient    : out std_logic_vector(19 downto 0);
-        remainder   : out std_logic_vector(19 downto 0);
-        busy        : out std_logic;
-        done        : out std_logic;
-        div_by_zero : out std_logic
+        i_clk          : in  std_logic;
+        i_rst          : in  std_logic;
+        -- Timing inputs
+        i_phi2         : in  std_logic;
+        i_word_type    : in  std_logic;  -- '0'=WA, '1'=WO
+        i_t0           : in  std_logic;
+        i_t19          : in  std_logic;
+        -- Serial data inputs
+        i_dividend_bit : in  std_logic;
+        i_divisor_bit  : in  std_logic;
+        -- Serial data outputs
+        o_quotient_bit : out std_logic;
+        o_remainder_bit: out std_logic;
+        -- Status
+        o_busy         : out std_logic;
+        o_div_by_zero  : out std_logic
     );
 end entity pdu;
 ```
@@ -90,11 +102,13 @@ end entity pdu;
 | PDU-F-006 | Shall correctly handle negative dividend and positive divisor | Must |
 | PDU-F-007 | Shall correctly handle positive dividend and negative divisor | Must |
 | PDU-F-008 | Shall correctly handle negative dividend and negative divisor | Must |
-| PDU-F-009 | Shall assert `busy` during computation | Must |
-| PDU-F-010 | Shall pulse `done` for exactly one clock cycle when result valid | Must |
-| PDU-F-011 | Shall complete division within 22 clock cycles | Should |
+| PDU-F-009 | Shall assert `o_busy` during WA computation phase | Must |
+| PDU-F-010 | Shall shift operands in during WO phase (LSB first) | Must |
+| PDU-F-011 | Shall complete division within one WA phase (80 master clocks) | Must |
 | PDU-F-012 | Quotient shall satisfy: dividend = quotient × divisor + remainder | Must |
-| PDU-F-013 | |Remainder| < |Divisor| | Must |
+| PDU-F-013 | \|Remainder\| < \|Divisor\| | Must |
+| PDU-F-014 | Shall latch operands at WO T19 for computation | Must |
+| PDU-F-015 | Shall load quotient/remainder to output shift registers at WA end | Must |
 
 ### 5. Verification Tests
 
@@ -131,57 +145,111 @@ end entity pdu;
 | PDU-T-031 | All positive shifts | Dividend much smaller than divisor |
 | PDU-T-032 | Maximum iterations | Worst-case timing verification |
 
-#### 5.5 Timing Tests
+#### 5.5 Timing Tests (Bit-Serial)
 
 | Test ID | Description | Criteria |
 |---------|-------------|----------|
-| PDU-T-040 | Busy signal assertion | `busy` goes high on `start`, low when `done` |
-| PDU-T-041 | Done pulse width | `done` high for exactly 1 clock |
-| PDU-T-042 | Start during busy | Ignored or restart |
-| PDU-T-043 | Back-to-back operations | Start new divide immediately after `done` |
-| PDU-T-044 | Reset during operation | Clears state, deasserts `busy` |
+| PDU-T-040 | Busy signal assertion | `o_busy` high during WA phase after operands loaded |
+| PDU-T-041 | Busy deasserts | `o_busy` low after WA phase completes |
+| PDU-T-042 | New operands during active | New operands override previous on next WO |
+| PDU-T-043 | Back-to-back operations | Consecutive WA+WO cycles produce correct results |
+| PDU-T-044 | Reset during operation | Clears state, deasserts `o_busy`, zeros outputs |
 
-#### 5.6 Testbench Structure
+#### 5.6 Testbench Structure (Bit-Serial)
 
 ```vhdl
 entity pdu_tb is
 end entity pdu_tb;
 
 architecture sim of pdu_tb is
-    signal clk, rst, start, busy, done, div_by_zero : std_logic := '0';
-    signal dividend, divisor, quotient, remainder : std_logic_vector(19 downto 0);
+    constant CLK_PERIOD : time := 667 ns;  -- 1.5 MHz master clock
     
-    constant CLK_PERIOD : time := 20 ns;
+    signal clk, rst, phi2, word_type, t0, t19 : std_logic := '0';
+    signal dividend_bit, divisor_bit : std_logic := '0';
+    signal quotient_bit, remainder_bit, busy, div_by_zero : std_logic;
+    signal quotient_sr, remainder_sr : std_logic_vector(19 downto 0);
+    signal phase : unsigned(1 downto 0) := "00";
 begin
     clk <= not clk after CLK_PERIOD / 2;
     
+    -- Generate phi2 (every 4th master clock)
+    phi_proc: process(clk)
+    begin
+        if rising_edge(clk) then
+            phase <= phase + 1;
+            phi2 <= '1' when phase = "10" else '0';
+        end if;
+    end process;
+    
     uut: entity work.pdu
-        port map (clk, rst, start, dividend, divisor, quotient, remainder,
-                  busy, done, div_by_zero);
+        port map (
+            i_clk => clk, i_rst => rst, i_phi2 => phi2,
+            i_word_type => word_type, i_t0 => t0, i_t19 => t19,
+            i_dividend_bit => dividend_bit, i_divisor_bit => divisor_bit,
+            o_quotient_bit => quotient_bit, o_remainder_bit => remainder_bit,
+            o_busy => busy, o_div_by_zero => div_by_zero
+        );
     
     stim: process
-        procedure do_divide(a, b : std_logic_vector(19 downto 0);
-                            exp_q : std_logic_vector(19 downto 0)) is
+        procedure run_wo_phase(
+            dividend_val : std_logic_vector(19 downto 0);
+            divisor_val  : std_logic_vector(19 downto 0)
+        ) is
+            variable v_dividend, v_divisor : std_logic_vector(19 downto 0);
         begin
-            dividend <= a;
-            divisor <= b;
-            start <= '1';
-            wait until rising_edge(clk);
-            start <= '0';
-            wait until done = '1' and rising_edge(clk);
-            assert quotient = exp_q
-                report "Division failed" severity error;
-            -- Verify remainder relationship
-            -- dividend = quotient * divisor + remainder (in fractional)
+            v_dividend := dividend_val;
+            v_divisor := divisor_val;
+            word_type <= '1';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                dividend_bit <= v_dividend(0);
+                divisor_bit <= v_divisor(0);
+                -- Capture output
+                wait until rising_edge(clk) and phase = "01";
+                quotient_sr <= quotient_bit & quotient_sr(19 downto 1);
+                remainder_sr <= remainder_bit & remainder_sr(19 downto 1);
+                -- Wait for phi2
+                wait until rising_edge(clk) and phase = "10";
+                wait until rising_edge(clk);
+                v_dividend := '0' & v_dividend(19 downto 1);
+                v_divisor := '0' & v_divisor(19 downto 1);
+            end loop;
+        end procedure;
+        
+        procedure run_wa_phase is
+        begin
+            word_type <= '0';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                for i in 0 to 3 loop
+                    wait until rising_edge(clk);
+                end loop;
+            end loop;
+        end procedure;
+        
+        procedure do_divide(
+            a, b, exp_q : std_logic_vector(19 downto 0);
+            name : string
+        ) is
+        begin
+            run_wa_phase;
+            run_wo_phase(a, b);
+            run_wa_phase;
+            run_wo_phase(x"00000", x"00000");
+            wait for 1 ns;
+            assert quotient_sr = exp_q
+                report name & " FAILED" severity error;
         end procedure;
     begin
         rst <= '1';
         wait for 5 * CLK_PERIOD;
         rst <= '0';
-        wait for CLK_PERIOD;
+        wait until phase = "00" and rising_edge(clk);
         
-        do_divide(x"00000", x"40000", x"00000");  -- PDU-T-001
-        do_divide(x"20000", x"40000", x"40000");  -- PDU-T-002
+        do_divide(x"00000", x"40000", x"00000", "PDU-T-001");  -- 0/0.5
+        do_divide(x"20000", x"40000", x"40000", "PDU-T-002");  -- 0.25/0.5
         
         report "PDU tests complete" severity note;
         wait;

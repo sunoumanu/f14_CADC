@@ -363,13 +363,28 @@ BEGIN
     END LOOP;
 
     ---------------------------------------------------------------------------
-    -- Summary
+    -- Summary Table
     ---------------------------------------------------------------------------
-    REPORT "======================================" SEVERITY NOTE;
-    REPORT "SL Testbench Complete" SEVERITY NOTE;
-    REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
-    REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
-    REPORT "======================================" SEVERITY NOTE;
+    REPORT "" SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "                         SL TESTBENCH SUMMARY                             " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+    REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+    REPORT "  SL-T-001..008    | ACC source selection (8 sources)                    " SEVERITY NOTE;
+    REPORT "  SL-T-010..013    | RAS source selection (4 sources)                    " SEVERITY NOTE;
+    REPORT "  SL-T-020..023    | IO source selection (4 sources)                     " SEVERITY NOTE;
+    REPORT "  SL-T-030..032    | Independence tests (all muxes operate separately)   " SEVERITY NOTE;
+    REPORT "  SL-T-040..043    | Data integrity (zeros, ones, walking bit)           " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  TOTAL: " & INTEGER'image(test_count) & " tests, " &
+           INTEGER'image(fail_count) & " failures" SEVERITY NOTE;
+    IF fail_count = 0 THEN
+        REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+    ELSE
+        REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+    END IF;
+    REPORT "==========================================================================" SEVERITY NOTE;
 
     ASSERT FALSE REPORT "sim complete" SEVERITY FAILURE;
     WAIT;

@@ -45,12 +45,12 @@ The original RAS operates as a **16-word random access read-write storage device
 - **Inputs:** DI (data in), CW (control word), IW (inhibit write), T18, WO, Φ1, Φ2, VDD, Ground
 - **Outputs:** DO (data out)
 
-#### 2.3 FPGA Implementation (Parallel Access)
-For FPGA implementation, the serial access is converted to parallel:
-- Full 20-bit read/write per clock cycle
-- Address width expanded to 6 bits (64 words) for additional storage if needed
-- Write enable replaces the serial control word protocol
-- Inhibit write can be implemented as an additional gate on write enable
+#### 2.3 FPGA Implementation (Bit-Serial Data, Parallel Addresses)
+For FPGA implementation, the RAS uses:
+- **Parallel addresses** from the microword (latched at WA T0)
+- **Bit-serial data I/O** during WO phase
+- Read data shifts out during WO, write data shifts in during WO
+- Write completes at WO T19 when write enable is asserted
 
 #### 2.4 Data Retention
 - RAS values are maintained throughout the computational frame
@@ -64,13 +64,17 @@ For FPGA implementation, the serial access is converted to parallel:
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset (active high) — clears all locations |
-| `read_addr` | Input | 6 | Read address (0–63) |
-| `read_data` | Output | 20 | Data read from addressed location |
-| `write_addr` | Input | 6 | Write address (0–63) |
-| `write_data` | Input | 20 | Data to write |
-| `write_en` | Input | 1 | Write enable — data written on rising clock edge |
+| `i_clk` | Input | 1 | System clock (1.5 MHz master) |
+| `i_rst` | Input | 1 | Synchronous reset (active high) — clears all locations |
+| `i_phi2` | Input | 1 | Phase 2 clock — shift on rising edge |
+| `i_word_type` | Input | 1 | '0'=WA, '1'=WO |
+| `i_t0` | Input | 1 | First bit time (latch addresses at WA T0) |
+| `i_t19` | Input | 1 | Last bit time (complete write at WO T19) |
+| `i_rd_addr` | Input | 6 | Read address (from parallel microword) |
+| `i_wr_addr` | Input | 6 | Write address (from parallel microword) |
+| `i_write_en` | Input | 1 | Write enable (from control) |
+| `i_wr_data_bit` | Input | 1 | Serial write data input (during WO) |
+| `o_rd_data_bit` | Output | 1 | Serial read data output (during WO) |
 
 #### 3.2 VHDL Entity Declaration
 
@@ -81,17 +85,24 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity ras is
     generic (
-        ADDR_WIDTH : natural := 6;    -- 64 words
-        DATA_WIDTH : natural := 20    -- 20-bit words
+        g_addr_width : natural := 6;    -- 64 words
+        g_data_width : natural := 20    -- 20-bit words
     );
     port (
-        clk        : in  std_logic;
-        rst        : in  std_logic;
-        read_addr  : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-        read_data  : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        write_addr : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-        write_data : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-        write_en   : in  std_logic
+        i_clk         : in  std_logic;
+        i_rst         : in  std_logic;
+        -- Timing inputs
+        i_phi2        : in  std_logic;
+        i_word_type   : in  std_logic;  -- '0'=WA, '1'=WO
+        i_t0          : in  std_logic;
+        i_t19         : in  std_logic;
+        -- Parallel address inputs (from microword)
+        i_rd_addr     : in  std_logic_vector(g_addr_width-1 downto 0);
+        i_wr_addr     : in  std_logic_vector(g_addr_width-1 downto 0);
+        i_write_en    : in  std_logic;
+        -- Serial data interface
+        i_wr_data_bit : in  std_logic;
+        o_rd_data_bit : out std_logic
     );
 end entity ras;
 ```
@@ -103,13 +114,13 @@ end entity ras;
 | RAS-F-001 | Shall provide 20-bit wide random access storage | Must |
 | RAS-F-002 | Shall support at least 64 addressable locations | Must |
 | RAS-F-003 | Shall support simultaneous read and write to different addresses | Must |
-| RAS-F-004 | Write shall occur on rising clock edge when `write_en` is asserted | Must |
-| RAS-F-005 | Read shall be asynchronous (combinational) or synchronous with 1-cycle latency | Must |
-| RAS-F-006 | Read-during-write to same address: new data forwarded (write-first) | Should |
-| RAS-F-007 | Reset shall clear all locations to zero | Must |
-| RAS-F-008 | Data shall be retained between clock cycles when not written | Must |
-| RAS-F-009 | FPGA implementation should map to Block RAM or distributed RAM | Should |
-| RAS-F-010 | Address out of range shall have defined behavior (wrap or read zero) | Should |
+| RAS-F-004 | Write shall occur at WO T19 when `i_write_en` is asserted | Must |
+| RAS-F-005 | Read data shall shift out serially during WO (LSB first) | Must |
+| RAS-F-006 | Write data shall shift in serially during WO (LSB first) | Must |
+| RAS-F-007 | Addresses shall be latched from parallel microword at WA T0 | Must |
+| RAS-F-008 | Reset shall clear all locations to zero | Must |
+| RAS-F-009 | Data shall be retained between clock cycles when not written | Must |
+| RAS-F-010 | FPGA implementation should map to Block RAM or distributed RAM | Should |
 
 ### 5. Verification Tests
 

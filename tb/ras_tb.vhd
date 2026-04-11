@@ -337,13 +337,28 @@ BEGIN
     read_mem(26, x"22220", "RAS-T-041b: Non-targeted unchanged");
 
     ---------------------------------------------------------------------------
-    -- Summary
+    -- Summary Table
     ---------------------------------------------------------------------------
-    REPORT "======================================" SEVERITY NOTE;
-    REPORT "RAS Testbench Complete" SEVERITY NOTE;
-    REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
-    REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
-    REPORT "======================================" SEVERITY NOTE;
+    REPORT "" SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "                        RAS TESTBENCH SUMMARY                             " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+    REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+    REPORT "  RAS-T-001..005   | Basic read/write single locations                   " SEVERITY NOTE;
+    REPORT "  RAS-T-010..012   | Read/Write to all 64 memory addresses               " SEVERITY NOTE;
+    REPORT "  RAS-T-020..022   | Simultaneous read/write different addresses         " SEVERITY NOTE;
+    REPORT "  RAS-T-030..031   | Reset clears all memory to zero                     " SEVERITY NOTE;
+    REPORT "  RAS-T-040..041   | Write enable control                                " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  TOTAL: " & INTEGER'image(test_count) & " tests, " &
+           INTEGER'image(fail_count) & " failures" SEVERITY NOTE;
+    IF fail_count = 0 THEN
+        REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+    ELSE
+        REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+    END IF;
+    REPORT "==========================================================================" SEVERITY NOTE;
 
     ASSERT FALSE REPORT "sim complete" SEVERITY FAILURE;
     WAIT;

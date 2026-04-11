@@ -42,9 +42,9 @@ ARCHITECTURE rtl OF pdu IS
   SIGNAL s_divisor_sr  : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   
   -- Output shift registers (shift out during WO)
-  -- 21 bits: loaded as {data[19:0], '0'} so all 20 data bits shift out
-  SIGNAL s_quotient_sr : STD_LOGIC_VECTOR(20 DOWNTO 0) := (OTHERS => '0');
-  SIGNAL s_remainder_sr: STD_LOGIC_VECTOR(20 DOWNTO 0) := (OTHERS => '0');
+  -- 20 bits: use T0 skip-shift + combinational output compensation (like PMU)
+  SIGNAL s_quotient_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL s_remainder_sr: STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
   
   -- Latched operands for computation
   SIGNAL s_dividend_lat: STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
@@ -67,9 +67,9 @@ ARCHITECTURE rtl OF pdu IS
 
 BEGIN
 
-  -- Serial outputs: always output bit(0), testbench captures after phi2
-  o_quotient_bit  <= s_quotient_sr(0);
-  o_remainder_bit <= s_remainder_sr(0);
+  -- Serial outputs: T0 outputs bit(0), T1+ outputs bit(1) for same-edge timing
+  o_quotient_bit  <= s_quotient_sr(0) WHEN i_t0 = '1' ELSE s_quotient_sr(1);
+  o_remainder_bit <= s_remainder_sr(0) WHEN i_t0 = '1' ELSE s_remainder_sr(1);
   o_busy          <= s_busy;
   o_div_by_zero   <= s_dbz_reg;
 
@@ -90,8 +90,11 @@ BEGIN
         -- WO: Shift in operands (LSB first), shift out results
         s_dividend_sr  <= i_dividend_bit & s_dividend_sr(19 DOWNTO 1);
         s_divisor_sr   <= i_divisor_bit & s_divisor_sr(19 DOWNTO 1);
-        s_quotient_sr  <= '0' & s_quotient_sr(20 DOWNTO 1);
-        s_remainder_sr <= '0' & s_remainder_sr(20 DOWNTO 1);
+        -- Skip shift at T0 for timing compensation (like PMU)
+        IF i_t0 = '0' THEN
+          s_quotient_sr  <= '0' & s_quotient_sr(19 DOWNTO 1);
+          s_remainder_sr <= '0' & s_remainder_sr(19 DOWNTO 1);
+        END IF;
         
         -- At end of WO (T19), latch operands for next computation
         IF i_t19 = '1' THEN
@@ -99,10 +102,9 @@ BEGIN
           s_divisor_lat  <= i_divisor_bit & s_divisor_sr(19 DOWNTO 1);
         END IF;
       ELSIF s_compute_done = '1' THEN
-        -- Load computed results into 21-bit output shift registers
-        -- Extra '0' LSB ensures all 20 data bits shift out before depletion
-        s_quotient_sr <= s_quot_reg & '0';
-        s_remainder_sr <= STD_LOGIC_VECTOR(s_partial_rem(19 DOWNTO 0)) & '0';
+        -- Load computed results into 20-bit output shift registers
+        s_quotient_sr <= s_quot_reg;
+        s_remainder_sr <= STD_LOGIC_VECTOR(s_partial_rem(19 DOWNTO 0));
       END IF;
     END IF;
   END PROCESS shift_proc;

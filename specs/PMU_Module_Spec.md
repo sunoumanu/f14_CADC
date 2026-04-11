@@ -9,8 +9,8 @@
 | Part Number | 944111 |
 | Device Count | 1,063 transistors |
 | Function | 20×20-bit signed fractional multiplication |
-| Algorithm | Booth's algorithm (modified) |
-| I/O Style | Serial input, parallel internal, serial output (original); Parallel for FPGA |
+| Algorithm | Parallel multiply (FPGA DSP), Booth's (original) |
+| I/O Style | Bit-serial I/O with parallel internal computation |
 
 ### 2. Functional Description
 
@@ -34,10 +34,14 @@ Since both operands are fractional fixed-point numbers in [-1.0, +1.0):
 - The PMU returns the upper 20 bits (bits [39:20] of the 40-bit result)
 - This effectively performs: `result = (A × B) >> 20` with rounding
 
-#### 2.3 Timing
-- In the original design, multiplication executes during the WA word time (20 bit times)
-- Operands are loaded serially during the previous WO word time
-- For FPGA: multi-cycle operation, signaled by `busy`/`done`
+#### 2.3 Timing (Bit-Serial Architecture)
+The PMU operates on the same timing as all CADC modules:
+- **WO (Word Out):** Operands shift in serially (20 bits LSB-first), previous product shifts out
+- **WO T19:** Operands latched for computation
+- **WA T0:** Parallel multiply executes (single FPGA DSP cycle)
+- **WA T0:** Product loaded to output shift register
+- **Next WO:** Product shifts out while new operands shift in
+- `o_busy` briefly asserts during parallel multiply (typically 1 master clock)
 
 ### 3. Interface Specification
 
@@ -45,14 +49,16 @@ Since both operands are fractional fixed-point numbers in [-1.0, +1.0):
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset (active high) |
-| `start` | Input | 1 | Start multiplication pulse |
-| `operand_a` | Input | 20 | Multiplicand (20-bit signed fractional) |
-| `operand_b` | Input | 20 | Multiplier (20-bit signed fractional) |
-| `result` | Output | 20 | Product (20-bit signed fractional) |
-| `busy` | Output | 1 | High while multiplication in progress |
-| `done` | Output | 1 | Pulses high for one cycle when result is valid |
+| `i_clk` | Input | 1 | System clock (1.5 MHz master) |
+| `i_rst` | Input | 1 | Synchronous reset (active high) |
+| `i_phi2` | Input | 1 | Phase 2 clock — shift on rising edge |
+| `i_word_type` | Input | 1 | '0'=WA (compute), '1'=WO (shift I/O) |
+| `i_t0` | Input | 1 | First bit time of word (bit 0) |
+| `i_t19` | Input | 1 | Last bit time of word (bit 19) |
+| `i_mcand_bit` | Input | 1 | Serial multiplicand input (during WO) |
+| `i_mplier_bit` | Input | 1 | Serial multiplier input (during WO) |
+| `o_prod_bit` | Output | 1 | Serial product output (during WO) |
+| `o_busy` | Output | 1 | High during multiplication (brief) |
 
 #### 3.2 VHDL Entity Declaration
 
@@ -63,14 +69,20 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity pmu is
     port (
-        clk       : in  std_logic;
-        rst       : in  std_logic;
-        start     : in  std_logic;
-        operand_a : in  std_logic_vector(19 downto 0);  -- Multiplicand
-        operand_b : in  std_logic_vector(19 downto 0);  -- Multiplier
-        result    : out std_logic_vector(19 downto 0);   -- Product
-        busy      : out std_logic;
-        done      : out std_logic
+        i_clk        : in  std_logic;
+        i_rst        : in  std_logic;
+        -- Timing inputs
+        i_phi2       : in  std_logic;
+        i_word_type  : in  std_logic;  -- '0'=WA, '1'=WO
+        i_t0         : in  std_logic;
+        i_t19        : in  std_logic;
+        -- Serial data inputs
+        i_mcand_bit  : in  std_logic;
+        i_mplier_bit : in  std_logic;
+        -- Serial data output
+        o_prod_bit   : out std_logic;
+        -- Status
+        o_busy       : out std_logic
     );
 end entity pmu;
 ```
@@ -80,16 +92,17 @@ end entity pmu;
 | Req ID | Requirement | Priority |
 |--------|-------------|----------|
 | PMU-F-001 | Shall perform 20×20-bit signed fractional multiplication | Must |
-| PMU-F-002 | Shall use Booth's algorithm for partial product generation | Must |
-| PMU-F-003 | Shall produce a 20-bit result from upper bits of 40-bit product | Must |
-| PMU-F-004 | Shall correctly handle multiplication by zero | Must |
-| PMU-F-005 | Shall correctly handle multiplication by +1 (0x3FFFF in fractional) | Must |
-| PMU-F-006 | Shall correctly handle multiplication by -1 (0x80000) | Must |
-| PMU-F-007 | Shall correctly handle the most negative × most negative case | Must |
-| PMU-F-008 | Shall assert `busy` during computation | Must |
-| PMU-F-009 | Shall pulse `done` for exactly one clock cycle when result is valid | Must |
-| PMU-F-010 | Shall complete multiplication within 20 clock cycles (one word time) | Should |
-| PMU-F-011 | Result shall be rounded to nearest (round half up) | Should |
+| PMU-F-002 | Shall produce a 20-bit result from upper bits of 40-bit product | Must |
+| PMU-F-003 | Shall correctly handle multiplication by zero | Must |
+| PMU-F-004 | Shall correctly handle multiplication by +1 (0x7FFFF in fractional) | Must |
+| PMU-F-005 | Shall correctly handle multiplication by -1 (0x80000) | Must |
+| PMU-F-006 | Shall correctly handle the most negative × most negative case | Must |
+| PMU-F-007 | Shall assert `o_busy` briefly during parallel multiply | Must |
+| PMU-F-008 | Shall shift operands in during WO phase (LSB first) | Must |
+| PMU-F-009 | Shall complete multiplication within WA T0 (single DSP cycle) | Must |
+| PMU-F-010 | Result shall be rounded to nearest (round half up) | Should |
+| PMU-F-011 | Shall latch operands at WO T19 for computation | Must |
+| PMU-F-012 | Shall load product to output shift register at WA T0 | Must |
 
 ### 5. Verification Tests
 
@@ -117,58 +130,106 @@ end entity pmu;
 
 #### 5.3 Timing Tests
 
+#### 5.3 Timing Tests (Bit-Serial)
+
 | Test ID | Description | Criteria |
 |---------|-------------|----------|
-| PMU-T-020 | Busy signal assertion | `busy` goes high on `start`, goes low when `done` |
-| PMU-T-021 | Done pulse width | `done` is high for exactly 1 clock cycle |
-| PMU-T-022 | Start during busy | New `start` during `busy` shall be ignored or restart |
-| PMU-T-023 | Back-to-back operations | Can start new multiply immediately after `done` |
-| PMU-T-024 | Reset during operation | `rst` during multiplication clears state, deasserts `busy` |
+| PMU-T-020 | Busy signal assertion | `o_busy` high briefly during WA T0 |
+| PMU-T-021 | Operand latching | Operands captured at WO T19 |
+| PMU-T-022 | Product available | Product in output SR after WA T0 |
+| PMU-T-023 | Back-to-back operations | Consecutive WA+WO cycles produce correct results |
+| PMU-T-024 | Reset during operation | `i_rst` clears state, zeros output SR |
 
-#### 5.4 Testbench Structure
+#### 5.4 Testbench Structure (Bit-Serial)
 
 ```vhdl
--- PMU Testbench outline
 entity pmu_tb is
 end entity pmu_tb;
 
 architecture sim of pmu_tb is
-    signal clk, rst, start, busy, done : std_logic := '0';
-    signal operand_a, operand_b, result : std_logic_vector(19 downto 0);
+    constant CLK_PERIOD : time := 667 ns;  -- 1.5 MHz master clock
     
-    constant CLK_PERIOD : time := 20 ns;  -- 50 MHz FPGA clock
+    signal clk, rst, phi2, word_type, t0, t19 : std_logic := '0';
+    signal mcand_bit, mplier_bit, prod_bit, busy : std_logic;
+    signal product_sr : std_logic_vector(19 downto 0) := (others => '0');
+    signal phase : unsigned(1 downto 0) := "00";
 begin
-    -- Clock generation
     clk <= not clk after CLK_PERIOD / 2;
     
-    -- DUT instantiation
-    uut: entity work.pmu
-        port map (clk, rst, start, operand_a, operand_b, result, busy, done);
+    -- Generate phi2 (every 4th master clock)
+    phi_proc: process(clk)
+    begin
+        if rising_edge(clk) then
+            phase <= phase + 1;
+            phi2 <= '1' when phase = "10" else '0';
+        end if;
+    end process;
     
-    -- Stimulus process
+    uut: entity work.pmu
+        port map (
+            i_clk => clk, i_rst => rst, i_phi2 => phi2,
+            i_word_type => word_type, i_t0 => t0, i_t19 => t19,
+            i_mcand_bit => mcand_bit, i_mplier_bit => mplier_bit,
+            o_prod_bit => prod_bit, o_busy => busy
+        );
+    
     stim: process
-        procedure do_multiply(a, b : std_logic_vector(19 downto 0);
-                              expected : std_logic_vector(19 downto 0)) is
+        procedure run_wo_phase(
+            mcand_val, mplier_val : std_logic_vector(19 downto 0)
+        ) is
+            variable v_mcand, v_mplier : std_logic_vector(19 downto 0);
         begin
-            operand_a <= a;
-            operand_b <= b;
-            start <= '1';
-            wait until rising_edge(clk);
-            start <= '0';
-            wait until done = '1' and rising_edge(clk);
-            assert result = expected
-                report "Multiply failed" severity error;
+            v_mcand := mcand_val;
+            v_mplier := mplier_val;
+            word_type <= '1';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                mcand_bit <= v_mcand(0);
+                mplier_bit <= v_mplier(0);
+                -- Capture output
+                wait until rising_edge(clk) and phase = "01";
+                product_sr <= prod_bit & product_sr(19 downto 1);
+                wait until rising_edge(clk) and phase = "10";
+                wait until rising_edge(clk);
+                v_mcand := '0' & v_mcand(19 downto 1);
+                v_mplier := '0' & v_mplier(19 downto 1);
+            end loop;
+        end procedure;
+        
+        procedure run_wa_phase is
+        begin
+            word_type <= '0';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                for i in 0 to 3 loop
+                    wait until rising_edge(clk);
+                end loop;
+            end loop;
+        end procedure;
+        
+        procedure do_multiply(
+            a, b, exp_p : std_logic_vector(19 downto 0);
+            name : string
+        ) is
+        begin
+            run_wa_phase;
+            run_wo_phase(a, b);
+            run_wa_phase;
+            run_wo_phase(x"00000", x"00000");
+            wait for 1 ns;
+            assert product_sr = exp_p
+                report name & " FAILED" severity error;
         end procedure;
     begin
         rst <= '1';
         wait for 5 * CLK_PERIOD;
         rst <= '0';
-        wait for CLK_PERIOD;
+        wait until phase = "00" and rising_edge(clk);
         
-        -- Run test vectors
-        do_multiply(x"00000", x"00000", x"00000");  -- PMU-T-001
-        do_multiply(x"40000", x"40000", x"10000");  -- PMU-T-003
-        -- ... additional tests ...
+        do_multiply(x"00000", x"00000", x"00000", "PMU-T-001");  -- 0*0
+        do_multiply(x"40000", x"40000", x"10000", "PMU-T-003");  -- 0.5*0.5
         
         report "PMU tests complete" severity note;
         wait;

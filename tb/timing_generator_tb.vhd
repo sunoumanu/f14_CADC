@@ -222,12 +222,33 @@ BEGIN
 
     WAIT FOR 5 * c_clk_period;
 
-    -- Summary
-    REPORT "======================================" SEVERITY NOTE;
-    REPORT "Timing Generator Testbench Complete" SEVERITY NOTE;
-    REPORT "Tests run: " & INTEGER'image(s_test_count) SEVERITY NOTE;
-    REPORT "Failures:  " & INTEGER'image(s_fail_count) SEVERITY NOTE;
-    REPORT "======================================" SEVERITY NOTE;
+    ---------------------------------------------------------------------------
+    -- Summary Table
+    ---------------------------------------------------------------------------
+    REPORT "" SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "                   TIMING GENERATOR TESTBENCH SUMMARY                     " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+    REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+    REPORT "  TIM-T-001        | Power-on reset initialization                       " SEVERITY NOTE;
+    REPORT "  TIM-T-002        | Bit counter (0-17) cycling                          " SEVERITY NOTE;
+    REPORT "  TIM-T-003        | Frame counter (0-63) cycling                        " SEVERITY NOTE;
+    REPORT "  TIM-T-004        | Sync pulse generation (end of frame 63)             " SEVERITY NOTE;
+    REPORT "  TIM-T-005        | Bit_zero pulse (first bit of each frame)            " SEVERITY NOTE;
+    REPORT "  TIM-T-006        | Frame timing (18 clocks per frame)                  " SEVERITY NOTE;
+    REPORT "  TIM-T-007        | Full cycle (64 frames, 1152 clocks)                 " SEVERITY NOTE;
+    REPORT "  TIM-T-008        | Clock enable gating                                 " SEVERITY NOTE;
+    REPORT "  TIM-T-009        | Reset during operation                              " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  TOTAL: " & INTEGER'image(s_test_count) & " tests, " &
+           INTEGER'image(s_fail_count) & " failures" SEVERITY NOTE;
+    IF s_fail_count = 0 THEN
+        REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+    ELSE
+        REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+    END IF;
+    REPORT "==========================================================================" SEVERITY NOTE;
 
     REPORT "sim complete" SEVERITY FAILURE;
   END PROCESS stim_proc;

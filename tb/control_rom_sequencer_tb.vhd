@@ -442,21 +442,31 @@ BEGIN
         check_addr(0, "ROM-T-RST: Reset clears PC");
 
         -----------------------------------------------------------------------
-        -- Summary
+        -- Summary Table
         -----------------------------------------------------------------------
         WAIT FOR 10 * CLK_PERIOD;
         REPORT "" SEVERITY NOTE;
-        REPORT "======================================" SEVERITY NOTE;
-        REPORT "Control ROM/Sequencer Testbench Complete" SEVERITY NOTE;
-        REPORT "======================================" SEVERITY NOTE;
-        REPORT "Tests run: " & INTEGER'IMAGE(v_test_count) SEVERITY NOTE;
-        REPORT "Failures:  " & INTEGER'IMAGE(v_fail_count) SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "               CONTROL ROM/SEQUENCER TESTBENCH SUMMARY                    " SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+        REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+        REPORT "  ROM-T-001..003   | ROM contents validation (first 3 addresses)         " SEVERITY NOTE;
+        REPORT "  ROM-T-010..012   | Basic instruction sequencing                        " SEVERITY NOTE;
+        REPORT "  ROM-T-020..025   | JMP instruction (conditional/unconditional)         " SEVERITY NOTE;
+        REPORT "  ROM-T-030..033   | JSR/RET instruction stack operations               " SEVERITY NOTE;
+        REPORT "  ROM-T-040..043   | Control signal decoding (acc, ras, io, dp)          " SEVERITY NOTE;
+        REPORT "  ROM-T-050..052   | Timing and pipeline behavior                        " SEVERITY NOTE;
+        REPORT "  ROM-T-RST        | Reset clears program counter                        " SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  TOTAL: " & INTEGER'IMAGE(v_test_count) & " tests, " &
+               INTEGER'IMAGE(v_fail_count) & " failures" SEVERITY NOTE;
         IF v_fail_count = 0 THEN
-            REPORT "RESULT: ALL TESTS PASSED" SEVERITY NOTE;
+            REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
         ELSE
-            REPORT "RESULT: SOME TESTS FAILED" SEVERITY ERROR;
+            REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
         END IF;
-        REPORT "======================================" SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
 
         REPORT "sim complete" SEVERITY FAILURE;
     END PROCESS;

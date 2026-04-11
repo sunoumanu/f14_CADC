@@ -10,6 +10,7 @@
 | Device Count | 745 transistors |
 | Function | Main ALU — arithmetic, logic, shift, and special operations |
 | Key Registers | Accumulator (ACC), Temporary (TMP), Status Flags |
+| I/O Style | Bit-serial I/O with parallel internal computation |
 
 ### 2. Functional Description
 
@@ -97,23 +98,27 @@ Three status flags are generated after each ALU operation:
 
 ### 3. Interface Specification
 
+### 3. Interface Specification
+
 #### 3.1 Port List
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset (active high) |
-| `alu_op` | Input | 4 | ALU operation select |
-| `acc_in` | Input | 20 | Data input to accumulator/ALU |
-| `acc_write_en` | Input | 1 | Enable writing to ACC from ALU result |
-| `tmp_write_en` | Input | 1 | Enable writing ACC value to TMP |
-| `flags_write_en` | Input | 1 | Enable updating status flags |
-| `acc_out` | Output | 20 | Current accumulator value |
-| `tmp_out` | Output | 20 | Current temporary register value |
-| `alu_result` | Output | 20 | Combinational ALU result (before register) |
-| `flag_z` | Output | 1 | Zero flag |
-| `flag_n` | Output | 1 | Negative flag |
-| `flag_c` | Output | 1 | Carry flag |
+| `i_clk` | Input | 1 | System clock (1.5 MHz master) |
+| `i_rst` | Input | 1 | Synchronous reset (active high) |
+| `i_phi2` | Input | 1 | Phase 2 clock — register updates |
+| `i_word_type` | Input | 1 | '0'=WA (compute), '1'=WO (shift I/O) |
+| `i_t0` | Input | 1 | First bit time of word (bit 0) |
+| `i_t18` | Input | 1 | Bit time 18 (register update) |
+| `i_t19` | Input | 1 | Last bit time of word (bit 19) |
+| `i_cw_bit` | Input | 1 | Serial control word input (during WA T0-T6) |
+| `i_data_bit` | Input | 1 | Serial data input (during WO) |
+| `o_result_bit` | Output | 1 | Serial ALU result output (during WO) |
+| `o_acc_bit` | Output | 1 | Serial ACC output (during WO) |
+| `o_tmp_bit` | Output | 1 | Serial TMP output (during WO) |
+| `o_flag_z` | Output | 1 | Zero flag |
+| `o_flag_n` | Output | 1 | Negative flag |
+| `o_flag_c` | Output | 1 | Carry flag |
 
 #### 3.2 VHDL Entity Declaration
 
@@ -124,19 +129,25 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity slf is
     port (
-        clk          : in  std_logic;
-        rst          : in  std_logic;
-        alu_op       : in  std_logic_vector(3 downto 0);
-        acc_in       : in  std_logic_vector(19 downto 0);
-        acc_write_en : in  std_logic;
-        tmp_write_en : in  std_logic;
-        flags_write_en : in  std_logic;
-        acc_out      : out std_logic_vector(19 downto 0);
-        tmp_out      : out std_logic_vector(19 downto 0);
-        alu_result   : out std_logic_vector(19 downto 0);
-        flag_z       : out std_logic;
-        flag_n       : out std_logic;
-        flag_c       : out std_logic
+        i_clk        : in  std_logic;
+        i_rst        : in  std_logic;
+        -- Timing inputs
+        i_phi2       : in  std_logic;
+        i_word_type  : in  std_logic;  -- '0'=WA, '1'=WO
+        i_t0         : in  std_logic;
+        i_t18        : in  std_logic;
+        i_t19        : in  std_logic;
+        -- Serial control/data inputs
+        i_cw_bit     : in  std_logic;  -- Control word (WA T0-T6)
+        i_data_bit   : in  std_logic;  -- Data input (WO)
+        -- Serial data outputs
+        o_result_bit : out std_logic;  -- ALU result (WO)
+        o_acc_bit    : out std_logic;  -- ACC output (WO)
+        o_tmp_bit    : out std_logic;  -- TMP output (WO)
+        -- Status flags
+        o_flag_z     : out std_logic;
+        o_flag_n     : out std_logic;
+        o_flag_c     : out std_logic
     );
 end entity slf;
 ```
@@ -149,17 +160,17 @@ end entity slf;
 | SLF-F-002 | Shall maintain a 20-bit accumulator register | Must |
 | SLF-F-003 | Shall maintain a 20-bit temporary register | Must |
 | SLF-F-004 | Shall generate Z, N, C flags from ALU result | Must |
-| SLF-F-005 | ACC shall only update when `acc_write_en` is asserted | Must |
-| SLF-F-006 | TMP shall only update when `tmp_write_en` is asserted | Must |
-| SLF-F-007 | Flags shall only update when `flags_write_en` is asserted | Must |
+| SLF-F-005 | Shall receive control word serially during WA T0-T6 | Must |
+| SLF-F-006 | Shall receive data input serially during WO (LSB first) | Must |
+| SLF-F-007 | Shall output ACC/TMP/result serially during WO | Must |
 | SLF-F-008 | ADD/SUB shall operate on signed 2's complement fractional numbers | Must |
 | SLF-F-009 | SHR shall perform arithmetic right shift (sign extension) | Must |
 | SLF-F-010 | SHL shall perform arithmetic left shift (sign bit preserved) | Must |
 | SLF-F-011 | Gray-to-Binary conversion shall be correct for all 20-bit patterns | Must |
 | SLF-F-012 | Binary-to-Gray conversion shall be correct for all 20-bit patterns | Must |
 | SLF-F-013 | ABS of most negative number (0x80000) shall saturate to 0x7FFFF | Should |
-| SLF-F-014 | All ALU operations shall be single-cycle (combinational result) | Must |
-| SLF-F-015 | `alu_result` output shall be purely combinational | Must |
+| SLF-F-014 | ALU computation shall complete during WA T8 | Must |
+| SLF-F-015 | Registers updated at WA T18 on phi2 | Must |
 | SLF-F-016 | Reset shall clear ACC, TMP, and all flags to zero | Must |
 
 ### 5. Verification Tests
@@ -233,53 +244,93 @@ end entity slf;
 | SLF-T-061 | TMP hold when write disabled | TMP unchanged with `tmp_write_en`=0 |
 | SLF-T-062 | Flags hold when write disabled | Flags unchanged with `flags_write_en`=0 |
 
-#### 5.8 Testbench Structure
+#### 5.8 Testbench Structure (Bit-Serial)
 
 ```vhdl
 entity slf_tb is
 end entity slf_tb;
 
 architecture sim of slf_tb is
-    signal clk, rst : std_logic := '0';
-    signal alu_op : std_logic_vector(3 downto 0);
-    signal acc_in, acc_out, tmp_out, alu_result : std_logic_vector(19 downto 0);
-    signal acc_write_en, tmp_write_en, flags_write_en : std_logic;
-    signal flag_z, flag_n, flag_c : std_logic;
+    constant CLK_PERIOD : time := 667 ns;  -- 1.5 MHz master clock
     
-    constant CLK_PERIOD : time := 20 ns;
+    signal clk, rst, phi2, word_type, t0, t18, t19 : std_logic := '0';
+    signal cw_bit, data_bit : std_logic := '0';
+    signal result_bit, acc_bit, tmp_bit : std_logic;
+    signal flag_z, flag_n, flag_c : std_logic;
+    signal result_sr, acc_sr : std_logic_vector(19 downto 0) := (others => '0');
+    signal phase : unsigned(1 downto 0) := "00";
 begin
     clk <= not clk after CLK_PERIOD / 2;
     
+    phi_proc: process(clk)
+    begin
+        if rising_edge(clk) then
+            phase <= phase + 1;
+            phi2 <= '1' when phase = "10" else '0';
+        end if;
+    end process;
+    
     uut: entity work.slf
-        port map (clk, rst, alu_op, acc_in, acc_write_en, tmp_write_en,
-                  flags_write_en, acc_out, tmp_out, alu_result,
-                  flag_z, flag_n, flag_c);
+        port map (
+            i_clk => clk, i_rst => rst, i_phi2 => phi2,
+            i_word_type => word_type, i_t0 => t0, i_t18 => t18, i_t19 => t19,
+            i_cw_bit => cw_bit, i_data_bit => data_bit,
+            o_result_bit => result_bit, o_acc_bit => acc_bit, o_tmp_bit => tmp_bit,
+            o_flag_z => flag_z, o_flag_n => flag_n, o_flag_c => flag_c
+        );
     
     stim: process
-        procedure do_alu_op(op : std_logic_vector(3 downto 0);
-                           input : std_logic_vector(19 downto 0);
-                           wr_acc, wr_tmp, wr_flags : std_logic) is
+        -- Helper procedures for bit-serial WA/WO phases
+        procedure run_wa_phase(cw : std_logic_vector(6 downto 0)) is
         begin
-            alu_op <= op;
-            acc_in <= input;
-            acc_write_en <= wr_acc;
-            tmp_write_en <= wr_tmp;
-            flags_write_en <= wr_flags;
-            wait until rising_edge(clk);
-            wait for 1 ns;  -- Allow propagation
+            word_type <= '0';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t18 <= '1' when bit = 18 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                if bit <= 6 then
+                    cw_bit <= cw(bit);
+                else
+                    cw_bit <= '0';
+                end if;
+                for i in 0 to 3 loop
+                    wait until rising_edge(clk);
+                end loop;
+            end loop;
+        end procedure;
+        
+        procedure run_wo_phase(data_val : std_logic_vector(19 downto 0)) is
+            variable v_data : std_logic_vector(19 downto 0);
+        begin
+            v_data := data_val;
+            word_type <= '1';
+            for bit in 0 to 19 loop
+                t0 <= '1' when bit = 0 else '0';
+                t18 <= '1' when bit = 18 else '0';
+                t19 <= '1' when bit = 19 else '0';
+                data_bit <= v_data(0);
+                wait until rising_edge(clk) and phase = "01";
+                result_sr <= result_bit & result_sr(19 downto 1);
+                acc_sr <= acc_bit & acc_sr(19 downto 1);
+                wait until rising_edge(clk) and phase = "10";
+                wait until rising_edge(clk);
+                v_data := '0' & v_data(19 downto 1);
+            end loop;
         end procedure;
     begin
         rst <= '1';
         wait for 5 * CLK_PERIOD;
         rst <= '0';
+        wait until phase = "00" and rising_edge(clk);
         
-        -- Load ACC with 0.5
-        do_alu_op("1101", x"40000", '1', '0', '1');  -- LOAD 0.5
-        assert acc_out = x"40000" report "LOAD failed" severity error;
+        -- Load ACC with 0.5: ALU_OP=LOAD(1101), acc_we=1, tmp_we=0, flags_we=1
+        run_wa_phase("1101111");  -- CW bits 0-3=LOAD, 4=acc_we, 5=tmp_we, 6=flags_we
+        run_wo_phase(x"40000");   -- Data = 0.5
         
-        -- Add 0.25
-        do_alu_op("0001", x"20000", '1', '0', '1');  -- ADD 0.25
-        assert acc_out = x"60000" report "ADD failed" severity error;
+        -- Verify ACC loaded
+        run_wa_phase("0000000");  -- NOP
+        run_wo_phase(x"00000");
+        assert acc_sr = x"40000" report "LOAD 0.5 failed" severity error;
         
         report "SLF tests complete" severity note;
         wait;

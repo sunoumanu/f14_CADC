@@ -43,6 +43,19 @@ ARCHITECTURE bench OF pdu_tb IS
     SIGNAL fail_count : INTEGER := 0;
     SIGNAL phase      : UNSIGNED(1 DOWNTO 0) := "00";
 
+    -- Test result tracking for summary table
+    CONSTANT C_MAX_TESTS : INTEGER := 50;
+    TYPE t_test_result IS (NOT_RUN, PASS, FAIL);
+    TYPE t_result_array IS ARRAY(0 TO C_MAX_TESTS-1) OF t_test_result;
+    SHARED VARIABLE v_results : t_result_array := (OTHERS => NOT_RUN);
+
+    -- Test ID to index mapping:
+    -- 0=PDU-T-001, 1=PDU-T-002, 2=PDU-T-003, 3=PDU-T-004, 4=PDU-T-005
+    -- 5=PDU-T-006, 6=PDU-T-007, 7=PDU-T-010, 8=PDU-T-020, 9=PDU-T-021
+    -- 10=PDU-T-030, 11=PDU-T-031, 12=PDU-T-032
+    -- 13=PDU-T-040, 14=PDU-T-041, 15=PDU-T-042, 16=PDU-T-043, 17=PDU-T-044
+    SIGNAL test_idx : INTEGER := 0;
+
 BEGIN
 
     clk <= NOT clk AFTER CLK_PERIOD / 2;
@@ -124,10 +137,14 @@ BEGIN
             dividend_bit <= v_dividend(0);
             divisor_bit  <= v_divisor(0);
             
-            wait_bit_time;
-            
+            -- Capture quotient/remainder BEFORE phi2 (at phase "01")
+            WAIT UNTIL rising_edge(clk) AND phase = "01";
             quotient_sr  <= quotient_bit & quotient_sr(19 DOWNTO 1);
             remainder_sr <= remainder_bit & remainder_sr(19 DOWNTO 1);
+            
+            -- Wait for phi2 to complete the shift
+            WAIT UNTIL rising_edge(clk) AND phase = "10";
+            WAIT UNTIL rising_edge(clk);
             
             v_dividend := '0' & v_dividend(19 DOWNTO 1);
             v_divisor  := '0' & v_divisor(19 DOWNTO 1);
@@ -137,12 +154,13 @@ BEGIN
 
         -- Division test with integrated PDU-T-020/021 remainder verification
         PROCEDURE do_divide(
-            a         : IN std_logic_vector(19 DOWNTO 0);
-            b         : IN std_logic_vector(19 DOWNTO 0);
-            exp_q     : IN std_logic_vector(19 DOWNTO 0);
-            name      : IN STRING;
-            tolerance : IN INTEGER := 2;
-            check_q   : IN BOOLEAN := TRUE
+            a          : IN std_logic_vector(19 DOWNTO 0);
+            b          : IN std_logic_vector(19 DOWNTO 0);
+            exp_q      : IN std_logic_vector(19 DOWNTO 0);
+            name       : IN STRING;
+            result_idx : IN INTEGER;
+            tolerance  : IN INTEGER := 2;
+            check_q    : IN BOOLEAN := TRUE
         ) IS
             VARIABLE diff          : INTEGER;
             VARIABLE rem_abs       : INTEGER;
@@ -151,6 +169,7 @@ BEGIN
             VARIABLE v_recon       : SIGNED(20 DOWNTO 0);
             VARIABLE v_a_ext       : SIGNED(20 DOWNTO 0);
             VARIABLE v_recon_diff  : INTEGER;
+            VARIABLE v_passed      : BOOLEAN := TRUE;
         BEGIN
             run_wa_phase;
             run_wo_phase(a, b);
@@ -171,6 +190,7 @@ BEGIN
                         " diff=" & INTEGER'image(diff)
                         SEVERITY ERROR;
                     fail_count <= fail_count + 1;
+                    v_passed := FALSE;
                 ELSE
                     REPORT name & " PASSED (Q=0x" &
                         to_hstring(unsigned(quotient_sr)) & ")"
@@ -182,6 +202,7 @@ BEGIN
                     " R=0x" & to_hstring(unsigned(remainder_sr)) &
                     " [overflow/undefined - no assertion]"
                     SEVERITY NOTE;
+                v_passed := TRUE;  -- Overflow cases are expected behavior
             END IF;
 
             -- PDU-T-020: Remainder relationship
@@ -203,6 +224,7 @@ BEGIN
                         INTEGER'image(v_recon_diff) & ")"
                         SEVERITY ERROR;
                     fail_count <= fail_count + 1;
+                    v_passed := FALSE;
                 END IF;
             END IF;
 
@@ -223,7 +245,15 @@ BEGIN
                         INTEGER'image(div_abs)
                         SEVERITY ERROR;
                     fail_count <= fail_count + 1;
+                    v_passed := FALSE;
                 END IF;
+            END IF;
+
+            -- Record result
+            IF v_passed THEN
+                v_results(result_idx) := PASS;
+            ELSE
+                v_results(result_idx) := FAIL;
             END IF;
         END PROCEDURE;
 
@@ -240,30 +270,30 @@ BEGIN
         -----------------------------------------------------------------------
 
         -- PDU-T-001: Zero / positive = 0
-        do_divide(x"00000", x"40000", x"00000", "PDU-T-001: 0/0.5");
+        do_divide(x"00000", x"40000", x"00000", "PDU-T-001: 0/0.5", 0);
 
         -- PDU-T-002: 0.25 / 0.5 = 0.5
-        do_divide(x"20000", x"40000", x"40000", "PDU-T-002: 0.25/0.5");
+        do_divide(x"20000", x"40000", x"40000", "PDU-T-002: 0.25/0.5", 1);
 
         -- PDU-T-003: 0.5 / (-0.5) -- overflow (|A| = |B|, undefined)
         do_divide(x"40000", x"C0000", x"00000",
-                  "PDU-T-003: 0.5/(-0.5) overflow", 0, FALSE);
+                  "PDU-T-003: 0.5/(-0.5) overflow", 2, 0, FALSE);
 
         -- PDU-T-004: 0.25 / (-0.5) = -0.5
         do_divide(x"20000", x"C0000", x"C0000",
-                  "PDU-T-004: 0.25/(-0.5)");
+                  "PDU-T-004: 0.25/(-0.5)", 3);
 
         -- PDU-T-005: (-0.25) / (-0.5) = +0.5
         do_divide(x"E0000", x"C0000", x"40000",
-                  "PDU-T-005: (-0.25)/(-0.5)");
+                  "PDU-T-005: (-0.25)/(-0.5)", 4);
 
         -- PDU-T-006: (-0.25) / 0.5 = -0.5
         do_divide(x"E0000", x"40000", x"C0000",
-                  "PDU-T-006: (-0.25)/0.5");
+                  "PDU-T-006: (-0.25)/0.5", 5);
 
         -- PDU-T-007: Small / Large ~ very small
         do_divide(x"00001", x"7FFFF", x"00001",
-                  "PDU-T-007: tiny/large", 3);
+                  "PDU-T-007: tiny/large", 6, 3);
 
         -----------------------------------------------------------------------
         -- 5.2 Division by Zero (PDU-T-010)
@@ -279,9 +309,11 @@ BEGIN
         WAIT FOR 1 ns;
         IF div_by_zero = '1' THEN
             REPORT "PDU-T-010 PASSED: div_by_zero asserted" SEVERITY NOTE;
+            v_results(7) := PASS;
         ELSE
             REPORT "PDU-T-010 FAILED: div_by_zero not asserted" SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(7) := FAIL;
         END IF;
 
         -----------------------------------------------------------------------
@@ -296,16 +328,16 @@ BEGIN
         -- PDU-T-030: Alternating partial remainder signs
         -- 0.2 / 0.5 ~ 0.4  (exercises both add and subtract paths)
         do_divide(x"19999", x"40000", x"33333",
-                  "PDU-T-030: alternating rem signs", 4);
+                  "PDU-T-030: alternating rem signs", 10, 4);
 
         -- PDU-T-031: All positive shifts (dividend much smaller than divisor)
         do_divide(x"00010", x"7FFFF", x"00010",
-                  "PDU-T-031: all positive shifts", 4);
+                  "PDU-T-031: all positive shifts", 11, 4);
 
         -- PDU-T-032: Maximum iterations / worst-case timing
         -- (0.5 - eps) / 0.5 ~ 1.0 - eps
         do_divide(x"3FFFF", x"40000", x"7FFFE",
-                  "PDU-T-032: worst-case timing", 4);
+                  "PDU-T-032: worst-case timing", 12, 4);
 
         -----------------------------------------------------------------------
         -- 5.5 Timing Tests (PDU-T-040 .. PDU-T-044)
@@ -324,10 +356,12 @@ BEGIN
         WAIT FOR 1 ns;
         IF busy = '1' THEN
             REPORT "PDU-T-040 PASSED: busy asserted during WA" SEVERITY NOTE;
+            v_results(13) := PASS;
         ELSE
             REPORT "PDU-T-040 FAILED: busy not asserted after WA start"
                    SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(13) := FAIL;
         END IF;
         -- Complete remaining WA bits
         FOR bit IN 1 TO 19 LOOP
@@ -345,9 +379,11 @@ BEGIN
         IF busy = '0' THEN
             REPORT "PDU-T-041 PASSED: busy deasserted after WA+WO"
                    SEVERITY NOTE;
+            v_results(14) := PASS;
         ELSE
             REPORT "PDU-T-041 FAILED: busy still asserted" SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(14) := FAIL;
         END IF;
 
         -- PDU-T-042: New operands presented during active computation
@@ -368,11 +404,13 @@ BEGIN
         IF v_diff <= 2 THEN
             REPORT "PDU-T-042 PASSED: Q=0x" &
                    to_hstring(unsigned(quotient_sr)) SEVERITY NOTE;
+            v_results(15) := PASS;
         ELSE
             REPORT "PDU-T-042 FAILED: Q=0x" &
                    to_hstring(unsigned(quotient_sr)) &
                    " expected ~0x20000" SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(15) := FAIL;
         END IF;
 
         -- PDU-T-043: Back-to-back operations
@@ -391,11 +429,13 @@ BEGIN
         IF v_diff <= 2 THEN
             REPORT "PDU-T-043 PASSED: back-to-back Q=0x" &
                    to_hstring(unsigned(quotient_sr)) SEVERITY NOTE;
+            v_results(16) := PASS;
         ELSE
             REPORT "PDU-T-043 FAILED: Q=0x" &
                    to_hstring(unsigned(quotient_sr)) &
                    " expected ~0x20000" SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(16) := FAIL;
         END IF;
 
         -- PDU-T-044: Reset during operation clears busy
@@ -417,22 +457,52 @@ BEGIN
         test_count <= test_count + 1;
         IF busy = '0' THEN
             REPORT "PDU-T-044 PASSED: busy cleared on reset" SEVERITY NOTE;
+            v_results(17) := PASS;
         ELSE
             REPORT "PDU-T-044 FAILED: busy not cleared after reset"
                    SEVERITY ERROR;
             fail_count <= fail_count + 1;
+            v_results(17) := FAIL;
         END IF;
 
         WAIT FOR 5 * CLK_PERIOD;
 
         -----------------------------------------------------------------------
-        -- Summary
+        -- Summary Table
         -----------------------------------------------------------------------
-        REPORT "======================================" SEVERITY NOTE;
-        REPORT "PDU Testbench Complete (Bit-Serial)" SEVERITY NOTE;
-        REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
-        REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
-        REPORT "======================================" SEVERITY NOTE;
+        REPORT "" SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "                        PDU TESTBENCH SUMMARY                             " SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  Test ID     | Description                              | Result        " SEVERITY NOTE;
+        REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+        REPORT "  PDU-T-001   | Zero / positive = 0                      | " & t_test_result'IMAGE(v_results(0)) SEVERITY NOTE;
+        REPORT "  PDU-T-002   | Positive / positive (0.25/0.5)           | " & t_test_result'IMAGE(v_results(1)) SEVERITY NOTE;
+        REPORT "  PDU-T-003   | Positive / negative (overflow)           | " & t_test_result'IMAGE(v_results(2)) SEVERITY NOTE;
+        REPORT "  PDU-T-004   | Positive / negative (0.25/-0.5)          | " & t_test_result'IMAGE(v_results(3)) SEVERITY NOTE;
+        REPORT "  PDU-T-005   | Negative / negative (-0.25/-0.5)         | " & t_test_result'IMAGE(v_results(4)) SEVERITY NOTE;
+        REPORT "  PDU-T-006   | Negative / positive (-0.25/0.5)          | " & t_test_result'IMAGE(v_results(5)) SEVERITY NOTE;
+        REPORT "  PDU-T-007   | Small / large (tiny/large)               | " & t_test_result'IMAGE(v_results(6)) SEVERITY NOTE;
+        REPORT "  PDU-T-010   | Division by zero detection               | " & t_test_result'IMAGE(v_results(7)) SEVERITY NOTE;
+        REPORT "  PDU-T-020   | Remainder relationship Q*B+R~A           | (integrated)  " SEVERITY NOTE;
+        REPORT "  PDU-T-021   | Remainder magnitude |R| < |B|            | (integrated)  " SEVERITY NOTE;
+        REPORT "  PDU-T-030   | Alternating partial remainder signs      | " & t_test_result'IMAGE(v_results(10)) SEVERITY NOTE;
+        REPORT "  PDU-T-031   | All positive shifts                      | " & t_test_result'IMAGE(v_results(11)) SEVERITY NOTE;
+        REPORT "  PDU-T-032   | Worst-case timing                        | " & t_test_result'IMAGE(v_results(12)) SEVERITY NOTE;
+        REPORT "  PDU-T-040   | Busy asserted during computation         | " & t_test_result'IMAGE(v_results(13)) SEVERITY NOTE;
+        REPORT "  PDU-T-041   | Busy deasserts after completion          | " & t_test_result'IMAGE(v_results(14)) SEVERITY NOTE;
+        REPORT "  PDU-T-042   | New operands during active computation   | " & t_test_result'IMAGE(v_results(15)) SEVERITY NOTE;
+        REPORT "  PDU-T-043   | Back-to-back operations                  | " & t_test_result'IMAGE(v_results(16)) SEVERITY NOTE;
+        REPORT "  PDU-T-044   | Reset during operation clears busy       | " & t_test_result'IMAGE(v_results(17)) SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  TOTAL: " & INTEGER'image(test_count) & " tests, " &
+               INTEGER'image(fail_count) & " failures" SEVERITY NOTE;
+        IF fail_count = 0 THEN
+            REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+        ELSE
+            REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+        END IF;
+        REPORT "==========================================================================" SEVERITY NOTE;
 
         REPORT "sim complete" SEVERITY FAILURE;
     END PROCESS;

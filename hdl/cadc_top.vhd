@@ -281,8 +281,9 @@ BEGIN
       o_fail_detect    => o_fail_detect
     );
 
-  -- I/O control from parallel microword (gate with WA to avoid WO corruption)
-  s_io_ctrl <= s_micro_word(3 DOWNTO 0) WHEN s_word_type = '0' ELSE "0000";
+  -- I/O control from parallel microword (gate with WA and is_io flag bit 31)
+  -- Bit 31 distinguishes IO instructions from ALU instructions (shared bits 3:0)
+  s_io_ctrl <= s_micro_word(3 DOWNTO 0) WHEN s_word_type = '0' AND s_micro_word(31) = '1' ELSE "0000";
 
   -----------------------------------------------------------------------------
   -- I/O Serialization - Convert between parallel I/O and serial streams

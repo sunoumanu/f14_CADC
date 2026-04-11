@@ -141,70 +141,88 @@ Selects which source feeds the I/O Bridge output.
 
 ### 3. Interface Specification
 
+#### 3.0 I/O Style
+**Bit-Serial:** Single-bit data ports shift serially during WO (Word Out) phase, LSB first. 
+Control signals are **parallel** from the microword, latched at WA (Word Address) T0.
+
 #### 3.1 Port List
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
-| **Data Sources** | | | |
-| `src_ras` | Input | 20 | RAS read data |
-| `src_acc` | Input | 20 | ACC register value |
-| `src_tmp` | Input | 20 | TMP register value |
-| `src_pmu` | Input | 20 | PMU result |
-| `src_pdu_q` | Input | 20 | PDU quotient |
-| `src_pdu_r` | Input | 20 | PDU remainder |
-| `src_io_in` | Input | 20 | I/O input data |
-| `src_const` | Input | 20 | Constant from ROM |
-| **Select Controls** | | | |
-| `sel_acc_src` | Input | 3 | ACC input source select |
-| `sel_ras_src` | Input | 2 | RAS write data source select |
-| `sel_io_src` | Input | 2 | I/O output source select |
-| **Routed Outputs** | | | |
-| `acc_in` | Output | 20 | Selected data for ACC/ALU input |
-| `ras_wr_data` | Output | 20 | Selected data for RAS write |
-| `io_out` | Output | 20 | Selected data for I/O output |
+| **Clock and Control** | | | |
+| `i_clk` | Input | 1 | System clock |
+| `i_rst` | Input | 1 | Synchronous reset |
+| `i_phi2` | Input | 1 | Shift clock phase (operations on rising edge) |
+| `i_word_type` | Input | 1 | '0'=WA (Word Address), '1'=WO (Word Out) |
+| `i_t0` | Input | 1 | First bit time of 20-bit word |
+| `i_t19` | Input | 1 | Last bit time of 20-bit word |
+| **Serial Data Sources** | | | |
+| `i_src_ras_bit` | Input | 1 | RAS read data (bit-serial) |
+| `i_src_acc_bit` | Input | 1 | ACC output (bit-serial) |
+| `i_src_tmp_bit` | Input | 1 | TMP output (bit-serial) |
+| `i_src_pmu_bit` | Input | 1 | PMU product (bit-serial) |
+| `i_src_pduq_bit` | Input | 1 | PDU quotient (bit-serial) |
+| `i_src_pdur_bit` | Input | 1 | PDU remainder (bit-serial) |
+| `i_src_io_bit` | Input | 1 | I/O input (bit-serial) |
+| `i_src_const_bit` | Input | 1 | Data ROM constant (bit-serial) |
+| **Parallel Control (from microword)** | | | |
+| `i_sel_acc` | Input | 4 | ACC source select (bits 7-10 of microword) |
+| `i_sel_ras` | Input | 4 | RAS write source select (bits 11-14) |
+| `i_sel_io` | Input | 3 | I/O output source select (bits 15-17) |
+| **Serial Data Outputs** | | | |
+| `o_acc_in_bit` | Output | 1 | Selected data to SLF ACC input |
+| `o_ras_wr_bit` | Output | 1 | Selected data to RAS write port |
+| `o_io_out_bit` | Output | 1 | Selected data to I/O Bridge output |
 
 #### 3.2 VHDL Entity Declaration
 
 ```vhdl
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
 
-entity sl is
-    port (
-        -- Data sources
-        src_ras     : in  std_logic_vector(19 downto 0);
-        src_acc     : in  std_logic_vector(19 downto 0);
-        src_tmp     : in  std_logic_vector(19 downto 0);
-        src_pmu     : in  std_logic_vector(19 downto 0);
-        src_pdu_q   : in  std_logic_vector(19 downto 0);
-        src_pdu_r   : in  std_logic_vector(19 downto 0);
-        src_io_in   : in  std_logic_vector(19 downto 0);
-        src_const   : in  std_logic_vector(19 downto 0);
-        -- Select controls
-        sel_acc_src : in  std_logic_vector(2 downto 0);
-        sel_ras_src : in  std_logic_vector(1 downto 0);
-        sel_io_src  : in  std_logic_vector(1 downto 0);
-        -- Routed outputs
-        acc_in      : out std_logic_vector(19 downto 0);
-        ras_wr_data : out std_logic_vector(19 downto 0);
-        io_out      : out std_logic_vector(19 downto 0)
-    );
-end entity sl;
+ENTITY sl IS
+  PORT (
+    i_clk          : IN  STD_LOGIC;
+    i_rst          : IN  STD_LOGIC;
+    -- Timing inputs
+    i_phi2         : IN  STD_LOGIC;   -- Shift on phi2
+    i_word_type    : IN  STD_LOGIC;   -- '0'=WA, '1'=WO
+    i_t0           : IN  STD_LOGIC;   -- First bit of word
+    i_t19          : IN  STD_LOGIC;   -- Last bit of word
+    -- Serial data source inputs (active during WO)
+    i_src_ras_bit  : IN  STD_LOGIC;   -- RAS read data
+    i_src_acc_bit  : IN  STD_LOGIC;   -- ACC output
+    i_src_tmp_bit  : IN  STD_LOGIC;   -- TMP output
+    i_src_pmu_bit  : IN  STD_LOGIC;   -- PMU product
+    i_src_pduq_bit : IN  STD_LOGIC;   -- PDU quotient
+    i_src_pdur_bit : IN  STD_LOGIC;   -- PDU remainder
+    i_src_io_bit   : IN  STD_LOGIC;   -- I/O input
+    i_src_const_bit: IN  STD_LOGIC;   -- Data ROM constant
+    -- Parallel control (from microword)
+    i_sel_acc      : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);  -- ACC source
+    i_sel_ras      : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);  -- RAS write source
+    i_sel_io       : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);  -- IO output source
+    -- Serial data outputs (active during WO)
+    o_acc_in_bit   : OUT STD_LOGIC;   -- To SLF ACC input
+    o_ras_wr_bit   : OUT STD_LOGIC;   -- To RAS write data
+    o_io_out_bit   : OUT STD_LOGIC    -- To I/O output
+  );
+END ENTITY sl;
 ```
 
 ### 4. Functional Requirements
 
 | Req ID | Requirement | Priority |
 |--------|-------------|----------|
-| SL-F-001 | Shall be purely combinational (no clock, no registers) | Must |
-| SL-F-002 | Shall route one of 8 sources to ACC input per `sel_acc_src` | Must |
-| SL-F-003 | Shall route one of 4 sources to RAS write data per `sel_ras_src` | Must |
-| SL-F-004 | Shall route one of 4 sources to I/O output per `sel_io_src` | Must |
-| SL-F-005 | All three output muxes shall operate independently | Must |
-| SL-F-006 | Same source may be routed to multiple destinations simultaneously | Must |
-| SL-F-007 | Maximum propagation delay shall not exceed critical path budget | Should |
+| SL-F-001 | Shall latch parallel control inputs at WA T0 (i_phi2 = '1', i_word_type = '0', i_t0 = '1') | Must |
+| SL-F-002 | Shall route one of 8 serial sources to ACC output per `i_sel_acc[2:0]` | Must |
+| SL-F-003 | Shall route one of 4 serial sources to RAS write output per `i_sel_ras[1:0]` | Must |
+| SL-F-004 | Shall route one of 4 serial sources to I/O output per `i_sel_io[1:0]` | Must |
+| SL-F-005 | All three output muxes shall operate independently during WO | Must |
+| SL-F-006 | Same serial source may be routed to multiple destinations simultaneously | Must |
+| SL-F-007 | Serial selection shall be combinational once control is latched | Must |
 | SL-F-008 | Reserved select values shall output zero | Should |
-| SL-F-009 | All 20 bits shall be routed (no bit swapping or modification) | Must |
+| SL-F-009 | Outputs shall be valid on each i_phi2 rising edge during WO | Must |
 
 ### 5. Verification Tests
 
@@ -259,44 +277,81 @@ end entity sl;
 #### 5.6 Testbench Structure
 
 ```vhdl
-entity sl_tb is
-end entity sl_tb;
+ENTITY sl_tb IS
+END ENTITY sl_tb;
 
-architecture sim of sl_tb is
-    signal src_ras, src_acc, src_tmp, src_pmu : std_logic_vector(19 downto 0);
-    signal src_pdu_q, src_pdu_r, src_io_in, src_const : std_logic_vector(19 downto 0);
-    signal sel_acc_src : std_logic_vector(2 downto 0);
-    signal sel_ras_src, sel_io_src : std_logic_vector(1 downto 0);
-    signal acc_in, ras_wr_data, io_out : std_logic_vector(19 downto 0);
-begin
-    uut: entity work.sl
-        port map (
-            src_ras, src_acc, src_tmp, src_pmu,
-            src_pdu_q, src_pdu_r, src_io_in, src_const,
-            sel_acc_src, sel_ras_src, sel_io_src,
-            acc_in, ras_wr_data, io_out
-        );
+ARCHITECTURE sim OF sl_tb IS
+  CONSTANT CLK_PERIOD : TIME := 666 ns;  -- 1.5 MHz
+  
+  SIGNAL clk, rst        : STD_LOGIC := '0';
+  SIGNAL phi2, word_type : STD_LOGIC := '0';
+  SIGNAL t0, t19         : STD_LOGIC := '0';
+  -- Serial data sources
+  SIGNAL src_ras_bit, src_acc_bit, src_tmp_bit : STD_LOGIC := '0';
+  SIGNAL src_pmu_bit, src_pduq_bit, src_pdur_bit : STD_LOGIC := '0';
+  SIGNAL src_io_bit, src_const_bit : STD_LOGIC := '0';
+  -- Parallel control
+  SIGNAL sel_acc : STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL sel_ras : STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL sel_io  : STD_LOGIC_VECTOR(2 DOWNTO 0) := (OTHERS => '0');
+  -- Serial outputs
+  SIGNAL acc_in_bit, ras_wr_bit, io_out_bit : STD_LOGIC;
+  
+BEGIN
+  clk <= NOT clk AFTER CLK_PERIOD / 2;
+  
+  uut: ENTITY work.sl
+    PORT MAP (
+      i_clk => clk, i_rst => rst,
+      i_phi2 => phi2, i_word_type => word_type,
+      i_t0 => t0, i_t19 => t19,
+      i_src_ras_bit => src_ras_bit,
+      i_src_acc_bit => src_acc_bit,
+      i_src_tmp_bit => src_tmp_bit,
+      i_src_pmu_bit => src_pmu_bit,
+      i_src_pduq_bit => src_pduq_bit,
+      i_src_pdur_bit => src_pdur_bit,
+      i_src_io_bit => src_io_bit,
+      i_src_const_bit => src_const_bit,
+      i_sel_acc => sel_acc,
+      i_sel_ras => sel_ras,
+      i_sel_io => sel_io,
+      o_acc_in_bit => acc_in_bit,
+      o_ras_wr_bit => ras_wr_bit,
+      o_io_out_bit => io_out_bit
+    );
+  
+  stim: PROCESS
+  BEGIN
+    rst <= '1'; WAIT FOR CLK_PERIOD * 2;
+    rst <= '0'; WAIT FOR CLK_PERIOD;
     
-    stim: process
-    begin
-        -- Set unique values on each source
-        src_ras   <= x"11111";
-        src_acc   <= x"22222";
-        src_tmp   <= x"33333";
-        src_pmu   <= x"44444";
-        src_pdu_q <= x"55555";
-        src_pdu_r <= x"66666";
-        src_io_in <= x"77777";
-        src_const <= x"88888";
-        
-        -- Test ACC source selection
-        for i in 0 to 7 loop
-            sel_acc_src <= std_logic_vector(to_unsigned(i, 3));
-            sel_ras_src <= "00";
-            sel_io_src <= "00";
-            wait for 10 ns;
-            -- Verify acc_in matches expected source
-        end loop;
+    -- Set control during WA phase
+    word_type <= '0';  -- WA
+    sel_acc <= "0000"; sel_ras <= "0000"; sel_io <= "000";
+    t0 <= '1'; phi2 <= '1';
+    WAIT FOR CLK_PERIOD;
+    t0 <= '0'; phi2 <= '0';
+    
+    -- Apply serial data during WO phase
+    word_type <= '1';  -- WO
+    FOR bit_idx IN 0 TO 19 LOOP
+      -- Set different patterns on each source
+      src_ras_bit <= '1';
+      src_acc_bit <= '0';
+      t0 <= '1' WHEN bit_idx = 0 ELSE '0';
+      t19 <= '1' WHEN bit_idx = 19 ELSE '0';
+      phi2 <= '1';
+      WAIT FOR CLK_PERIOD / 2;
+      phi2 <= '0';
+      WAIT FOR CLK_PERIOD / 2;
+    END LOOP;
+    
+    REPORT "Test complete" SEVERITY NOTE;
+    WAIT;
+  END PROCESS stim;
+END ARCHITECTURE sim;
+```
         
         -- Test RAS source selection
         sel_acc_src <= "000";

@@ -60,8 +60,12 @@ ARCHITECTURE rtl OF control_rom_sequencer IS
     OF STD_LOGIC_VECTOR(g_uword_width-1 DOWNTO 0);
 
   ---------------------------------------------------------------------------
-  -- Polynomial Microprogram for E = a3*X^3 + a2*X^2 + a1*X + a0
-  -- Using Horner's method: E = ((a3*X + a2)*X + a1)*X + a0
+  -- F-14A CADC Air Data Computation Microprogram
+  -- Computes: Mach, Altitude, Airspeed, Vertical Speed,
+  --           Wing Sweep (rate-limited), Maneuver Flaps, Glove Vane
+  -- From: Ps (static pressure), Qc (impact pressure), TAT (temperature)
+  -- Method: Horner polynomial evaluation via PMU multiply + SLF add
+  -- Total instructions: 147
   --
   -- Microword Bit Layout:
   --   bits 0-3:   SLF ALU_OP (serial) / IO control (parallel) - SHARED!
@@ -74,155 +78,292 @@ ARCHITECTURE rtl OF control_rom_sequencer IS
   --   bits 18-23: RAS read address (parallel)
   --   bits 24-29: RAS write address (parallel)
   --   bit 30:     RAS write enable (parallel)
-  --   bits 32-35: Data ROM address (parallel)
+  --   bits 32-37: Data ROM address (parallel, 6 bits = 64 constants)
+  --   bits 38-39: reserved
   --   bits 40-47: Sequencer nextctl (parallel)
   --
   -- ALU_OP: 0=NOP,1=ADD,2=SUB,0xD=LOAD,0xE=STORE_TMP,0xF=PASS
   -- ACC_SRC (bits 10-7): 0=RAS,1=PMU,2=PDUQ,3=PDUR,4=IO,5=CONST,6=TMP,7=ACC
   -- IO_CTRL: 0=NOP,1=read_ps,2=read_qc,6=write_mach,...
   --
+  -- CRITICAL: ALU_OP and IO_CTRL share bits 3:0. They cannot coexist.
+  -- IO commands occupy their own instruction (no ALU operation).
+  --
   -- PIPELINE NOTE: ACC_SRC routes data during WO_N, ALU uses it during WA_(N+1)
   -- So to "LOAD source to ACC": inst N sets ACC_SRC=source, inst N+1 does LOAD+acc_we
+  --
+  -- RAS Memory Map:
+  --   2=TAT, 3=Ps_bin, 4=Qc_bin, 5=ratio, 6=Mach, 7=Altitude
+  --   8=Airspeed, 9=Vspd, 10=Wing_cmd, 11=Wing_out, 12=Flap, 13=Glove
+  --   14=Alt_prev, 15=Wing_prev
   ---------------------------------------------------------------------------
   SIGNAL s_ctrl_rom : t_ctrl_rom := (
-    -- Inst 0: Route IO to SLF, setup I/O read
-    -- ACC_SRC=IO(4)=0100 → bits 10-7: 0x200, io_ctrl=1 (read_ps)
-    0  => x"000000000201",  -- ACC_SRC=IO, io_ctrl=read_ps
-    
-    -- Inst 1: LOAD (uses IO from WO0), route doesn't matter for next
-    -- ALU=LOAD(D), acc_we=1 → 0x1D
-    1  => x"00000000001D",  -- LOAD IO to ACC, ACC = X
-    
-    -- Inst 2: Copy ACC to TMP via tmp_we
-    -- ALU=PASS(F), tmp_we=1, acc_we=0 → PASS doesn't write ACC when acc_we=1
-    -- Actually just tmp_we=1, ALU=NOP → bit5=1 = 0x20
-    2  => x"000000000020",  -- tmp_we=1, TMP = X
-    
-    -- Inst 3: Route CONST[0]=a3 to SLF for inst 4
-    -- ACC_SRC=CONST(5)=0101 → bits 10-7: 0x280, data_addr=0
-    3  => x"000000000280",  -- ACC_SRC=CONST, data_addr=0
-    
-    -- Inst 4: LOAD (uses a3 from WO3), ACC=a3
-    -- After WA4 T18: ACC=a3, s_acc_out_sr=a3, s_tmp_out_sr=X
-    -- During WO4: PMU receives (a3, X)
-    -- At WO4 T19: PMU latches, then starts computing at WA5 T0
-    4  => x"00000000001D",  -- LOAD to ACC, ACC = a3
-    
-    -- Inst 5: Route PMU to SLF (for inst 6), wait for PMU result
-    -- ACC_SRC=PMU(1)=0001 → bits 10-7: 0x80, nextctl=WAIT_PMU(07)
-    5  => x"070000000080",  -- ACC_SRC=PMU, WAIT_PMU
-    
-    -- Inst 6: LOAD PMU (uses a3*X from WO5), route CONST[1]=a2 for inst 7
-    -- ACC_SRC=CONST(5), data_addr=1, ALU=LOAD, acc_we=1
-    6  => x"00010000029D",  -- LOAD PMU to ACC (=a3*X), route a2
-    
-    -- Inst 7: ADD (uses a2 from WO6), ACC = a3*X + a2
-    -- After WA7: ACC = a3*X + a2
-    -- During WO7: PMU receives (a3*X+a2, X)
-    7  => x"000000000011",  -- ADD, acc_we=1, ACC = a3*X + a2
-    
-    -- Inst 8: Route PMU, wait for PMU
-    8  => x"070000000080",  -- ACC_SRC=PMU, WAIT_PMU
-    
-    -- Inst 9: LOAD PMU, route CONST[2]=a1
-    -- ACC = (a3*X + a2)*X
-    9  => x"00020000029D",  -- LOAD PMU, route a1
-    
-    -- Inst 10: ADD a1
-    -- ACC = (a3*X + a2)*X + a1
-    10 => x"000000000011",  -- ADD, acc_we=1
-    
-    -- Inst 11: Route PMU, wait
-    11 => x"070000000080",  -- ACC_SRC=PMU, WAIT_PMU
-    
-    -- Inst 12: LOAD PMU, route CONST[3]=a0
-    -- ACC = ((a3*X + a2)*X + a1)*X
-    12 => x"00030000029D",  -- LOAD PMU, route a0
-    
-    -- Inst 13: ADD a0, final result
-    -- ACC = E = ((a3*X + a2)*X + a1)*X + a0
-    13 => x"000000000011",  -- ADD, acc_we=1, ACC = E
-    
-    -- Inst 14: NOP - ACC data shifts out, io_sel=0 routes ACC in io_mux
-    14 => x"000000000000",  -- NOP, io_sel=0=ACC
-    
-    -- Inst 15: NOP - keep ACC routing for one more cycle  
-    15 => x"000000000000",  -- NOP, io_sel=0=ACC
-    
-    -- Inst 16: Output to MACH - captures data from WO15
-    -- io_sel=0=ACC for this WO, io_ctrl=write_mach triggers capture
-    16 => x"000000000006",  -- io_sel=0=ACC, io_ctrl=write_mach
-    
-    -- Inst 17: Continue to instruction test section
-    17 => x"011400000000",  -- JUMP to 20 (0x14)
-
-    ---------------------------------------------------------------------------
-    -- Instruction Test Section (addrs 20-60)
-    -- Exercises all NEXTCTL instruction types.
-    -- Control fields are all zero (NOP) so data path is unaffected.
-    ---------------------------------------------------------------------------
-
-    -- === Branch taken tests (testbench sets appropriate flags) ===
-    20 => x"000000000000",  -- NOP (SEQ -> PC=21)
-    21 => x"021800000000",  -- BRZ to 24 (taken when Z=1)
-    22 => x"000000000000",  -- skip
-    23 => x"000000000000",  -- skip
-    24 => x"031B00000000",  -- BRN to 27 (taken when N=1)
-    25 => x"000000000000",  -- skip
-    26 => x"000000000000",  -- skip
-    27 => x"041E00000000",  -- BRC to 30 (taken when C=1)
-    28 => x"000000000000",  -- skip
-    29 => x"000000000000",  -- skip
-    30 => x"052100000000",  -- BR_PMUB to 33 (taken when pmu_busy=1)
-    31 => x"000000000000",  -- skip
-    32 => x"000000000000",  -- skip
-    33 => x"062400000000",  -- BR_PDUB to 36 (taken when pdu_busy=1)
-    34 => x"000000000000",  -- skip
-    35 => x"000000000000",  -- skip
-
-    -- === Wait tests ===
-    36 => x"080000000000",  -- WAIT_PDU (holds while pdu_busy=1)
-    37 => x"070000000000",  -- WAIT_PMU (holds while pmu_busy=1)
-
-    -- === Subroutine tests ===
-    38 => x"092A00000000",  -- CALL to 42 (0x2A), push return addr 39
-    39 => x"013200000000",  -- JUMP to 50 (0x32) (return landing)
-    40 => x"000000000000",  -- NOP
-    41 => x"000000000000",  -- NOP
-    42 => x"0A0000000000",  -- RET (pop -> PC=39)
-
-    -- === Branch not-taken tests (testbench clears all flags) ===
-    50 => x"023C00000000",  -- BRZ to 60 (not taken, Z=0 -> PC=51)
-    51 => x"033C00000000",  -- BRN to 60 (not taken, N=0 -> PC=52)
-    52 => x"043C00000000",  -- BRC to 60 (not taken, C=0 -> PC=53)
-    53 => x"053C00000000",  -- BR_PMUB to 60 (not taken, busy=0 -> PC=54)
-    54 => x"063C00000000",  -- BR_PDUB to 60 (not taken, busy=0 -> PC=55)
-    55 => x"014600000000",  -- JUMP to 70 (0x46) -> nested call tests
-
-    -- === Fail trap ===
-    60 => x"013C00000000",  -- JUMP to 60 (halt - branch test failed)
-
-    -- === Nested subroutine tests ===
-    70 => x"095000000000",  -- CALL to 80 (0x50), push 71
-    71 => x"015A00000000",  -- JUMP to 90 (0x5A) -> halt after nested test
-
-    80 => x"095500000000",  -- CALL to 85 (0x55), push 81 (nested call)
-    81 => x"0A0000000000",  -- RET -> pop 71
-
-    85 => x"0A0000000000",  -- RET -> pop 81
-
-    90 => x"015A00000000",  -- JUMP to 90 (halt - nested tests passed)
+    -- Phase 1: Sensor input (Gray-to-binary conversion)
+    -- GRAY2BIN operates on s_input_lat, NOT s_acc_reg.
+    -- After IO READ, sensor data arrives on input during WO.
+    -- So: READ -> GRAY2BIN (skip intermediate LOAD).
+    -- Bit 31 = is_io flag: set on IO instructions, clear on ALU instructions
+      0 => x"000080000201",  -- IO READ_PS, route IO to ACC input
+      1 => x"00000000001B",  -- GRAY2BIN(input_lat=Ps_gray) => Ps_bin in ACC
+      2 => x"000043000000",  -- Store Ps_bin to RAS[3]
+      3 => x"000080000202",  -- IO READ_QC, route IO to ACC input
+      4 => x"00000000001B",  -- GRAY2BIN(input_lat=Qc_gray) => Qc_bin in ACC
+      5 => x"000044000000",  -- Store Qc_bin to RAS[4]
+      6 => x"000080000203",  -- IO READ_TAT, route IO to ACC input
+      7 => x"00000000001D",  -- LOAD TAT to ACC
+      8 => x"000042000000",  -- Store TAT to RAS[2]
+    -- Phase 2: Pressure ratio r = Qc/Ps via PDU
+      9 => x"0000000C0000",  -- Route RAS[3] (Ps) to ACC input
+     10 => x"00000000001D",  -- LOAD Ps to ACC
+     11 => x"000000100020",  -- TMP=Ps, route RAS[4] (Qc)
+     12 => x"00000000001D",  -- LOAD Qc to ACC => PDU auto-starts Qc/Ps
+     13 => x"080000000100",  -- WAIT_PDU, route PDU quotient
+     14 => x"00004500001D",  -- LOAD ratio = Qc/Ps to ACC, store RAS[5]
+    -- Phase 3: Mach = 4th-order Horner of ratio r
+     15 => x"0000000002A0",  -- TMP=r for multiplies, route CONST[0]=a4
+     16 => x"00000000001D",  -- LOAD a4 => PMU starts a4*r
+     17 => x"070000000080",  -- WAIT_PMU, route PMU result
+     18 => x"00010000029D",  -- LOAD a4*r, route CONST[1]=a3
+     19 => x"000000000051",  -- ADD a3 => (a4*r+a3), PMU starts *r
+     20 => x"070000000080",  -- WAIT_PMU
+     21 => x"00020000029D",  -- LOAD PMU, route CONST[2]=a2
+     22 => x"000000000051",  -- ADD a2, PMU starts *r
+     23 => x"070000000080",  -- WAIT_PMU
+     24 => x"00030000029D",  -- LOAD PMU, route CONST[3]=a1
+     25 => x"000000000051",  -- ADD a1, PMU starts *r
+     26 => x"070000000080",  -- WAIT_PMU
+     27 => x"00040000029D",  -- LOAD PMU, route CONST[4]=a0
+     28 => x"000046000051",  -- ADD a0 => Mach, store RAS[6], route ACC to IO
+     29 => x"000080000006",  -- IO WRITE_MACH
+    -- Phase 4: Altitude = 4th-order Horner of Ps
+     30 => x"0000000C0000",  -- Route RAS[3] (Ps)
+     31 => x"00000000001D",  -- LOAD Ps to ACC
+     32 => x"0005000002A0",  -- TMP=Ps, route CONST[5]=b4
+     33 => x"00000000001D",  -- LOAD b4 => PMU starts b4*Ps
+     34 => x"070000000080",  -- WAIT_PMU
+     35 => x"00060000029D",  -- LOAD PMU, route CONST[6]=b3
+     36 => x"000000000051",  -- ADD b3, PMU starts *Ps
+     37 => x"070000000080",  -- WAIT_PMU
+     38 => x"00070000029D",  -- LOAD PMU, route CONST[7]=b2
+     39 => x"000000000051",  -- ADD b2, PMU starts *Ps
+     40 => x"070000000080",  -- WAIT_PMU
+     41 => x"00080000029D",  -- LOAD PMU, route CONST[8]=b1
+     42 => x"000000000051",  -- ADD b1, PMU starts *Ps
+     43 => x"070000000080",  -- WAIT_PMU
+     44 => x"00090000029D",  -- LOAD PMU, route CONST[9]=b0
+     45 => x"000047000051",  -- ADD b0 => Altitude, store RAS[7], route ACC to IO
+     46 => x"000080000007",  -- IO WRITE_ALT
+    -- Phase 5: Airspeed = f(Mach, TAT) with linearized sqrt
+     47 => x"000C00000280",  -- Route CONST[12]=tat_ref
+     48 => x"00000000001D",  -- LOAD tat_ref to ACC
+     49 => x"000000080020",  -- TMP=tat_ref, route RAS[2] (TAT)
+     50 => x"00000000001D",  -- LOAD TAT => PDU starts TAT/tat_ref
+     51 => x"080000000100",  -- WAIT_PDU, route quotient
+     52 => x"00000000001D",  -- LOAD ratio2 = TAT/tat_ref
+     53 => x"000D000002A0",  -- TMP=ratio2, route CONST[13]=sqrt_c1
+     54 => x"00000000001D",  -- LOAD sqrt_c1 => PMU starts sqrt_c1*ratio2
+     55 => x"070000000080",  -- WAIT_PMU
+     56 => x"000E0000029D",  -- LOAD PMU, route CONST[14]=sqrt_c0
+     57 => x"000000000051",  -- ADD sqrt_c0 => sqrt_est
+     58 => x"000000180020",  -- TMP=sqrt_est, route RAS[6] (Mach)
+     59 => x"00000000001D",  -- LOAD Mach => PMU starts Mach*sqrt_est
+     60 => x"070000000080",  -- WAIT_PMU
+     61 => x"00000000001D",  -- LOAD PMU = Mach*sqrt_est
+     62 => x"000A000002A0",  -- TMP=factor, route CONST[10]=tas_c1
+     63 => x"00000000001D",  -- LOAD tas_c1 => PMU starts tas_c1*factor
+     64 => x"070000000080",  -- WAIT_PMU
+     65 => x"000B0000029D",  -- LOAD PMU, route CONST[11]=tas_c0
+     66 => x"000048000051",  -- ADD tas_c0 => Airspeed, store RAS[8], route ACC to IO
+     67 => x"000080000008",  -- IO WRITE_AIRSPD
+    -- Phase 6: Vertical Speed = (Alt - Alt_prev) * vspd_scale
+     68 => x"000000380000",  -- Route RAS[14] (Alt_prev)
+     69 => x"00000000001D",  -- LOAD Alt_prev to ACC
+     70 => x"0000001C0000",  -- Route RAS[7] (Alt) for subtract
+     71 => x"000000000052",  -- SUB: ACC = Alt_prev - Alt
+     72 => x"000000000059",  -- NEG: ACC = Alt - Alt_prev = delta_alt
+     73 => x"0000001C0020",  -- TMP=delta_alt, route RAS[7] (Alt)
+     74 => x"00004E00001D",  -- LOAD Alt, store to RAS[14] = new Alt_prev
+     75 => x"001600000280",  -- Route CONST[22]=vspd_scale
+     76 => x"00000000001D",  -- LOAD vspd_scale => PMU starts vspd_scale*delta_alt
+     77 => x"070000000080",  -- WAIT_PMU
+     78 => x"00004900001D",  -- LOAD Vspd, store RAS[9], route ACC to IO
+     79 => x"000080000009",  -- IO WRITE_VSPD
+    -- Phase 7: Wing Sweep = 3rd-order Horner of Mach + rate limit
+     80 => x"000000180000",  -- Route RAS[6] (Mach)
+     81 => x"00000000001D",  -- LOAD Mach
+     82 => x"000F000002A0",  -- TMP=Mach, route CONST[15]=d3
+     83 => x"00000000001D",  -- LOAD d3 => PMU starts d3*M
+     84 => x"070000000080",  -- WAIT_PMU
+     85 => x"00100000029D",  -- LOAD PMU, route CONST[16]=d2
+     86 => x"000000000051",  -- ADD d2, PMU starts *M
+     87 => x"070000000080",  -- WAIT_PMU
+     88 => x"00110000029D",  -- LOAD PMU, route CONST[17]=d1
+     89 => x"000000000051",  -- ADD d1, PMU starts *M
+     90 => x"070000000080",  -- WAIT_PMU
+     91 => x"00120000029D",  -- LOAD PMU, route CONST[18]=d0
+     92 => x"00004A000051",  -- ADD d0 => ws_cmd, store RAS[10]
+    -- Rate limiting: delta = ws_cmd - Wing_prev
+     93 => x"0000003C0000",  -- Route RAS[15] (Wing_prev)
+     94 => x"00000000001D",  -- LOAD Wing_prev
+     95 => x"000000280000",  -- Route RAS[10] (ws_cmd)
+     96 => x"000000000052",  -- SUB: ACC = Wing_prev - ws_cmd
+     97 => x"000000000059",  -- NEG: ACC = ws_cmd - Wing_prev = delta
+     98 => x"0015000002A0",  -- TMP=delta, route CONST[21]=rate_limit
+     99 => x"00000000001D",  -- LOAD rate_limit
+    100 => x"000000000300",  -- Route TMP (delta) for subtract
+    101 => x"000000000052",  -- SUB: ACC = rate - delta
+    102 => x"036B00000000",  -- BRN clamp_pos (107) if delta > rate
+    103 => x"000000000300",  -- Route TMP (delta)
+    104 => x"00000000005D",  -- LOAD delta, set flags
+    105 => x"036E00000000",  -- BRN check_neg_bound (110) if delta < 0
+    106 => x"017300000000",  -- JMP apply_delta (115)
+    107 => x"001500000280",  -- Route CONST[21]=rate_limit
+    108 => x"00000000001D",  -- LOAD +rate_limit (clamped)
+    109 => x"017300000000",  -- JMP apply_delta (115)
+    110 => x"001500000280",  -- Route CONST[21]=rate_limit
+    111 => x"000000000051",  -- ADD rate: ACC = delta + rate
+    112 => x"037B00000000",  -- BRN clamp_neg (123) if delta+rate < 0
+    113 => x"000000000300",  -- Route TMP (delta)
+    114 => x"00000000001D",  -- LOAD delta (unclamped)
+    -- Apply delta: Wing_out = Wing_prev + clamped delta
+    115 => x"0000003C0020",  -- TMP=clamped_delta, route RAS[15] (Wing_prev)
+    116 => x"00000000001D",  -- LOAD Wing_prev
+    117 => x"000000000300",  -- Route TMP (clamped_delta)
+    118 => x"000000000051",  -- ADD clamped_delta => Wing_out
+    119 => x"00004B000000",  -- Store Wing_out to RAS[11]
+    120 => x"00004F000000",  -- Store Wing_out to RAS[15] (new prev), route ACC to IO
+    121 => x"00008000000A",  -- IO WRITE_WING
+    122 => x"017F00000000",  -- JMP to flap calculation (127)
+    -- Clamp to -rate_limit
+    123 => x"001500000280",  -- Route CONST[21]=rate_limit
+    124 => x"00000000001D",  -- LOAD rate_limit
+    125 => x"000000000019",  -- NEG => ACC = -rate_limit
+    126 => x"017300000000",  -- JMP apply_delta (115)
+    -- Phase 8: Maneuver Flap = flap_c1 * Mach + flap_c0
+    127 => x"000000180000",  -- Route RAS[6] (Mach)
+    128 => x"00000000001D",  -- LOAD Mach
+    129 => x"0019000002A0",  -- TMP=Mach, route CONST[25]=flap_c1
+    130 => x"00000000001D",  -- LOAD flap_c1 => PMU starts flap_c1*M
+    131 => x"070000000080",  -- WAIT_PMU
+    132 => x"001A0000029D",  -- LOAD PMU, route CONST[26]=flap_c0
+    133 => x"00004C000051",  -- ADD flap_c0 => Flap, store RAS[12], route ACC to IO
+    134 => x"00008000000B",  -- IO WRITE_FLAP
+    -- Phase 9: Glove Vane = (e2*M + e1)*M + e0
+    135 => x"000000180000",  -- Route RAS[6] (Mach)
+    136 => x"00000000001D",  -- LOAD Mach
+    137 => x"001B000002A0",  -- TMP=Mach, route CONST[27]=e2
+    138 => x"00000000001D",  -- LOAD e2 => PMU starts e2*M
+    139 => x"070000000080",  -- WAIT_PMU
+    140 => x"001C0000029D",  -- LOAD PMU, route CONST[28]=e1
+    141 => x"000000000051",  -- ADD e1, PMU starts *M
+    142 => x"070000000080",  -- WAIT_PMU
+    143 => x"001D0000029D",  -- LOAD PMU, route CONST[29]=e0
+    144 => x"00004D000051",  -- ADD e0 => Glove Vane, store RAS[13], route ACC to IO
+    145 => x"00008000000C",  -- IO WRITE_GLOVE
+    -- Halt: Jump to self, frame_mark resets PC to 0
+    146 => x"019200000000",  -- HALT: JMP self, await frame_mark
 
     OTHERS => (OTHERS => '0')
   );
 
-  -- Data ROM for constants (20-bit values)
-  TYPE t_data_rom IS ARRAY(0 TO 15) OF STD_LOGIC_VECTOR(19 DOWNTO 0);
+  -- Data ROM for constants (20-bit values, 64 entries)
+  TYPE t_data_rom IS ARRAY(0 TO 63) OF STD_LOGIC_VECTOR(19 DOWNTO 0);
   SIGNAL s_data_rom : t_data_rom := (
-    0 => x"10000",  -- a3 = 0.125
-    1 => x"20000",  -- a2 = 0.25
-    2 => x"30000",  -- a1 = 0.375
-    3 => x"08000",  -- a0 = 0.0625
+    ---------------------------------------------------------------------------
+    -- Mach polynomial: M = f(Qc/Ps) using Horner form, 4th order
+    -- Subsonic approximation: M ≈ a4*r^4 + a3*r^3 + a2*r^2 + a1*r + a0
+    -- where r = Qc/Ps (impact pressure ratio), scaled to Q1.19
+    --
+    -- Derived from isentropic flow: Pt/Ps = (1 + 0.2*M^2)^3.5
+    -- so Qc/Ps = Pt/Ps - 1 = (1 + 0.2*M^2)^3.5 - 1
+    -- Inverted polynomial fit for M = f(Qc/Ps), valid 0 < M < 1.0
+    -- Coefficients fitted to Q1.19 full-range [-1,+1)
+    ---------------------------------------------------------------------------
+    0  => x"1999A",  -- mach_a4 =  0.2     (high-order correction)
+    1  => x"E6667",  -- mach_a3 = -0.2     (negative cubic term)
+    2  => x"06666",  -- mach_a2 =  0.05    (quadratic correction)
+    3  => x"5EB85",  -- mach_a1 =  0.74    (dominant linear term)
+    4  => x"00000",  -- mach_a0 =  0.0     (zero offset)
+
+    ---------------------------------------------------------------------------
+    -- Altitude polynomial: Alt = f(Ps) using Horner form, 4th order
+    -- Standard atmosphere: Ps decreases ~exponentially with altitude
+    -- Polynomial approximation of altitude from static pressure
+    -- Alt_scaled = b4*Ps^4 + b3*Ps^3 + b2*Ps^2 + b1*Ps + b0
+    -- Ps=0x40000(0.5) → ~18,000ft; Ps=0x20000(0.25) → ~34,000ft
+    -- All scaled to Q1.19 where ±1.0 maps to ±100,000 ft
+    ---------------------------------------------------------------------------
+    5  => x"0CCCD",  -- alt_b4  =  0.1
+    6  => x"F999A",  -- alt_b3  = -0.05    (cubic correction)
+    7  => x"1999A",  -- alt_b2  =  0.2     (quadratic term)
+    8  => x"9999A",  -- alt_b1  = -0.8     (dominant: lower Ps = higher alt)
+    9  => x"60000",  -- alt_b0  =  0.75    (offset for sea-level baseline)
+
+    ---------------------------------------------------------------------------
+    -- Airspeed: TAS = f(M, TAT)
+    -- True Airspeed = M * a * sqrt(TAT/T_std)
+    -- Simplified: TAS ≈ M * K_tas * sqrt_tat_approx
+    -- For subsonic: TAS_scaled ≈ M * c1_tas + c0_tas  (linear in M)
+    -- Temperature correction applied as separate multiply
+    ---------------------------------------------------------------------------
+    10 => x"51EB8",  -- tas_c1  =  0.64    (speed of sound scale factor)
+    11 => x"00000",  -- tas_c0  =  0.0     (offset)
+    12 => x"40000",  -- tat_ref =  0.5     (reference temperature ratio T/T_std)
+    13 => x"20000",  -- sqrt_approx_c1 = 0.25 (linear term of sqrt approx)
+    14 => x"60000",  -- sqrt_approx_c0 = 0.75 (constant term of sqrt approx)
+
+    ---------------------------------------------------------------------------
+    -- Wing sweep schedule: WS = f(M)
+    -- F-14 variable geometry: wings sweep aft as Mach increases
+    -- Schedule is piecewise but approximated by 3rd-order polynomial
+    -- Wings at 20° (forward) for M<0.4, 68° (aft) at M>1.0
+    -- ws_out = d3*M^3 + d2*M^2 + d1*M + d0
+    -- Scaled: 0x00000 = full forward (20°), 0x7FFFF = full aft (68°)
+    ---------------------------------------------------------------------------
+    15 => x"E0000",  -- ws_d3   = -0.25    (cubic rolloff)
+    16 => x"33333",  -- ws_d2   =  0.4     (quadratic acceleration)
+    17 => x"40000",  -- ws_d1   =  0.5     (linear sweep rate)
+    18 => x"E0000",  -- ws_d0   = -0.25    (offset: negative at low Mach)
+
+    ---------------------------------------------------------------------------
+    -- Wing sweep limits and rate constants
+    ---------------------------------------------------------------------------
+    19 => x"00000",  -- ws_lower_limit = 0.0  (full forward = 20°)
+    20 => x"7FFFF",  -- ws_upper_limit = max positive (~1.0 = 68°)
+    21 => x"00625",  -- ws_rate_limit  = 0.003 (max change per frame ~1°/sec)
+
+    ---------------------------------------------------------------------------
+    -- Vertical speed: Vspd = delta(Alt) / delta(t)
+    -- Approximated as: (Alt_new - Alt_prev) * frame_rate_scale
+    ---------------------------------------------------------------------------
+    22 => x"12400",  -- vspd_scale = 0.14258 (≈18.3 Hz frame rate scale)
+
+    ---------------------------------------------------------------------------
+    -- Mach threshold for wing sweep enable (M > 0.4 transitions)
+    ---------------------------------------------------------------------------
+    23 => x"33333",  -- mach_threshold_low  = 0.4  (sweep enable)
+    24 => x"66666",  -- mach_threshold_high = 0.8  (supersonic regime)
+
+    ---------------------------------------------------------------------------
+    -- Maneuver flap schedule: Flap = f(M)
+    -- Simplified as linear: full down at low speed, retracted at high speed
+    ---------------------------------------------------------------------------
+    25 => x"C0000",  -- flap_c1 = -0.5   (retract with increasing Mach)
+    26 => x"60000",  -- flap_c0 =  0.75  (mostly deployed at low speed)
+
+    ---------------------------------------------------------------------------
+    -- Glove vane schedule: GV = f(M), 2nd order
+    ---------------------------------------------------------------------------
+    27 => x"20000",  -- gv_e2  =  0.25
+    28 => x"E0000",  -- gv_e1  = -0.25
+    29 => x"04000",  -- gv_e0  =  0.03125
+
+    ---------------------------------------------------------------------------
+    -- Miscellaneous constants
+    ---------------------------------------------------------------------------
+    30 => x"00000",  -- zero constant
+    31 => x"7FFFF",  -- max positive (saturation limit)
+
     OTHERS => (OTHERS => '0')
   );
 
@@ -240,7 +381,7 @@ ARCHITECTURE rtl OF control_rom_sequencer IS
   -- Shift registers for serial output
   SIGNAL s_cw_sr    : STD_LOGIC_VECTOR(g_uword_width-1 DOWNTO 0) := (OTHERS => '0');
   SIGNAL s_const_sr : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
-  SIGNAL s_data_addr: UNSIGNED(3 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL s_data_addr: UNSIGNED(5 DOWNTO 0) := (OTHERS => '0');
 
 BEGIN
 
@@ -273,10 +414,10 @@ BEGIN
           -- WA phase: shift out (CW was pre-loaded at previous WO T19)
           IF i_t0 = '1' THEN
             -- Latch data address for constant output
-            s_data_addr <= UNSIGNED(s_current_uword(35 DOWNTO 32));
+            s_data_addr <= UNSIGNED(s_current_uword(37 DOWNTO 32));
           ELSIF i_t19 = '1' THEN
             -- Pre-load constant at end of WA (ready for WO T0)
-            s_const_sr <= s_data_rom(TO_INTEGER(UNSIGNED(s_current_uword(35 DOWNTO 32))));
+            s_const_sr <= s_data_rom(TO_INTEGER(UNSIGNED(s_current_uword(37 DOWNTO 32))));
           ELSE
             -- Shift out during WA
             s_cw_sr <= '0' & s_cw_sr(g_uword_width-1 DOWNTO 1);

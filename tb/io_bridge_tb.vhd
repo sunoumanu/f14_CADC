@@ -277,14 +277,33 @@ BEGIN
         check1(out_bit_status, '0', "IO-T-051: Reset BIT status");
 
         -----------------------------------------------------------------------
-        -- Summary
+        -- Summary Table
         -----------------------------------------------------------------------
         WAIT FOR 5 * CLK_PERIOD;
-        REPORT "======================================" SEVERITY NOTE;
-        REPORT "I/O Bridge Testbench Complete" SEVERITY NOTE;
-        REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
-        REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
-        REPORT "======================================" SEVERITY NOTE;
+        REPORT "" SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "                     I/O BRIDGE TESTBENCH SUMMARY                         " SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+        REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+        REPORT "  IO-T-001..006    | Basic reset and initialization                      " SEVERITY NOTE;
+        REPORT "  IO-T-010..013    | Mach input capture and parallel load               " SEVERITY NOTE;
+        REPORT "  IO-T-014..016    | Mach scaling factor tests                          " SEVERITY NOTE;
+        REPORT "  IO-T-020..023    | Alpha input capture and parallel load              " SEVERITY NOTE;
+        REPORT "  IO-T-024..026    | Alpha scaling factor tests                         " SEVERITY NOTE;
+        REPORT "  IO-T-030..032    | ACC output shift register (MSB-first, serial)      " SEVERITY NOTE;
+        REPORT "  IO-T-033..035    | ACC output pattern tests                           " SEVERITY NOTE;
+        REPORT "  IO-T-040..043    | Airspeed output shift register                     " SEVERITY NOTE;
+        REPORT "  IO-T-050..051    | Built-In Test (BIT) functionality                  " SEVERITY NOTE;
+        REPORT "==========================================================================" SEVERITY NOTE;
+        REPORT "  TOTAL: " & INTEGER'image(test_count) & " tests, " &
+               INTEGER'image(fail_count) & " failures" SEVERITY NOTE;
+        IF fail_count = 0 THEN
+            REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+        ELSE
+            REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+        END IF;
+        REPORT "==========================================================================" SEVERITY NOTE;
 
         REPORT "sim complete" SEVERITY FAILURE;
     END PROCESS;

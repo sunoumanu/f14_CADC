@@ -13,22 +13,27 @@ vlib work 2>nul
 vcom -2008 -work work "%SRC_DIR%\pdu.vhd"
 vcom -2008 -work work "%TB_DIR%\pdu_tb.vhd"
 
-REM Create DO file for waveform setup
-echo # PDU Waveform Setup > pdu_wave.do
-echo add wave -divider "Clock and Control" >> pdu_wave.do
+REM Create DO file for waveform setup (bit-serial interface)
+echo # PDU Waveform Setup (Bit-Serial) > pdu_wave.do
+echo add wave -divider "Clock and Timing" >> pdu_wave.do
 echo add wave /pdu_tb/clk >> pdu_wave.do
 echo add wave /pdu_tb/rst >> pdu_wave.do
-echo add wave /pdu_tb/start >> pdu_wave.do
-echo add wave -divider "Inputs (Q1.19 fractional)" >> pdu_wave.do
-echo add wave -hex /pdu_tb/dividend >> pdu_wave.do
-echo add wave -hex /pdu_tb/divisor >> pdu_wave.do
-echo add wave -divider "Outputs" >> pdu_wave.do
-echo add wave -hex /pdu_tb/quotient >> pdu_wave.do
-echo add wave -hex /pdu_tb/remainder >> pdu_wave.do
-echo add wave /pdu_tb/div_by_zero >> pdu_wave.do
+echo add wave /pdu_tb/phi2 >> pdu_wave.do
+echo add wave /pdu_tb/word_type >> pdu_wave.do
+echo add wave /pdu_tb/t0 >> pdu_wave.do
+echo add wave /pdu_tb/t19 >> pdu_wave.do
+echo add wave -divider "Serial Inputs" >> pdu_wave.do
+echo add wave /pdu_tb/dividend_bit >> pdu_wave.do
+echo add wave /pdu_tb/divisor_bit >> pdu_wave.do
+echo add wave -divider "Serial Outputs" >> pdu_wave.do
+echo add wave /pdu_tb/quotient_bit >> pdu_wave.do
+echo add wave /pdu_tb/remainder_bit >> pdu_wave.do
+echo add wave -divider "Captured Results (shift registers)" >> pdu_wave.do
+echo add wave -hex /pdu_tb/quotient_sr >> pdu_wave.do
+echo add wave -hex /pdu_tb/remainder_sr >> pdu_wave.do
 echo add wave -divider "Status" >> pdu_wave.do
 echo add wave /pdu_tb/busy >> pdu_wave.do
-echo add wave /pdu_tb/done >> pdu_wave.do
+echo add wave /pdu_tb/div_by_zero >> pdu_wave.do
 echo add wave -divider "Internal State" >> pdu_wave.do
 echo add wave /pdu_tb/uut/s_state >> pdu_wave.do
 echo add wave -hex /pdu_tb/uut/s_partial_rem >> pdu_wave.do

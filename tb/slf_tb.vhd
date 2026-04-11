@@ -436,13 +436,34 @@ BEGIN
     check_flags('1', '0', '0', "SLF-T-062d: Flags unchanged");
 
     ---------------------------------------------------------------------------
-    -- Summary
+    -- Summary Table
     ---------------------------------------------------------------------------
-    REPORT "======================================" SEVERITY NOTE;
-    REPORT "SLF Testbench Complete" SEVERITY NOTE;
-    REPORT "Tests run: " & INTEGER'image(test_count) SEVERITY NOTE;
-    REPORT "Failures:  " & INTEGER'image(fail_count) SEVERITY NOTE;
-    REPORT "======================================" SEVERITY NOTE;
+    REPORT "" SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "                        SLF TESTBENCH SUMMARY                             " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  Test Group       | Description                                         " SEVERITY NOTE;
+    REPORT "--------------------------------------------------------------------------" SEVERITY NOTE;
+    REPORT "  SLF-T-001..005   | ADD operation (positive, negative, overflow)        " SEVERITY NOTE;
+    REPORT "  SLF-T-010..012   | SUB operation (positive, negative, borrow)          " SEVERITY NOTE;
+    REPORT "  SLF-T-015..017   | Logical ops (AND, OR, XOR)                          " SEVERITY NOTE;
+    REPORT "  SLF-T-020..021   | NOT operation                                       " SEVERITY NOTE;
+    REPORT "  SLF-T-025..027   | Shift operations (SHL, SHR)                         " SEVERITY NOTE;
+    REPORT "  SLF-T-030..032   | NEG and ABS operations                              " SEVERITY NOTE;
+    REPORT "  SLF-T-035..037   | Gray/Binary conversions                             " SEVERITY NOTE;
+    REPORT "  SLF-T-040..041   | LOAD operation                                      " SEVERITY NOTE;
+    REPORT "  SLF-T-045..046   | STORE_TMP operation                                 " SEVERITY NOTE;
+    REPORT "  SLF-T-050..053   | Flag tests (Z, N, C)                                " SEVERITY NOTE;
+    REPORT "  SLF-T-060..062   | Write enable controls                               " SEVERITY NOTE;
+    REPORT "==========================================================================" SEVERITY NOTE;
+    REPORT "  TOTAL: " & INTEGER'image(test_count) & " tests, " &
+           INTEGER'image(fail_count) & " failures" SEVERITY NOTE;
+    IF fail_count = 0 THEN
+        REPORT "  STATUS: *** ALL TESTS PASSED ***" SEVERITY NOTE;
+    ELSE
+        REPORT "  STATUS: *** SOME TESTS FAILED ***" SEVERITY ERROR;
+    END IF;
+    REPORT "==========================================================================" SEVERITY NOTE;
 
     ASSERT FALSE REPORT "sim complete" SEVERITY FAILURE;
     WAIT;

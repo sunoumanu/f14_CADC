@@ -77,72 +77,75 @@ The 4-bit IOCTL field from the microinstruction controls I/O operations:
 
 ### 3. Interface Specification
 
+#### 3.0 I/O Style
+**Parallel Interface:** The IO Bridge uses 20-bit parallel interfaces for both internal data paths (to/from steering logic) and external sensor/actuator interfaces. This is appropriate because it connects to external hardware (ADCs, DACs) which are inherently parallel.
+
 #### 3.1 Port List
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
 | **Core Interface** | | | |
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset |
-| `io_ctrl` | Input | 4 | I/O control from microinstruction |
-| `io_data_in` | Input | 20 | Data to write to output channel |
-| `io_data_out` | Output | 20 | Data read from input channel |
-| `io_ready` | Output | 1 | I/O operation complete |
+| `i_clk` | Input | 1 | System clock |
+| `i_rst` | Input | 1 | Synchronous reset |
+| `i_io_ctrl` | Input | 4 | I/O control from microinstruction |
+| `i_io_data_in` | Input | 20 | Data to write to output channel |
+| `o_io_data_out` | Output | 20 | Data read from input channel |
+| `o_io_ready` | Output | 1 | I/O operation complete |
 | **Sensor Inputs** | | | |
-| `sensor_ps` | Input | 20 | Static pressure (Gray-coded) |
-| `sensor_qc` | Input | 20 | Dynamic pressure (Gray-coded) |
-| `sensor_tat` | Input | 20 | Total air temperature |
-| `sensor_analog` | Input | 20 | Analog pilot input |
-| `sensor_digital` | Input | 20 | Digital switch inputs |
+| `i_sensor_ps` | Input | 20 | Static pressure (Gray-coded) |
+| `i_sensor_qc` | Input | 20 | Dynamic pressure (Gray-coded) |
+| `i_sensor_tat` | Input | 20 | Total air temperature |
+| `i_sensor_analog` | Input | 20 | Analog pilot input |
+| `i_sensor_digital` | Input | 20 | Digital switch inputs |
 | **Display/Actuator Outputs** | | | |
-| `out_mach` | Output | 20 | Mach number display |
-| `out_alt` | Output | 20 | Altitude display |
-| `out_airspd` | Output | 20 | Airspeed display |
-| `out_vspd` | Output | 20 | Vertical speed display |
-| `out_wing` | Output | 20 | Wing sweep command |
-| `out_flap` | Output | 20 | Maneuver flap command |
-| `out_glove` | Output | 20 | Glove vane command |
-| `out_bit_status` | Output | 1 | BIT pass/fail |
+| `o_out_mach` | Output | 20 | Mach number display |
+| `o_out_alt` | Output | 20 | Altitude display |
+| `o_out_airspd` | Output | 20 | Airspeed display |
+| `o_out_vspd` | Output | 20 | Vertical speed display |
+| `o_out_wing` | Output | 20 | Wing sweep command |
+| `o_out_flap` | Output | 20 | Maneuver flap command |
+| `o_out_glove` | Output | 20 | Glove vane command |
+| `o_out_bit_status` | Output | 1 | BIT pass/fail |
 | **Redundancy** | | | |
-| `channel_active` | Input | 1 | This channel is active (drives outputs) |
-| `fail_detect` | Output | 1 | Failure detected in this channel |
+| `i_channel_active` | Input | 1 | This channel is active (drives outputs) |
+| `o_fail_detect` | Output | 1 | Failure detected in this channel |
 
 #### 3.2 VHDL Entity Declaration
 
 ```vhdl
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity io_bridge is
-    port (
-        -- Core interface
-        clk            : in  std_logic;
-        rst            : in  std_logic;
-        io_ctrl        : in  std_logic_vector(3 downto 0);
-        io_data_in     : in  std_logic_vector(19 downto 0);
-        io_data_out    : out std_logic_vector(19 downto 0);
-        io_ready       : out std_logic;
-        -- Sensor inputs
-        sensor_ps      : in  std_logic_vector(19 downto 0);
-        sensor_qc      : in  std_logic_vector(19 downto 0);
-        sensor_tat     : in  std_logic_vector(19 downto 0);
-        sensor_analog  : in  std_logic_vector(19 downto 0);
-        sensor_digital : in  std_logic_vector(19 downto 0);
-        -- Display/actuator outputs
-        out_mach       : out std_logic_vector(19 downto 0);
-        out_alt        : out std_logic_vector(19 downto 0);
-        out_airspd     : out std_logic_vector(19 downto 0);
-        out_vspd       : out std_logic_vector(19 downto 0);
-        out_wing       : out std_logic_vector(19 downto 0);
-        out_flap       : out std_logic_vector(19 downto 0);
-        out_glove      : out std_logic_vector(19 downto 0);
-        out_bit_status : out std_logic;
-        -- Redundancy
-        channel_active : in  std_logic;
-        fail_detect    : out std_logic
-    );
-end entity io_bridge;
+ENTITY io_bridge IS
+  PORT (
+    -- Core interface
+    i_clk            : IN  STD_LOGIC;
+    i_rst            : IN  STD_LOGIC;
+    i_io_ctrl        : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    i_io_data_in     : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_io_data_out    : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_io_ready       : OUT STD_LOGIC;
+    -- Sensor inputs (20-bit parallel, external interface)
+    i_sensor_ps      : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    i_sensor_qc      : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    i_sensor_tat     : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    i_sensor_analog  : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    i_sensor_digital : IN  STD_LOGIC_VECTOR(19 DOWNTO 0);
+    -- Display/actuator outputs (20-bit parallel, external interface)
+    o_out_mach       : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_alt        : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_airspd     : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_vspd       : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_wing       : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_flap       : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_glove      : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
+    o_out_bit_status : OUT STD_LOGIC;
+    -- Redundancy
+    i_channel_active : IN  STD_LOGIC;
+    o_fail_detect    : OUT STD_LOGIC
+  );
+END ENTITY io_bridge;
 ```
 
 ### 4. Functional Requirements

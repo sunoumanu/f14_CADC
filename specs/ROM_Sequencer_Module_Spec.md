@@ -121,104 +121,106 @@ The F-14A CADC uses only the **increment** address capability of the ROM. All da
 
 ### 3. Interface Specification
 
+#### 3.0 I/O Style
+**Bit-Serial Control Output:** The sequencer outputs the 48-bit microword serially during WA (Word Address) phase via `o_cw_bit`, LSB first. The first 20 bits (T0-T19) carry the control word fields that other modules capture. Data ROM constants are output serially during WO (Word Out) phase via `o_const_bit`.
+
 #### 3.1 Port List
 
 | Port | Direction | Width | Description |
 |------|-----------|-------|-------------|
 | **Clock & Reset** | | | |
-| `clk` | Input | 1 | System clock |
-| `rst` | Input | 1 | Synchronous reset — resets micro_PC to 0 |
+| `i_clk` | Input | 1 | System clock |
+| `i_rst` | Input | 1 | Synchronous reset — resets micro_PC to 0 |
+| **Timing Inputs** | | | |
+| `i_phi2` | Input | 1 | Shift clock phase |
+| `i_word_type` | Input | 1 | '0'=WA (Control Word), '1'=WO (Data Word) |
+| `i_t0` | Input | 1 | First bit time of 20-bit word |
+| `i_t19` | Input | 1 | Last bit time of 20-bit word |
 | **Status Inputs** | | | |
-| `flag_z` | Input | 1 | Zero flag from SLF |
-| `flag_n` | Input | 1 | Negative flag from SLF |
-| `flag_c` | Input | 1 | Carry flag from SLF |
-| `pmu_busy` | Input | 1 | PMU busy status |
-| `pdu_busy` | Input | 1 | PDU busy status |
-| `frame_mark` | Input | 1 | Frame mark — resets to start of program |
-| `word_mark` | Input | 1 | Word mark — T18 timing signal |
-| **Control Outputs** | | | |
-| `micro_addr` | Output | 10 | Current microinstruction address |
-| `micro_word` | Output | 48 | Current microinstruction word |
-| `alu_op` | Output | 4 | Decoded ALU operation for SLF |
-| `acc_write_en` | Output | 1 | ACC write enable for SLF |
-| `tmp_write_en` | Output | 1 | TMP write enable for SLF |
-| `flags_write_en` | Output | 1 | Flags write enable for SLF |
-| `ras_write_en` | Output | 1 | Write enable for RAS |
-| `ras_read_addr` | Output | 6 | Read address for RAS |
-| `ras_write_addr` | Output | 6 | Write address for RAS |
-| `sel_acc_src` | Output | 3 | Steering Logic ACC source select |
-| `sel_ras_src` | Output | 2 | Steering Logic RAS source select |
-| `sel_io_src` | Output | 2 | Steering Logic I/O source select |
-| `pmu_start` | Output | 1 | Start signal for PMU |
-| `pdu_start` | Output | 1 | Start signal for PDU |
-| `io_ctrl` | Output | 4 | I/O Bridge control signals |
-| **Data ROM** | | | |
-| `data_rom_addr` | Output | 10 | Data ROM read address |
-| `data_rom_data` | Input | 20 | Data ROM read data (constant) |
+| `i_flag_z` | Input | 1 | Zero flag from SLF |
+| `i_flag_n` | Input | 1 | Negative flag from SLF |
+| `i_flag_c` | Input | 1 | Carry flag from SLF |
+| `i_pmu_busy` | Input | 1 | PMU busy status |
+| `i_pdu_busy` | Input | 1 | PDU busy status |
+| `i_frame_mark` | Input | 1 | Frame mark — resets to start of program |
+| **Serial Control Outputs** | | | |
+| `o_cw_bit` | Output | 1 | Serial control word (during WA phase) |
+| `o_const_bit` | Output | 1 | Serial data ROM constant (during WO phase) |
+| **Debug Outputs** | | | |
+| `o_micro_addr` | Output | 10 | Current microinstruction address (parallel) |
+| `o_micro_word` | Output | 48 | Current microinstruction word (parallel) |
 
 #### 3.2 VHDL Entity Declaration
 
 ```vhdl
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity control_rom_sequencer is
-    generic (
-        CTRL_ROM_DEPTH : natural := 1024;  -- Microinstruction count
-        DATA_ROM_DEPTH : natural := 512;   -- Data constant count
-        UWORD_WIDTH    : natural := 48     -- Microinstruction width
-    );
-    port (
-        -- Clock and Reset
-        clk            : in  std_logic;
-        rst            : in  std_logic;
-        -- Status inputs
-        flag_z         : in  std_logic;
-        flag_n         : in  std_logic;
-        flag_c         : in  std_logic;
-        pmu_busy       : in  std_logic;
-        pdu_busy       : in  std_logic;
-        frame_mark     : in  std_logic;
-        word_mark      : in  std_logic;
-        -- Microinstruction output
-        micro_addr     : out std_logic_vector(9 downto 0);
-        micro_word     : out std_logic_vector(UWORD_WIDTH-1 downto 0);
-        -- Decoded control signals
-        alu_op         : out std_logic_vector(3 downto 0);
-        acc_write_en   : out std_logic;
-        tmp_write_en   : out std_logic;
-        flags_write_en : out std_logic;
-        ras_write_en   : out std_logic;
-        ras_read_addr  : out std_logic_vector(5 downto 0);
-        ras_write_addr : out std_logic_vector(5 downto 0);
-        sel_acc_src    : out std_logic_vector(2 downto 0);
-        sel_ras_src    : out std_logic_vector(1 downto 0);
-        sel_io_src     : out std_logic_vector(1 downto 0);
-        pmu_start      : out std_logic;
-        pdu_start      : out std_logic;
-        io_ctrl        : out std_logic_vector(3 downto 0);
-        -- Data ROM interface
-        data_rom_addr  : out std_logic_vector(9 downto 0);
-        data_rom_data  : in  std_logic_vector(19 downto 0)
-    );
-end entity control_rom_sequencer;
+ENTITY control_rom_sequencer IS
+  GENERIC (
+    g_ctrl_rom_depth : NATURAL := 1024;
+    g_data_rom_depth : NATURAL := 512;
+    g_uword_width    : NATURAL := 48
+  );
+  PORT (
+    i_clk         : IN  STD_LOGIC;
+    i_rst         : IN  STD_LOGIC;
+    -- Timing inputs
+    i_phi2        : IN  STD_LOGIC;
+    i_word_type   : IN  STD_LOGIC;  -- '0'=WA, '1'=WO
+    i_t0          : IN  STD_LOGIC;
+    i_t19         : IN  STD_LOGIC;
+    -- Flag inputs
+    i_flag_z      : IN  STD_LOGIC;
+    i_flag_n      : IN  STD_LOGIC;
+    i_flag_c      : IN  STD_LOGIC;
+    i_pmu_busy    : IN  STD_LOGIC;
+    i_pdu_busy    : IN  STD_LOGIC;
+    i_frame_mark  : IN  STD_LOGIC;
+    -- Serial control word output (during WA)
+    o_cw_bit      : OUT STD_LOGIC;   -- Serial control word
+    -- Data ROM interface
+    o_const_bit   : OUT STD_LOGIC;   -- Serial constant output (during WO)
+    -- Debug outputs
+    o_micro_addr  : OUT STD_LOGIC_VECTOR(9 DOWNTO 0);
+    o_micro_word  : OUT STD_LOGIC_VECTOR(g_uword_width-1 DOWNTO 0)
+  );
+END ENTITY control_rom_sequencer;
 ```
+
+#### 3.3 Serial Control Word Format
+The 48-bit microword is shifted out during WA phase (bits 0-19 during T0-T19). Each receiving module captures its relevant fields:
+
+| Bits | Width | Receiver | Field |
+|------|-------|----------|-------|
+| 0-3 | 4 | SLF | ALU_OP (serial capture) |
+| 4 | 1 | SLF | acc_we |
+| 5 | 1 | SLF | tmp_we |
+| 6 | 1 | SLF | flags_we |
+| 7-10 | 4 | SL | ACC source select (parallel) |
+| 11-14 | 4 | SL | RAS source select (parallel) |
+| 15-17 | 3 | SL | IO source select (parallel) |
+| 18-23 | 6 | RAS | Read address (parallel) |
+| 24-29 | 6 | RAS | Write address (parallel) |
+| 30 | 1 | RAS | Write enable (parallel) |
+| 32-37 | 6 | Data ROM | Constant address |
+| 40-47 | 8 | Sequencer | Next address control |
 
 ### 4. Functional Requirements
 
 | Req ID | Requirement | Priority |
 |--------|-------------|----------|
-| ROM-F-001 | Shall store the complete CADC microprogram | Must |
-| ROM-F-002 | Shall implement a micro-PC with sequential increment | Must |
+| ROM-F-001 | Shall store the complete CADC microprogram in Block RAM | Must |
+| ROM-F-002 | Shall implement a micro-PC with sequential increment at WA T0 | Must |
 | ROM-F-003 | Shall implement unconditional jump (micro_PC = target) | Must |
 | ROM-F-004 | Shall implement conditional branch on Z, N, C flags | Must |
 | ROM-F-005 | Shall implement wait-for-PMU-done hold | Must |
 | ROM-F-006 | Shall implement wait-for-PDU-done hold | Must |
-| ROM-F-007 | Shall decode microinstruction fields to individual control signals | Must |
-| ROM-F-008 | Micro-PC shall reset to 0 on `rst` or `frame_mark` | Must |
-| ROM-F-009 | Microinstruction fetch shall be single-cycle | Must |
-| ROM-F-010 | Data ROM shall provide constants to data path via SL | Must |
+| ROM-F-007 | Shall output serial control word (o_cw_bit) during WA phase | Must |
+| ROM-F-008 | Micro-PC shall reset to 0 on i_rst or i_frame_mark | Must |
+| ROM-F-009 | Shall output serial data constant (o_const_bit) during WO phase | Must |
+| ROM-F-010 | Data ROM constant address shall be extracted from microword | Must |
 | ROM-F-011 | Control ROM should be loadable (Block RAM) for program updates | Should |
 | ROM-F-012 | Shall support subroutine call/return with stack | Should |
 | ROM-F-013 | Stack depth shall be at least 4 levels | Should |
@@ -289,58 +291,81 @@ end entity control_rom_sequencer;
 #### 5.7 Testbench Structure
 
 ```vhdl
-entity control_rom_sequencer_tb is
-end entity control_rom_sequencer_tb;
+ENTITY control_rom_sequencer_tb IS
+END ENTITY control_rom_sequencer_tb;
 
-architecture sim of control_rom_sequencer_tb is
-    signal clk, rst : std_logic := '0';
-    signal flag_z, flag_n, flag_c : std_logic := '0';
-    signal pmu_busy, pdu_busy : std_logic := '0';
-    signal frame_mark, word_mark : std_logic := '0';
-    signal micro_addr : std_logic_vector(9 downto 0);
-    signal micro_word : std_logic_vector(47 downto 0);
-    signal alu_op : std_logic_vector(3 downto 0);
-    -- ... other decoded signals ...
+ARCHITECTURE sim OF control_rom_sequencer_tb IS
+  CONSTANT CLK_PERIOD : TIME := 666 ns;  -- 1.5 MHz
+  
+  SIGNAL clk, rst : STD_LOGIC := '0';
+  SIGNAL phi2, word_type : STD_LOGIC := '0';
+  SIGNAL t0, t19 : STD_LOGIC := '0';
+  SIGNAL flag_z, flag_n, flag_c : STD_LOGIC := '0';
+  SIGNAL pmu_busy, pdu_busy : STD_LOGIC := '0';
+  SIGNAL frame_mark : STD_LOGIC := '0';
+  -- Serial outputs
+  SIGNAL cw_bit, const_bit : STD_LOGIC;
+  -- Debug outputs
+  SIGNAL micro_addr : STD_LOGIC_VECTOR(9 DOWNTO 0);
+  SIGNAL micro_word : STD_LOGIC_VECTOR(47 DOWNTO 0);
+  -- Captured control word
+  SIGNAL cw_shift_reg : STD_LOGIC_VECTOR(19 DOWNTO 0) := (OTHERS => '0');
+  
+BEGIN
+  clk <= NOT clk AFTER CLK_PERIOD / 2;
+  
+  uut: ENTITY work.control_rom_sequencer
+    PORT MAP (
+      i_clk => clk, i_rst => rst,
+      i_phi2 => phi2, i_word_type => word_type,
+      i_t0 => t0, i_t19 => t19,
+      i_flag_z => flag_z, i_flag_n => flag_n, i_flag_c => flag_c,
+      i_pmu_busy => pmu_busy, i_pdu_busy => pdu_busy,
+      i_frame_mark => frame_mark,
+      o_cw_bit => cw_bit,
+      o_const_bit => const_bit,
+      o_micro_addr => micro_addr,
+      o_micro_word => micro_word
+    );
+  
+  -- Capture serial control word during WA phase
+  capture_proc: PROCESS(clk)
+  BEGIN
+    IF RISING_EDGE(clk) THEN
+      IF phi2 = '1' AND word_type = '0' THEN
+        cw_shift_reg <= cw_bit & cw_shift_reg(19 DOWNTO 1);
+      END IF;
+    END IF;
+  END PROCESS;
+  
+  stim: PROCESS
+  BEGIN
+    rst <= '1';
+    WAIT FOR CLK_PERIOD * 5;
+    rst <= '0';
     
-    constant CLK_PERIOD : time := 20 ns;
-begin
-    clk <= not clk after CLK_PERIOD / 2;
+    -- Run WA/WO cycles and verify PC advances
+    FOR op IN 0 TO 9 LOOP
+      -- WA phase: 20 bits of control word
+      word_type <= '0';
+      FOR bit_idx IN 0 TO 19 LOOP
+        t0 <= '1' WHEN bit_idx = 0 ELSE '0';
+        t19 <= '1' WHEN bit_idx = 19 ELSE '0';
+        phi2 <= '1'; WAIT FOR CLK_PERIOD / 2;
+        phi2 <= '0'; WAIT FOR CLK_PERIOD / 2;
+      END LOOP;
+      
+      -- WO phase: 20 bits of data
+      word_type <= '1';
+      FOR bit_idx IN 0 TO 19 LOOP
+        t0 <= '1' WHEN bit_idx = 0 ELSE '0';
+        t19 <= '1' WHEN bit_idx = 19 ELSE '0';
+        phi2 <= '1'; WAIT FOR CLK_PERIOD / 2;
+        phi2 <= '0'; WAIT FOR CLK_PERIOD / 2;
+      END LOOP;
+    END LOOP;
     
-    -- DUT instantiation with test ROM content
-    uut: entity work.control_rom_sequencer
-        port map (...);
-    
-    stim: process
-    begin
-        -- Reset
-        rst <= '1';
-        wait for 5 * CLK_PERIOD;
-        rst <= '0';
-        
-        -- Verify sequential execution from address 0
-        for i in 0 to 9 loop
-            wait until rising_edge(clk);
-            assert micro_addr = std_logic_vector(to_unsigned(i, 10))
-                report "Sequential execution failed at step " & integer'image(i)
-                severity error;
-        end loop;
-        
-        -- Test conditional branch: set Z flag, expect branch
-        flag_z <= '1';
-        -- Load a branch-on-Z instruction...
-        wait until rising_edge(clk);
-        -- Verify micro_PC jumped to target
-        
-        -- Test wait for PMU
-        pmu_busy <= '1';
-        -- Execute wait-PMU instruction
-        -- Verify PC holds
-        wait for 5 * CLK_PERIOD;
-        pmu_busy <= '0';
-        wait until rising_edge(clk);
-        -- Verify PC advances
-        
-        report "Control ROM/Sequencer tests complete" severity note;
+    REPORT "Control ROM/Sequencer tests complete" SEVERITY NOTE;
         wait;
     end process;
 end architecture sim;
