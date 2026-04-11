@@ -21,4 +21,4 @@ vcom -2008 -work work "%TB_DIR%\control_rom_sequencer_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_control_rom_sequencer.do}; run 0 ns" work.control_rom_sequencer_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_control_rom_sequencer.do}" work.control_rom_sequencer_tb

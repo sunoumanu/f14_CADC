@@ -21,4 +21,4 @@ vcom -2008 -work work "%TB_DIR%\io_bridge_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_io_bridge.do}; run 0 ns" work.io_bridge_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_io_bridge.do}" work.io_bridge_tb

@@ -21,4 +21,4 @@ vcom -2008 -work work "%TB_DIR%\pmu_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_pmu.do}; run 0 ns" work.pmu_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_pmu.do}" work.pmu_tb

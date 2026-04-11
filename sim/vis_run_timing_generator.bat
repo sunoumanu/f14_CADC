@@ -21,4 +21,4 @@ vcom -2008 -work work "%TB_DIR%\timing_generator_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_timing_generator.do}; run 0 ns" work.timing_generator_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_timing_generator.do}" work.timing_generator_tb

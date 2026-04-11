@@ -57,34 +57,39 @@ The CADC computes real-time air data parameters for the F-14A fighter aircraft:
 f14-CADC/
 ├── hdl/                    # Synthesizable VHDL modules
 │   ├── cadc_top.vhd       # Top-level integration
+│   ├── cadc_wrapper.vhd   # AXI-GPIO wrapper for FPGA
+│   ├── clock_divider.vhd  # Clock division utilities
 │   ├── timing_generator.vhd
-│   ├── pmu.vhd            # Parallel Multiplier Unit
-│   ├── pdu.vhd            # Parallel Divider Unit  
-│   ├── slf.vhd            # Special Logic Function (ALU)
-│   ├── ras.vhd            # Random Access Storage (16×20 registers)
+│   ├── pmu.vhd            # Parallel Multiplier Unit (bit-serial)
+│   ├── pdu.vhd            # Parallel Divider Unit (bit-serial)
+│   ├── slf.vhd            # Special Logic Function (ALU, bit-serial)
+│   ├── ras.vhd            # Random Access Storage (64×20 registers)
 │   ├── sl.vhd             # Steering Logic (data routing)
 │   ├── control_rom_sequencer.vhd
 │   └── io_bridge.vhd
 ├── tb/                     # VHDL testbenches
 │   └── *_tb.vhd           # One testbench per module
 ├── sim/                    # Simulation batch files
-│   └── run_*.bat          # Questa GUI simulation launchers
+│   ├── run_*.bat          # Questa GUI simulation launchers
+│   └── vis_run_*.bat      # Questa Visualizer launchers
 ├── specs/                  # Design specifications
 │   ├── CADC_System_Requirements.md
 │   ├── CADC_Top_Level_Spec.md
 │   └── *_Module_Spec.md   # Per-module specifications
+├── verification/          # Polynomial verification notebook
+├── implementation/        # Vivado FPGA implementation
 ├── ocr_text/              # OCR'd text from original documents
-└── *.pdf                  # Original Ray Holt design notebooks
+└── original_docs/         # Original Ray Holt design PDFs
 ```
 
 ## Modules
 
 | Module | Part # | Function | Devices |
 |--------|--------|----------|---------|
-| **PMU** | 944111 | 20×20 parallel multiply, Q1.19 result | 1,063 |
-| **PDU** | 944112 | 20÷20 non-restoring division | 1,241 |
-| **SLF** | 944113 | ALU (add/sub/and/or/xor/shift), flags (Z/N/C/V) | 743 |
-| **RAS** | 944114 | 16×20-bit dual-port register file | 2,330 |
+| **PMU** | 944111 | 20×20 bit-serial multiply, Q1.19 result | 1,063 |
+| **PDU** | 944112 | 20÷20 bit-serial fractional division (Q1.19) | 1,241 |
+| **SLF** | 944113 | ALU (add/sub/and/or/xor/shift/Gray), flags (Z/N/C) | 743 |
+| **RAS** | 944114 | 64×20-bit register file with serial I/O | 2,330 |
 | **SL** | 944118 | 3-channel data multiplexer/router | 771 |
 | **ROM** | 944125 | 128×20-bit microcode storage | 1,269–3,268 |
 
@@ -211,19 +216,19 @@ All modules use timing compensation for serial outputs:
 ### PMU (Multiplier) Pipeline
 
 ```
-    ┌───────────────────── WO_N ─────────────────────┐┌───────── WA_N+1 ─────────┐
-    │                                                ││                          │
-    │ T0 ────────────────────────────────────── T19  ││ T0 ─────────────── T19   │
-    │  │                                         │   ││  │                       │
-    │  │ ◄─── Shift in mcand (from ACC) ──────► │   ││  │                       │
-    │  │ ◄─── Shift in mplier (from TMP) ─────► │   ││  │                       │
-    │  │                                         │   ││  │                       │
-    │  │                    Latch at T19 ────────┘   ││  │ Parallel multiply     │
-    │  │                                             ││  │ Load product → sr     │
-    └──┼─────────────────────────────────────────────┘└──┼───────────────────────┘
-       │                                                 │
-       │◄────── Operands shifting in ──────────────────►│
-       │                                                 │◄─── Product ready ───►
+    ┌────────────────── WO_N ──────────────────┐┌──────── WA_N+1 ────────┐
+    │                                          ││                        │
+    │ T0 ──────────────────────────────── T19  ││ T0 ───────────── T19 │
+    │  │                                    │  ││  │                     │
+    │  │  ◄── Shift in mcand (from ACC) ─►  │  ││  │                     │
+    │  │  ◄── Shift in mplier (from TMP) ►  │  ││  │                     │
+    │  │                                    │  ││  │                     │
+    │  │                Latch at T19 ──────┘  ││  │ Parallel multiply   │
+    │  │                                       ││  │ Load product → sr   │
+    └──┼─────────────────────────────────────┘└──┼────────────────────┘
+       │                                          │
+       │◄──── Operands shifting in ────────────►│
+       │                                          │◄── Product ready ──►
        
     Product available during WO_N+1 (1 operation latency)
 ```
@@ -231,16 +236,21 @@ All modules use timing compensation for serial outputs:
 ### PDU (Divider) Pipeline
 
 ```
-    ┌───────────────────── WO_N ─────────────────────┐┌───────── WA_N+1 ─────────┐
-    │                                                ││                          │
-    │  ◄─── Shift in dividend (from ACC) ─────────► ││                          │
-    │  ◄─── Shift in divisor (from TMP) ──────────► ││  Parallel divide at T0   │
-    │                                                ││  (dividend << 20) / div  │
-    │                    Latch operands at T19 ──────││  Load quotient → sr      │
-    └────────────────────────────────────────────────┘└──────────────────────────┘
-
-    Q1.19 fractional: dividend scaled by 2^20 before division
-    Quotient available during WO_N+1
+    ┌────────────────── WO_N ──────────────────┐┌──────── WA_N+1 ────────┐
+    │                                          ││                        │
+    │ T0 ──────────────────────────────── T19  ││ T0 ───────────── T19 │
+    │  │                                    │  ││  │                     │
+    │  │  ◄ Shift in dividend (from ACC) ►  │  ││  │                     │
+    │  │  ◄ Shift in divisor (from TMP) ─►  │  ││  │                     │
+    │  │                                    │  ││  │                     │
+    │  │                Latch at T19 ──────┘  ││  │ Parallel divide     │
+    │  │                                       ││  │ Load quotient → sr  │
+    └──┼─────────────────────────────────────┘└──┼────────────────────┘
+       │                                          │
+       │◄──── Operands shifting in ────────────►│
+       │                                          │◄─ Quotient ready ──►
+       
+    Quotient available during WO_N+1 (1 operation latency)
 ```
 
 ### SLF (ALU) Pipeline
@@ -367,16 +377,18 @@ The CADC uses a **pipelined architecture** where routing and computation are off
 ```
 
 ```
-    Instruction N:    ┌─────── WA_N ────────┐┌─────── WO_N ────────┐
-                      │  SL latches sel_acc │  Data routes via SL  │
-                      │  from microword     │  to SLF input        │
-                      └────────────────────┘└──────────┬───────────┘
-                                                       │
-                                                       ▼ Data latched in SLF input_lat
-    Instruction N+1:  ┌─────── WA_N+1 ──────┐┌─────── WO_N+1 ───────┐
-                      │  ALU computes using │  New data routing     │
-                      │  latched input_lat  │                       │
-                      └────────────────────┘└───────────────────────┘
+    Instruction N:    ┌────── WA_N ──────┐┌────── WO_N ──────┐
+                      │ SL latches       ││ Data routes via  │
+                      │ sel_acc from     ││ SL to SLF input  │
+                      │ microword        ││                  │
+                      └──────────────────┘└────────┬─────────┘
+                                                   │
+                                                   ▼ Data latched in SLF
+    Instruction N+1:  ┌────── WA_N+1 ────┐┌────── WO_N+1 ────┐
+                      │ ALU computes     ││ New data routing │
+                      │ using latched    ││                  │
+                      │ input_lat        ││                  │
+                      └──────────────────┘└──────────────────┘
 ```
 
 ---
@@ -440,6 +452,18 @@ The batch files:
 2. Generate a `.do` script with relevant signals
 3. Launch Questa GUI with waveform viewer
 
+### Questa Visualizer
+
+For the modern Visualizer GUI, use the `vis_run_*.bat` scripts:
+
+```batch
+# Run with Questa Visualizer (logs all signals for waveform analysis)
+sim\vis_run_pmu.bat
+sim\vis_run_pdu.bat
+sim\vis_run_cadc_top.bat
+# ... etc
+```
+
 ### Command Line Simulation
 
 ```powershell
@@ -461,17 +485,17 @@ vsim -c work.slf_tb -do "run -all; quit -f"
 
 ### Test Results
 
-| Module | Tests | Pass | Status |
-|--------|-------|------|--------|
-| timing_generator | 9 | 9 | ✅ |
-| pmu | 7 | 7 | ✅ |
-| pdu | 4 | 4 | ✅ |
-| slf | 9 | 9 | ✅ |
-| ras | 8 | 8 | ✅ |
-| sl | 4 | 4 | ✅ |
-| io_bridge | 20 | 20 | ✅ |
-| cadc_top | 7 | 7 | ✅ |
-| **Total** | **68** | **68** | **100%** |
+| Module | Test Groups | Description |
+|--------|------------|-------------|
+| timing_generator | TIM-T-001..009 | Reset, counters, sync, clock enable |
+| pmu | PMU-T-001..024 | Multiply ops, boundary cases, timing |
+| pdu | PDU-T-001..044 | Divide ops, div-by-zero, remainder |
+| slf | SLF-T-001..062 | ALU ops, flags, Gray/binary conversion |
+| ras | RAS-T-001..041 | Read/write, all addresses, reset |
+| sl | SL-T-001..043 | MUX selection, independence, integrity |
+| io_bridge | IO-T-001..051 | Input capture, output shift, BIT |
+| control_rom_sequencer | ROM-T-001..RST | Sequencing, jumps, JSR/RET, decode |
+| cadc_top | TOP-T-001..051 | Integration, computation, timing |
 
 ### Polynomial Verification (E = a3·X³ + a2·X² + a1·X + a0)
 

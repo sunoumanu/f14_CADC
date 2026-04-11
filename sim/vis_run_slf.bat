@@ -21,4 +21,4 @@ vcom -2008 -work work "%TB_DIR%\slf_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_slf.do}; run 0 ns" work.slf_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_slf.do}" work.slf_tb

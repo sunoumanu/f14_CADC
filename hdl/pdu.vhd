@@ -2,12 +2,12 @@
 -- PDU - Parallel Divider Unit (PN 944112)
 -- F-14A Central Air Data Computer - FPGA Implementation (Bit-Serial I/O)
 --
--- Implements 20-bit signed fractional division using non-restoring
--- algorithm. Serial data I/O with parallel internal computation.
+-- Implements 20-bit signed fractional division (Q1.19 format).
+-- Serial data I/O with parallel internal computation using VHDL divide.
 --
 -- Timing:
 --   WO: Operands shift in serially (20 bits), previous quotient shifts out
---   WA: Parallel non-restoring algorithm computes new quotient
+--   WA: Parallel divide computes new quotient
 -------------------------------------------------------------------------------
 
 LIBRARY IEEE;

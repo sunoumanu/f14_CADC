@@ -29,4 +29,4 @@ vcom -2008 -work work "%TB_DIR%\cadc_top_tb.vhd"
 
 REM Launch with Visualizer GUI
 echo Launching Questa Visualizer...
-vsim -visualizer -do "do {%SIM_DIR%vis_cadc_top.do}; run 0 ns" work.cadc_top_tb
+vsim -visualizer -do "do {%SIM_DIR%vis_cadc_top.do}" work.cadc_top_tb
