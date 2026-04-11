@@ -1,0 +1,416 @@
+/*
+
+AMD Vivado v2025.2 (64-bit) [Major: 2025, Minor: 2]
+SW Build: 6299465 on Fri Nov 14 19:35:11 GMT 2025
+IP Build: 6300035 on Fri Nov 14 10:48:45 MST 2025
+IP Build: 6300035 on Fri Nov 14 10:48:45 MST 2025
+
+Process ID (PID): 47952
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Sat Apr 11 18:12:18 BST 2026
+Time zone: 	Greenwich Mean Time (Europe/London)
+
+OS: Windows 11
+OS Version: 10.0
+OS Architecture: amd64
+Available processors (cores): 16
+
+Screen size: 3840x2160
+Local screen bounds: x = 0, y = 0, width = 3840, height = 2088
+Screen resolution (DPI): 150
+Available screens: 1
+Default font: family=Segoe UI,name=Segoe UI,style=plain,size=18
+Scale size: 27
+OS font scaling: 150%
+Anti-Alias Enabled: false
+
+Java version: 	21.0.5 64-bit
+
+Java home: 	C:/AMDDesignTools/2025.2/Vivado/tps/win64/jre21.0.5_11
+Java executable: 	C:/AMDDesignTools/2025.2/Vivado/tps/win64/jre21.0.5_11/bin/java.exe
+Java arguments: 	[-Dsun.java2d.pmoffscreen=false, -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2, -Dsun.java2d.xrender=false, -Dsun.java2d.d3d=false, -Dsun.awt.nopixfmt=true, -Dsun.java2d.dpiaware=true, -Dsun.java2d.uiScale.enabled=false, -Dswing.aatext=true, -XX:-UsePerfData, -Djdk.map.althashing.threshold=512, -XX:StringTableSize=4072, -XX:+UseStringDeduplication, -XX:MaxGCPauseMillis=200, -XX:ParallelGCThreads=4, -XX:+ParallelRefProcEnabled, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.desktop/sun.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/java.awt.event=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.base/java.nio=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.table=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED, --add-exports=java.base/sun.security.action=ALL-UNNAMED, --add-exports=java.desktop/sun.font=ALL-UNNAMED, -XX:NewSize=80m, -XX:MaxNewSize=80m, -Xms812m, -Xmx6144m, -Xss10m]
+Java initial memory (-Xms): 	812 MB
+Java maximum memory (-Xmx):	 6 GB
+
+User name: 	aptay
+User home directory: C:/Users/aptay
+User working directory: C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts
+User country: 	GB
+User language: 	en
+User locale: 	en_GB
+
+RDI_BASEROOT: C:/AMDDesignTools/2025.2
+HDI_APPROOT: C:/AMDDesignTools/2025.2/Vivado
+RDI_DATADIR: C:/AMDDesignTools/2025.2/SharedData/data;C:/AMDDesignTools/2025.2/Vivado/data
+RDI_BINDIR: C:/AMDDesignTools/2025.2/Vivado/bin
+
+Vivado preferences file: C:/Users/aptay/AppData/Roaming/Xilinx/Vivado/2025.2/newvivado.xml
+Vivado preferences directory: C:/Users/aptay/AppData/Roaming/Xilinx/Vivado/2025.2/
+Vivado layouts directory: C:/Users/aptay/AppData/Roaming/Xilinx/Vivado/2025.2/data/layouts
+PlanAhead jar file: 	C:/AMDDesignTools/2025.2/Vivado/lib/classes/planAhead.jar
+Vivado log file: 	C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts/vivado.log
+Vivado journal file: 	C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts/vivado.jou
+Engine tmp dir: 	C:/Users/aptay/Dropbox/adiuvo/f14-CADC/implementation/scripts/.Xil/Vivado-47952-Adiuvo_Adam
+Non-Default Parameters:	[]
+
+Xilinx & AMD Environment Variables
+--------------------------------------------------------------------------------------------
+RDI_APPROOT: C:/AMDDesignTools/2025.2/Vivado
+RDI_ARGS:  -mode gui -source create_project_tile.tcl
+RDI_ARGS_FUNCTION: RDI_EXEC_DEFAULT
+RDI_BASEROOT: C:/AMDDesignTools/2025.2
+RDI_BINDIR: C:/AMDDesignTools/2025.2/Vivado/bin
+RDI_BINROOT: C:/AMDDesignTools/2025.2/Vivado/bin
+RDI_BUILD: yes
+RDI_CHECK_PROG: True
+RDI_DATADIR: C:/AMDDesignTools/2025.2/SharedData/data;C:/AMDDesignTools/2025.2/Vivado/data
+RDI_INSTALLROOT: C:/AMDDesignTools
+RDI_INSTALLVER: Vivado
+RDI_INSTALLVERSION: 2025.2
+RDI_ISE_PLATFORM: nt64
+RDI_JAVACEFROOT: C:/AMDDesignTools/2025.2/Vivado/tps/win64/java-cef-95.0.4638.69
+RDI_JAVAFXROOT: C:/AMDDesignTools/2025.2/Vivado/tps/win64/javafx-sdk-21.0.5
+RDI_JAVAROOT: C:/AMDDesignTools/2025.2/Vivado/tps/win64/jre21.0.5_11
+RDI_JAVA_VERSION: 21.0.5_11
+RDI_LIBDIR: C:/AMDDesignTools/2025.2/Vivado/lib/win64.o
+RDI_MINGW_LIB: C:/AMDDesignTools/2025.2/Vivado\tps\mingw\6.2.0\win64.o\nt\bin;C:/AMDDesignTools/2025.2/Vivado\tps\mingw\6.2.0\win64.o\nt\libexec\gcc\x86_64-w64-mingw32\6.2.0
+RDI_OPT_EXT: .o
+RDI_PLATFORM: win64
+RDI_PREPEND_PATH: C:/AMDDesignTools/2025.2/Vitis/bin;C:/AMDDesignTools/2025.2/Vivado/ids_lite/ISE/bin/nt64;C:/AMDDesignTools/2025.2/Vivado/ids_lite/ISE/lib/nt64
+RDI_PROG: C:/AMDDesignTools/2025.2/Vivado/bin/unwrapped/win64.o/vivado.exe
+RDI_PROGNAME: vivado.exe
+RDI_PYTHON3: C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0
+RDI_PYTHON3_VERSION: 3.13.0
+RDI_PYTHONHOME: C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0
+RDI_PYTHONPATH: C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0;C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0\bin;C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0\lib;C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0\lib\site-packages
+RDI_PYTHON_LD_LIBPATH: C:/AMDDesignTools/2025.2/Vivado\tps\win64\python-3.13.0\lib
+RDI_SESSION_INFO: C:\Users\aptay\Dropbox\adiuvo\f14-CADC\implementation\scripts:ADIUVO_ADAM-11-04-2026_18-11-58.58
+RDI_SHARED_DATA: C:/AMDDesignTools/2025.2/SharedData/data
+RDI_TPS_ROOT: C:/AMDDesignTools/2025.2/Vivado/tps/win64
+RDI_USE_JDK21: True
+RDI_VERBOSE: False
+XILINX: C:/AMDDesignTools/2025.2/Vivado/ids_lite/ISE
+XILINX_DSP: C:/AMDDesignTools/2025.2/Vivado/ids_lite/ISE
+XILINX_HLS: C:/AMDDesignTools/2025.2/Vitis
+XILINX_PLANAHEAD: C:/AMDDesignTools/2025.2/Vivado
+XILINX_SDK: C:/AMDDesignTools/2025.2/Vitis
+XILINX_VITIS: C:/AMDDesignTools/2025.2/Vitis
+XILINX_VIVADO: C:/AMDDesignTools/2025.2/Vivado
+_RDI_BINROOT: C:\AMDDesignTools\2025.2\Vivado\bin
+_RDI_CWD: C:\Users\aptay\Dropbox\adiuvo\f14-CADC\implementation\scripts
+
+
+GUI allocated memory:	812 MB
+GUI max memory:		6,144 MB
+Engine allocated memory: 1,083 MB
+
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// TclEventType: START_PROGRESS_DIALOG
+// Tcl Message: start_gui 
+// TclEventType: START_PROGRESS_DIALOG
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FLOW_ADDED
+// Tcl Message: source create_project_tile.tcl 
+// Tcl Message: # set project_name "cadc_tile" # set project_dir "[file dirname [info script]]/../vivado_proj_tile" # set src_dir "[file dirname [info script]]/../../hdl" # set constraints_dir "[file dirname [info script]]/../constraints" # set ip_axi_uart_dir "C:/GIT/ip_axi_uart/src" # set ip_axi_protocol_lite_dir "C:/GIT/ip_axi_protocol_lite" # set cl_axi_common_dir "C:/GIT/cl_axi_common" # set cl_common_dir "C:/GIT/cl_common" # set part "xc7s25csga225-1" # create_project $project_name $project_dir -part $part -force 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,098 MB. GUI used memory: 83 MB. Current time: 4/11/26, 6:12:19 PM BST
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_ADD
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 111 MB (+113655kb) [00:00:19]
+// [Engine Memory]: 1,155 MB (+1060039kb) [00:00:19]
+// [GUI Memory]: 140 MB (+25181kb) [00:00:20]
+// [Engine Memory]: 1,214 MB (+1030kb) [00:00:21]
+// WARNING: HEventQueue.dispatchEvent() is taking  2591 ms.
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/AMDDesignTools/2025.2/Vivado/data/ip'. 
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// TclEventType: PROJECT_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: LOAD_FEATURE
+// Tcl Message: create_project: Time (s): cpu = 00:00:19 ; elapsed = 00:00:14 . Memory (MB): peak = 1838.441 ; gain = 320.301 
+// TclEventType: RSB_CHANGE_CURRENT_DIAGRAM
+// TclEventType: RSB_SAVE_DIAGRAM
+// TclEventType: RSB_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_LOCK_CHANGE
+// TclEventType: RSB_OPEN_DIAGRAM
+// Tcl Message: Wrote  : <C:\Users\aptay\Dropbox\adiuvo\f14-CADC\implementation\vivado_proj_tile\cadc_tile.srcs\sources_1\bd\cadc_system\cadc_system.bd>  
+// TclEventType: LOAD_FEATURE
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // x (PAResourceOtoP.PAViews_PROJECT_SUMMARY, PlanAheadTabProject Summary)
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_ADD_OBJECT
+// Tcl Message: ## create_bd_port -dir I -type clk -freq_hz 12000000 sys_clk ## set_property CONFIG.FREQ_HZ 12000000 [get_bd_ports sys_clk] ## create_bd_port -dir I -type rst sys_rst_n ## set_property CONFIG.POLARITY ACTIVE_LOW [get_bd_ports sys_rst_n] ## create_bd_port -dir I uart_rxd ## create_bd_port -dir O uart_txd ## create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0 
+// Tcl Message: INFO: [Device 21-403] Loading part xc7s25csga225-1 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,396 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:12:34 PM BST
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_OBJECT_CHANGE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// [Engine Memory]: 1,441 MB (+174556kb) [00:00:32]
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_OBJECT_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// Tcl Message: ## set_property -dict [list \ ##     CONFIG.PRIM_IN_FREQ {12.000} \ ##     CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {100.000} \ ##     CONFIG.CLKOUT2_USED {true} \ ##     CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {6.000} \ ##     CONFIG.USE_LOCKED {true} \ ##     CONFIG.USE_RESET {true} \ ##     CONFIG.RESET_TYPE {ACTIVE_LOW} \ ## ] [get_bd_cells clk_wiz_0] ## create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0 ## create_bd_cell -type module -reference axi_uart_wrapper axi_uart_0 
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_MESSAGE_UPDATE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_MESSAGE_UPDATE
+// TclEventType: BDCELL_LOCK_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_CHANGE_CURRENT_DIAGRAM
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_CLOSE_DIAGRAM
+// TclEventType: RSB_CHANGE_CURRENT_DIAGRAM
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: PACKAGER_MESSAGE_UPDATE
+// TclEventType: BDCELL_LOCK_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_SCRIPT_TASK
+// Tcl Message: ## create_bd_cell -type module -reference axi_protocol_wrapper axi_protocol_0 
+// Tcl Message: INFO: [IP_Flow 19-5107] Inferred bus interface 'i_rst_n' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository). INFO: [IP_Flow 19-5107] Inferred bus interface 'i_clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository). INFO: [IP_Flow 19-4728] Bus Interface 'i_rst_n': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'. INFO: [IP_Flow 19-4728] Bus Interface 'i_clk': Added interface parameter 'ASSOCIATED_RESET' with value 'i_rst_n'. 
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: PACKAGER_UNLOAD_CORE
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: BDCELL_LOCK_CHANGE
+// [GUI Memory]: 148 MB (+746kb) [00:00:35]
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: COMPOSITE_FILE_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: RSB_ADD_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: RSB_CONNECTION_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// Tcl Message: ## create_bd_cell -type module -reference cadc_wrapper cadc_top_0 
+// Tcl Message: INFO: [IP_Flow 19-5107] Inferred bus interface 'i_rst' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository). 
+// TclEventType: STOP_PROGRESS_DIALOG
+// Tcl Message: ## create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0 
+// Tcl Message: INFO: [BD 5-1043] It is recommended to use inline hdl version xilinx.com:inline_hdl:ilvector_logic:1.0 for the IP type xilinx.com:ip:util_vector_logic:2.0 for improved performance and reduced disk space. IPs with VLNV xilinx.com:ip:util_vector_logic:2.0 will not be supported from release 2025.2. More information on inline hdl IP is available in UG994  
+// Tcl Message: ## set_property -dict [list \ ##     CONFIG.C_SIZE {1} \ ##     CONFIG.C_OPERATION {not} \ ## ] [get_bd_cells util_vector_logic_0] ## create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_status 
+// Tcl Message: INFO: [BD 5-1043] It is recommended to use inline hdl version xilinx.com:inline_hdl:ilconcat:1.0 for the IP type xilinx.com:ip:xlconcat:2.1 for improved performance and reduced disk space. IPs with VLNV xilinx.com:ip:xlconcat:2.1 will not be supported from release 2025.2. More information on inline hdl IP is available in UG994  
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_uart_0/o_m_axis_tvalid] [get_bd_pins axi_protocol_0/s_axis_tvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/s_axis_tready] [get_bd_pins axi_uart_0/i_m_axis_tready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axis_tdata] [get_bd_pins axi_uart_0/i_s_axis_tdata] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axis_tvalid] [get_bd_pins axi_uart_0/i_s_axis_tvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_uart_0/o_s_axis_tready] [get_bd_pins axi_protocol_0/m_axis_tready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awaddr] [get_bd_pins axi_smartconnect_0/S00_AXI_awaddr] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awprot] [get_bd_pins axi_smartconnect_0/S00_AXI_awprot] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_awvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_awready] [get_bd_pins axi_protocol_0/m_axi_awready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wdata] [get_bd_pins axi_smartconnect_0/S00_AXI_wdata] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wstrb] [get_bd_pins axi_smartconnect_0/S00_AXI_wstrb] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_wvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_wready] [get_bd_pins axi_protocol_0/m_axi_wready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_bresp] [get_bd_pins axi_protocol_0/m_axi_bresp] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_bvalid] [get_bd_pins axi_protocol_0/m_axi_bvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_bready] [get_bd_pins axi_smartconnect_0/S00_AXI_bready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_araddr] [get_bd_pins axi_smartconnect_0/S00_AXI_araddr] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_arprot] [get_bd_pins axi_smartconnect_0/S00_AXI_arprot] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_arvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_arvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_arready] [get_bd_pins axi_protocol_0/m_axi_arready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rdata] [get_bd_pins axi_protocol_0/m_axi_rdata] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rresp] [get_bd_pins axi_protocol_0/m_axi_rresp] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rvalid] [get_bd_pins axi_protocol_0/m_axi_rvalid] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_protocol_0/m_axi_rready] [get_bd_pins axi_smartconnect_0/S00_AXI_rready] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_gpio_qc/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_qc] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_gpio_tat/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_tat] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_gpio_analog/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_analog] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_gpio_digital/gpio_io_o] [get_bd_pins cadc_top_0/i_sensor_digital] 
+// Tcl Message: ## connect_bd_net [get_bd_pins axi_gpio_digital/gpio2_io_o] [get_bd_pins cadc_top_0/i_channel_active] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_mach] [get_bd_pins axi_gpio_out_0/gpio_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_alt] [get_bd_pins axi_gpio_out_0/gpio2_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_airspd] [get_bd_pins axi_gpio_out_1/gpio_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_vspd] [get_bd_pins axi_gpio_out_1/gpio2_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_wing] [get_bd_pins axi_gpio_out_2/gpio_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_flap] [get_bd_pins axi_gpio_out_2/gpio2_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_out_glove] [get_bd_pins axi_gpio_out_3/gpio_io_i] 
+// Tcl Message: ## connect_bd_net [get_bd_pins cadc_top_0/o_bit_status] [get_bd_pins xlconcat_status/In0] ## connect_bd_net [get_bd_pins cadc_top_0/o_fail_detect] [get_bd_pins xlconcat_status/In1] ## connect_bd_net [get_bd_pins xlconcat_status/dout] [get_bd_pins axi_gpio_out_3/gpio2_io_i] 
+// Tcl Message: ## assign_bd_address 
+// Tcl Message: INFO: [BD 41-3093] Triggering Legacy Auto Assign Algorithm 
+// Tcl Message: ## set_property offset 0x40000000 [get_bd_addr_segs {axi_gpio_ps/S_AXI/Reg}] 
+// Tcl Message: ERROR: [Common 17-107] Cannot change read-only property 'offset'. Resolution: Please refer to Vivado Properties Reference Guide (UG912) for more information on setting properties. 
+// [GUI Memory]: 162 MB (+6753kb) [00:00:37]
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/a.b': 27s
+// HOptionPane Error: 'ERROR: [Common 17-107] Cannot change read-only property 'offset'. Resolution: Please refer to Vivado Properties Reference Guide (UG912) for more information on setting properties.  (Sourcing Tcl script 'create_project_tile.tcl')'
+// Tcl Message:      while executing "source "[file dirname [info script]]/create_bd_tile.tcl""     (file "create_project_tile.tcl" line 117) 
+// WARNING: HTimer (Open addressing views timer) is taking 146ms to process. Increasing delay to 1300 ms.

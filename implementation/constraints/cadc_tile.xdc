@@ -4,14 +4,9 @@
 ## UPDATE PIN ASSIGNMENTS FOR YOUR SPECIFIC CARRIER BOARD
 
 #-------------------------------------------------------------------------------
-# System Clock (UPDATE for your oscillator frequency and pin)
-#-------------------------------------------------------------------------------
+# System Clock (100MHz input)\n#-------------------------------------------------------------------------------
 set_property -dict { PACKAGE_PIN L5    IOSTANDARD LVCMOS33 } [get_ports { sys_clk }]
-create_clock -add -name sys_clk_pin -period 83.333 -waveform {0 41.667} [get_ports {sys_clk}]
-# Note: 83.333ns = 12MHz. Adjust period for your clock frequency:
-#   100MHz = 10.000ns
-#   25MHz  = 40.000ns
-#   12MHz  = 83.333ns
+create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5.000} [get_ports {sys_clk}]
 
 #-------------------------------------------------------------------------------
 # Reset (UPDATE for your board - active-low push button or jumper)

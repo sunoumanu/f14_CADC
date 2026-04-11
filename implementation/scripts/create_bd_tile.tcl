@@ -27,9 +27,9 @@ create_bd_design "cadc_system"
 # External Ports
 #-------------------------------------------------------------------------------
 
-# Clock port (external oscillator - adjust frequency for your board)
-create_bd_port -dir I -type clk -freq_hz 12000000 sys_clk
-set_property CONFIG.FREQ_HZ 12000000 [get_bd_ports sys_clk]
+# Clock port (100MHz external oscillator)
+create_bd_port -dir I -type clk -freq_hz 100000000 sys_clk
+set_property CONFIG.FREQ_HZ 100000000 [get_bd_ports sys_clk]
 
 # Reset port (active-low)
 create_bd_port -dir I -type rst sys_rst_n
@@ -41,14 +41,13 @@ create_bd_port -dir O uart_txd
 
 #-------------------------------------------------------------------------------
 # Clocking Wizard
-# Generate 100MHz for AXI logic and 6MHz for clock divider (divide by 4 = 1.5MHz)
+# Input: 100MHz, Output: 6MHz for clock divider (divide by 4 = 1.5MHz)
+# 100MHz used directly for AXI logic
 #-------------------------------------------------------------------------------
 create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
 set_property -dict [list \
-    CONFIG.PRIM_IN_FREQ {12.000} \
-    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {100.000} \
-    CONFIG.CLKOUT2_USED {true} \
-    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {6.000} \
+    CONFIG.PRIM_IN_FREQ {100.000} \
+    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {6.000} \
     CONFIG.USE_LOCKED {true} \
     CONFIG.USE_RESET {true} \
     CONFIG.RESET_TYPE {ACTIVE_LOW} \
@@ -60,11 +59,11 @@ set_property -dict [list \
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 
 #-------------------------------------------------------------------------------
-# AXI UART (ip_axi_uart - added as RTL module reference)
+# AXI UART Wrapper (wraps ip_axi_uart for IP Integrator)
 # Converts UART RX/TX to AXI-Stream interface
-# Generics: G_CLK_FREQ=100MHz, G_BAUD_RATE=115200
+# Fixed config: 100MHz clock, 115200 baud, 8N1
 #-------------------------------------------------------------------------------
-create_bd_cell -type module -reference axi_uart axi_uart_0
+create_bd_cell -type module -reference axi_uart_wrapper axi_uart_0
 
 #-------------------------------------------------------------------------------
 # AXI Protocol Wrapper (wraps ip_axi_protocol_lite for IP Integrator)
@@ -206,33 +205,33 @@ set_property -dict [list \
 # Connect Clocks
 #-------------------------------------------------------------------------------
 
-# Clock wizard input
+# Clock wizard generates 6MHz for CADC from 100MHz input
 connect_bd_net [get_bd_ports sys_clk] [get_bd_pins clk_wiz_0/clk_in1]
 connect_bd_net [get_bd_ports sys_rst_n] [get_bd_pins clk_wiz_0/resetn]
 
-# Processor system reset
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
+# Processor system reset (uses 100MHz sys_clk directly)
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
 connect_bd_net [get_bd_pins clk_wiz_0/locked] [get_bd_pins proc_sys_reset_0/dcm_locked]
 connect_bd_net [get_bd_ports sys_rst_n] [get_bd_pins proc_sys_reset_0/ext_reset_in]
 
-# 100MHz to AXI components
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_uart_0/i_clk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_protocol_0/clk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_smartconnect_0/aclk]
+# 100MHz to AXI components (directly from input)
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_uart_0/i_clk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_protocol_0/clk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_smartconnect_0/aclk]
 
-# Clocks to all GPIOs
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_ps/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_qc/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_tat/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_analog/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_digital/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_out_0/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_out_1/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_out_2/s_axi_aclk]
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins axi_gpio_out_3/s_axi_aclk]
+# Clocks to all GPIOs (100MHz)
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_ps/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_qc/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_tat/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_analog/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_digital/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_out_0/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_out_1/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_out_2/s_axi_aclk]
+connect_bd_net [get_bd_ports sys_clk] [get_bd_pins axi_gpio_out_3/s_axi_aclk]
 
-# 6MHz to clock divider, 1.5MHz to CADC
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins clock_divider_0/i_clk]
+# 6MHz to clock divider (from clk_wiz), 1.5MHz to CADC
+connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins clock_divider_0/i_clk]
 connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins clock_divider_0/i_rst_n]
 connect_bd_net [get_bd_pins clock_divider_0/o_clk_div] [get_bd_pins cadc_top_0/i_clk_master]
 
@@ -282,38 +281,9 @@ connect_bd_net [get_bd_pins axi_protocol_0/m_axis_tvalid] [get_bd_pins axi_uart_
 connect_bd_net [get_bd_pins axi_uart_0/o_s_axis_tready] [get_bd_pins axi_protocol_0/m_axis_tready]
 
 #-------------------------------------------------------------------------------
-# Connect Protocol to AXI SmartConnect
-# The wrapper exposes m_axi_* ports that follow standard naming
+# Connect Protocol to AXI SmartConnect (interface connection)
 #-------------------------------------------------------------------------------
-
-# Write address channel
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awaddr] [get_bd_pins axi_smartconnect_0/S00_AXI_awaddr]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awprot] [get_bd_pins axi_smartconnect_0/S00_AXI_awprot]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_awvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_awvalid]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_awready] [get_bd_pins axi_protocol_0/m_axi_awready]
-
-# Write data channel
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wdata] [get_bd_pins axi_smartconnect_0/S00_AXI_wdata]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wstrb] [get_bd_pins axi_smartconnect_0/S00_AXI_wstrb]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_wvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_wvalid]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_wready] [get_bd_pins axi_protocol_0/m_axi_wready]
-
-# Write response channel
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_bresp] [get_bd_pins axi_protocol_0/m_axi_bresp]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_bvalid] [get_bd_pins axi_protocol_0/m_axi_bvalid]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_bready] [get_bd_pins axi_smartconnect_0/S00_AXI_bready]
-
-# Read address channel
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_araddr] [get_bd_pins axi_smartconnect_0/S00_AXI_araddr]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_arprot] [get_bd_pins axi_smartconnect_0/S00_AXI_arprot]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_arvalid] [get_bd_pins axi_smartconnect_0/S00_AXI_arvalid]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_arready] [get_bd_pins axi_protocol_0/m_axi_arready]
-
-# Read data channel
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rdata] [get_bd_pins axi_protocol_0/m_axi_rdata]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rresp] [get_bd_pins axi_protocol_0/m_axi_rresp]
-connect_bd_net [get_bd_pins axi_smartconnect_0/S00_AXI_rvalid] [get_bd_pins axi_protocol_0/m_axi_rvalid]
-connect_bd_net [get_bd_pins axi_protocol_0/m_axi_rready] [get_bd_pins axi_smartconnect_0/S00_AXI_rready]
+connect_bd_intf_net [get_bd_intf_pins axi_protocol_0/m_axi] [get_bd_intf_pins axi_smartconnect_0/S00_AXI]
 
 #-------------------------------------------------------------------------------
 # Connect SmartConnect to GPIOs (AXI-Lite interfaces)

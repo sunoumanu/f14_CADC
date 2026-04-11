@@ -50,6 +50,7 @@ add_files -norecurse [list \
     "$src_dir/slf.vhd" \
     "$src_dir/timing_generator.vhd" \
     "$src_dir/axi_protocol_wrapper.vhd" \
+    "$src_dir/axi_uart_wrapper.vhd" \
 ]
 
 #-------------------------------------------------------------------------------
@@ -90,27 +91,20 @@ add_files -norecurse [list \
 ]
 
 #-------------------------------------------------------------------------------
-# Set VHDL file types
+# Set VHDL file types and library names
+# Note: After add_files, must use actual filenames not paths with get_files
 #-------------------------------------------------------------------------------
 
-# VHDL-2008 for main CADC sources
-set_property file_type {VHDL 2008} [get_files "$src_dir/*.vhd"]
-
-# VHDL-2008 for IP sources
-set_property file_type {VHDL 2008} [get_files "$ip_axi_uart_dir/*.vhd"]
-set_property file_type {VHDL 2008} [get_files "$ip_axi_protocol_lite_dir/*.vhd"]
-set_property file_type {VHDL 2008} [get_files "$cl_axi_common_dir/*/*.vhd"]
-set_property file_type {VHDL 2008} [get_files "$cl_common_dir/*/*.vhd"]
+# VHDL-2008 for all files first
+set_property file_type {VHDL 2008} [get_files -filter {FILE_TYPE == "VHDL"}]
 
 # Set library names for IP sources
-set_property library ip_axi_uart [get_files "$ip_axi_uart_dir/*.vhd"]
-set_property library cl_axi_common [get_files "$cl_axi_common_dir/*/*.vhd"]
-set_property library cl_common [get_files "$cl_common_dir/*/*.vhd"]
+set_property library ip_axi_uart [get_files {axi_uart.vhd axi_uart_pkg.vhd axi_uart_rx_fsm.vhd axi_uart_tx_fsm.vhd}]
+set_property library cl_axi_common [get_files {axis_slice.vhd axi_register_fifo.vhd}]
+set_property library cl_common [get_files {register_synchroniser.vhd glitch_filter.vhd edge_detector.vhd counter.vhd watchdog_timer.vhd shift_register.vhd}]
 
 # Wrapper must be VHDL-93 for IP Integrator compatibility
-set_property file_type {VHDL} [get_files "$src_dir/cadc_wrapper.vhd"]
-set_property file_type {VHDL} [get_files "$src_dir/clock_divider.vhd"]
-set_property file_type {VHDL} [get_files "$src_dir/axi_protocol_wrapper.vhd"]
+set_property file_type {VHDL} [get_files {cadc_wrapper.vhd clock_divider.vhd axi_protocol_wrapper.vhd axi_uart_wrapper.vhd}]
 
 #-------------------------------------------------------------------------------
 # Add Constraints
