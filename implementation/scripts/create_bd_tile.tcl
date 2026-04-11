@@ -333,56 +333,28 @@ connect_bd_net [get_bd_pins cadc_top_0/o_fail_detect] [get_bd_pins xlconcat_stat
 connect_bd_net [get_bd_pins xlconcat_status/dout] [get_bd_pins axi_gpio_out_3/gpio2_io_i]
 
 #-------------------------------------------------------------------------------
-# Assign AXI Addresses
-# SmartConnect auto-assigns addresses; we override for specific layout
-#-------------------------------------------------------------------------------
-
-# Assign all addresses first
-assign_bd_address
-
-# Then set specific offsets (Input GPIOs)
-set_property offset 0x40000000 [get_bd_addr_segs {axi_gpio_ps/S_AXI/Reg}]
-set_property offset 0x40010000 [get_bd_addr_segs {axi_gpio_qc/S_AXI/Reg}]
-set_property offset 0x40020000 [get_bd_addr_segs {axi_gpio_tat/S_AXI/Reg}]
-set_property offset 0x40030000 [get_bd_addr_segs {axi_gpio_analog/S_AXI/Reg}]
-set_property offset 0x40040000 [get_bd_addr_segs {axi_gpio_digital/S_AXI/Reg}]
-
-# Output GPIOs
-set_property offset 0x40050000 [get_bd_addr_segs {axi_gpio_out_0/S_AXI/Reg}]
-set_property offset 0x40060000 [get_bd_addr_segs {axi_gpio_out_1/S_AXI/Reg}]
-set_property offset 0x40070000 [get_bd_addr_segs {axi_gpio_out_2/S_AXI/Reg}]
-set_property offset 0x40080000 [get_bd_addr_segs {axi_gpio_out_3/S_AXI/Reg}]
-
-#-------------------------------------------------------------------------------
 # Validate and Save
 #-------------------------------------------------------------------------------
 
 regenerate_bd_layout
+assign_bd_address
 validate_bd_design
 save_bd_design
 
+# Print address map (auto-assigned by validate)
 puts "=========================================="
 puts "Block design created successfully!"
 puts ""
-puts "AXI Address Map (for RPi software):"
-puts ""
-puts "INPUTS (Write from RPi):"
-puts "  0x40000000 : GPIO_PS       - i_sensor_ps[19:0]"
-puts "  0x40010000 : GPIO_QC       - i_sensor_qc[19:0]"
-puts "  0x40020000 : GPIO_TAT      - i_sensor_tat[19:0]"
-puts "  0x40030000 : GPIO_ANALOG   - i_sensor_analog[19:0]"
-puts "  0x40040000 : GPIO_DIGITAL  - i_sensor_digital[19:0] (CH1)"
-puts "  0x40040008 : GPIO_DIGITAL  - i_channel_active[0] (CH2)"
-puts ""
-puts "OUTPUTS (Read from RPi):"
-puts "  0x40050000 : GPIO_OUT_0    - o_out_mach[19:0] (CH1)"
-puts "  0x40050008 : GPIO_OUT_0    - o_out_alt[19:0] (CH2)"
-puts "  0x40060000 : GPIO_OUT_1    - o_out_airspd[19:0] (CH1)"
-puts "  0x40060008 : GPIO_OUT_1    - o_out_vspd[19:0] (CH2)"
-puts "  0x40070000 : GPIO_OUT_2    - o_out_wing[19:0] (CH1)"
-puts "  0x40070008 : GPIO_OUT_2    - o_out_flap[19:0] (CH2)"
-puts "  0x40080000 : GPIO_OUT_3    - o_out_glove[19:0] (CH1)"
-puts "  0x40080008 : GPIO_OUT_3    - {fail_detect, bit_status} (CH2)"
+puts "AXI Address Map (auto-assigned - check Address Editor):"
+puts "  GPIO_PS       - i_sensor_ps[19:0]"
+puts "  GPIO_QC       - i_sensor_qc[19:0]"
+puts "  GPIO_TAT      - i_sensor_tat[19:0]"
+puts "  GPIO_ANALOG   - i_sensor_analog[19:0]"
+puts "  GPIO_DIGITAL  - i_sensor_digital[19:0] (CH1), i_channel_active[0] (CH2)"
+puts "  GPIO_OUT_0    - o_out_mach[19:0] (CH1), o_out_alt[19:0] (CH2)"
+puts "  GPIO_OUT_1    - o_out_airspd[19:0] (CH1), o_out_vspd[19:0] (CH2)"
+puts "  GPIO_OUT_2    - o_out_wing[19:0] (CH1), o_out_flap[19:0] (CH2)"
+puts "  GPIO_OUT_3    - o_out_glove[19:0] (CH1), {fail_detect, bit_status} (CH2)"
 puts ""
 puts "UART Protocol (ip_axi_protocol_lite):"
 puts "  Single Write: 0x09 ADDR[4] LEN[1] DATA[4]"

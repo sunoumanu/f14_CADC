@@ -414,3 +414,114 @@ closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // x (PARe
 // HOptionPane Error: 'ERROR: [Common 17-107] Cannot change read-only property 'offset'. Resolution: Please refer to Vivado Properties Reference Guide (UG912) for more information on setting properties.  (Sourcing Tcl script 'create_project_tile.tcl')'
 // Tcl Message:      while executing "source "[file dirname [info script]]/create_bd_tile.tcl""     (file "create_project_tile.tcl" line 117) 
 // WARNING: HTimer (Open addressing views timer) is taking 146ms to process. Increasing delay to 1300 ms.
+// TclEventType: STOP_PROGRESS_DIALOG
+// HMemoryUtils.trashcanNow. Engine heap size: 1,486 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:12:50 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,486 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:13:30 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,488 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:14:09 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,488 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:14:10 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,488 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:14:50 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,488 MB. GUI used memory: 91 MB. Current time: 4/11/26, 6:15:30 PM BST
+// Elapsed time: 200 seconds
+selectButton("OK", "OK", "Sourcing Tcl script 'create_project_tile.tcl'"); // JButton (OK)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:28s
+// [Engine Memory]: 1,535 MB (+22311kb) [00:03:49]
+// TclEventType: DG_GRAPH_GENERATED
+// HMemoryUtils.trashcanNow. Engine heap size: 1,537 MB. GUI used memory: 92 MB. Current time: 4/11/26, 6:15:54 PM BST
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:30s
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// Tcl Message: update_compile_order -fileset sources_1 
+// TclEventType: DG_GRAPH_GENERATED
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:32s
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:34s
+// Tcl Message: update_compile_order -fileset sources_1 
+// TclEventType: DG_GRAPH_GENERATED
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:36s
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /axi_protocol_0_s_axis_tready]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+// PAPropertyPanels.initPanels (axi_protocol_0_s_axis_tready) elapsed time: 0.3s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/M.f': 03m:38s
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /axi_protocol_0_s_axis_tready]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /axi_protocol_0_s_axis_tready]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /axi_uart_0_o_s_axis_tready]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,598 MB. GUI used memory: 92 MB. Current time: 4/11/26, 6:16:10 PM BST
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /util_vector_logic_0_Res]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /proc_sys_reset_0_peripheral_aresetn]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /util_vector_logic_0_Res]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /xlconcat_status_dout]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+selectButton(PAResourceCommand.PACommandNames_ZOOM_FIT, "System_zoom_fit"); // C (PAResourceCommand.PACommandNames_ZOOM_FIT, System_zoom_fit)
+// Run Command: PAResourceCommand.PACommandNames_ZOOM_FIT
+selectCodeEditor(RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR, 592, 182); // cE (RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR)
+selectCodeEditor(RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR, 348, 57); // cE (RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Address Editor", 1); // m (PlanAheadTabBaseWorkspace_JideTabbedPane)
+// PAPropertyPanels.initPanels (/axi_protocol_0/m_axi) elapsed time: 0.4s
+selectTreeTable(PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL, "/axi_protocol_0/m_axi ;  ;  ;  ;  ; ", 4, "/axi_protocol_0/m_axi", 0, false); // o (PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL)
+selectTreeTable(PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL, "/axi_protocol_0/m_axi ;  ;  ;  ;  ; ", 4, "/axi_protocol_0/m_axi", 0, false, false, false, false, true, false); // o (PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL) - Popup Trigger
+selectMenuItem(RDIResourceCommand.RDICommands_PROPERTIES, "Address Path Properties..."); // ap (RDIResourceCommand.RDICommands_PROPERTIES, edit_properties_menu)
+// Run Command: RDIResourceCommand.RDICommands_PROPERTIES
+collapseTreeTable(PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL, "Incomplete Paths (1) ;  ;  ;  ;  ; ", 3); // o (PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,598 MB. GUI used memory: 96 MB. Current time: 4/11/26, 6:16:50 PM BST
+expandTreeTable(PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL, "Incomplete Paths (1) ;  ;  ;  ;  ; ", 3); // o (PAResourceAtoD.AddressNetworkTreeTablePanel_ADDRESS_NETWORK_TREE_TABLE_PANEL)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Address Editor", 1); // m (PlanAheadTabBaseWorkspace_JideTabbedPane)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Address Map", 2); // m (PlanAheadTabBaseWorkspace_JideTabbedPane)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "System", 0); // m (PlanAheadTabBaseWorkspace_JideTabbedPane)
+selectButton(PAResourceCommand.PACommandNames_VALIDATE_RSB_DESIGN, "System_validate_bd_design_rsb"); // C (PAResourceCommand.PACommandNames_VALIDATE_RSB_DESIGN, System_validate_bd_design_rsb)
+// Run Command: PAResourceCommand.PACommandNames_VALIDATE_RSB_DESIGN
+// Tcl Command: 'validate_bd_design'
+// TclEventType: PAUSE_COMPOSITE_FILE_CHANGE_GUI
+// TclEventType: RSB_VALIDATE_DIAGRAM
+// TclEventType: MSGMGR_REFRESH_MSG
+// TclEventType: RSB_PARAM_PROP
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_PARAM_PROP
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: PAUSE_COMPOSITE_FILE_CHANGE_GUI
+// Tcl Message: validate_bd_design 
+// Tcl Message: INFO: [xilinx.com:ip:clk_wiz:6.0-1] /clk_wiz_0 clk_wiz propagate 
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK", "Critical Messages"); // f (PAResourceAtoD.CmdMsgDialog_OK)
+dismissDialog("Critical Messages"); // ea.a (dialog0)
+// [GUI Memory]: 170 MB (+211kb) [00:05:04]
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_cells /axi_smartconnect_0]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_cells /axi_smartconnect_0]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runCommand("customize_rsb_block");
+// Run Command: PAResourceCommand.PACommandNames_CUSTOMIZE_RSB_BLOC
+selectButton(RDIResource.BaseDialog_OK, "OK", "Re-customize IP"); // f (RDIResource.BaseDialog_OK)
+dismissDialog("Re-customize IP"); // m (dialog1)
+// Tcl Message: startgroup 
+// Tcl Message: endgroup 
+selectButton(PAResourceCommand.PACommandNames_ZOOM_FIT, "System_zoom_fit"); // C (PAResourceCommand.PACommandNames_ZOOM_FIT, System_zoom_fit)
+// Run Command: PAResourceCommand.PACommandNames_ZOOM_FIT
+// HMemoryUtils.trashcanNow. Engine heap size: 1,598 MB. GUI used memory: 98 MB. Current time: 4/11/26, 6:17:31 PM BST
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_cells /axi_smartconnect_0]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /clock_divider_0_o_clk_div]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_nets /clk_wiz_0_clk_out2]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_cells /clk_wiz_0]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "select_objects [get_bd_cells /clk_wiz_0]"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+runCommand("customize_rsb_block");
+// Run Command: PAResourceCommand.PACommandNames_CUSTOMIZE_RSB_BLOC
+// WARNING: HEventQueue.dispatchEvent() is taking  1103 ms.
+dismissDialog("Re-customize IP"); // C (Re-customize IP Progress)
+selectTab(PAResourceTtoZ.XPG_TabbedPane_TABBED_PANE, (HResource) null, "Output Clocks", 1); // cL (PAResourceTtoZ.XPG_TabbedPane_TABBED_PANE)
+dismissDialog("Re-customize IP"); // m (dialog2)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,600 MB. GUI used memory: 107 MB. Current time: 4/11/26, 6:18:11 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,600 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:18:51 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,600 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:19:31 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,600 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:20:11 PM BST
+// Elapsed time: 149 seconds
+selectTab((HResource) null, (HResource) null, "Reports", 3); // ab
+selectTab((HResource) null, (HResource) null, "Design Runs", 4); // ab
+// Elapsed time: 26 seconds
+runTclCommand (PAResourceOtoP.PAViews_SYSTEM, "unselect_objects"); // gb (PAResourceOtoP.PAViews_SYSTEM, PlanAheadTabSystem)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,601 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:20:51 PM BST
+// TclEventType: RSB_REMOVE_ADDRNETWORK
+// TclEventType: RSB_CONNECTION_CHANGE
+// Tcl Message: connect_bd_intf_net [get_bd_intf_pins axi_protocol_0/m_axi] [get_bd_intf_pins axi_smartconnect_0/S00_AXI] 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,601 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:21:31 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,601 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:22:11 PM BST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,601 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:22:51 PM BST
+// TclEventType: FILE_SET_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,601 MB. GUI used memory: 106 MB. Current time: 4/11/26, 6:23:31 PM BST

@@ -5,22 +5,19 @@
 
 #-------------------------------------------------------------------------------
 # System Clock (100MHz input)\n#-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN L5    IOSTANDARD LVCMOS33 } [get_ports { sys_clk }]
+set_property -dict { PACKAGE_PIN M9    IOSTANDARD LVCMOS33 } [get_ports { sys_clk }]
 create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5.000} [get_ports {sys_clk}]
 
 #-------------------------------------------------------------------------------
-# Reset (UPDATE for your board - active-low push button or jumper)
+# Reset (active-low)
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN N6    IOSTANDARD LVCMOS33 } [get_ports { sys_rst_n }]
+set_property -dict { PACKAGE_PIN F2    IOSTANDARD LVCMOS33 } [get_ports { sys_rst_n }]
 
 #-------------------------------------------------------------------------------
-# UART to Raspberry Pi (UPDATE for your connector pinout)
-# RPi GPIO14 (TXD) → FPGA uart_rxd
-# RPi GPIO15 (RXD) ← FPGA uart_txd
-# Note: RPi operates at 3.3V - compatible with LVCMOS33
+# UART to Raspberry Pi
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN J1    IOSTANDARD LVCMOS33 } [get_ports { uart_rxd }]
-set_property -dict { PACKAGE_PIN K1    IOSTANDARD LVCMOS33 } [get_ports { uart_txd }]
+set_property -dict { PACKAGE_PIN K15   IOSTANDARD LVCMOS33 } [get_ports { uart_rxd }]
+set_property -dict { PACKAGE_PIN J15   IOSTANDARD LVCMOS33 } [get_ports { uart_txd }]
 
 #-------------------------------------------------------------------------------
 # Clock Domain Crossing Constraints
