@@ -2,9 +2,10 @@
 REM PDU Testbench - Questa Visualizer Interactive Simulation
 REM F-14A CADC - Parallel Divider Unit
 
-set QUESTA_PATH=C:\questa_base64_2025.3\win64
+if not defined QUESTA_HOME set QUESTA_HOME=C:\questa_base64_2025.3\win64
+set QUESTA_PATH=%QUESTA_HOME%
 set PATH=%QUESTA_PATH%;%PATH%
-set WORK_DIR=C:\temp\cadc_sim
+set WORK_DIR=%TEMP%\cadc_sim
 set SRC_DIR=%~dp0..\hdl
 set TB_DIR=%~dp0..\tb
 set SIM_DIR=%~dp0
