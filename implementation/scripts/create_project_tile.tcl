@@ -70,18 +70,24 @@ add_files -norecurse [list \
 ]
 
 #-------------------------------------------------------------------------------
-# Add cl_axi_common Library Sources (axis_slice, etc.)
+# Add cl_axi_common Library Sources (axis_slice, axi_register_fifo)
 #-------------------------------------------------------------------------------
 add_files -norecurse [list \
-    "$cl_axi_common_dir/cl_axi_common/cl_axi_common_pkg.vhd" \
     "$cl_axi_common_dir/axis_slice/axis_slice.vhd" \
-    "$cl_axi_common_dir/axis_fifo/axis_fifo.vhd" \
+    "$cl_axi_common_dir/axi_register_fifo/axi_register_fifo.vhd" \
 ]
 
 #-------------------------------------------------------------------------------
-# Add cl_common Library Sources (sync, glitch filter, etc.)
+# Add cl_common Library Sources (sync, glitch filter, watchdog, etc.)
 #-------------------------------------------------------------------------------
-add_files -norecurse [glob -nocomplain "$cl_common_dir/src/*.vhd"]
+add_files -norecurse [list \
+    "$cl_common_dir/synchronisers/register_synchroniser.vhd" \
+    "$cl_common_dir/glitch_filter/glitch_filter.vhd" \
+    "$cl_common_dir/edge_detector/edge_detector.vhd" \
+    "$cl_common_dir/counter/counter.vhd" \
+    "$cl_common_dir/watchdog_timer/watchdog_timer.vhd" \
+    "$cl_common_dir/shift_register/shift_register.vhd" \
+]
 
 #-------------------------------------------------------------------------------
 # Set VHDL file types
@@ -94,12 +100,12 @@ set_property file_type {VHDL 2008} [get_files "$src_dir/*.vhd"]
 set_property file_type {VHDL 2008} [get_files "$ip_axi_uart_dir/*.vhd"]
 set_property file_type {VHDL 2008} [get_files "$ip_axi_protocol_lite_dir/*.vhd"]
 set_property file_type {VHDL 2008} [get_files "$cl_axi_common_dir/*/*.vhd"]
-set_property file_type {VHDL 2008} [get_files "$cl_common_dir/src/*.vhd"]
+set_property file_type {VHDL 2008} [get_files "$cl_common_dir/*/*.vhd"]
 
 # Set library names for IP sources
 set_property library ip_axi_uart [get_files "$ip_axi_uart_dir/*.vhd"]
 set_property library cl_axi_common [get_files "$cl_axi_common_dir/*/*.vhd"]
-set_property library cl_common [get_files "$cl_common_dir/src/*.vhd"]
+set_property library cl_common [get_files "$cl_common_dir/*/*.vhd"]
 
 # Wrapper must be VHDL-93 for IP Integrator compatibility
 set_property file_type {VHDL} [get_files "$src_dir/cadc_wrapper.vhd"]
