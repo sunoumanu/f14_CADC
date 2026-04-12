@@ -2,7 +2,7 @@
 --Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
---Date        : Sat Apr 11 18:27:32 2026
+--Date        : Sun Apr 12 12:50:03 2026
 --Host        : Adiuvo_Adam running 64-bit major release  (build 9200)
 --Command     : generate_target cadc_system_wrapper.bd
 --Design      : cadc_system_wrapper

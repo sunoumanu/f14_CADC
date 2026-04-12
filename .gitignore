@@ -34,3 +34,7 @@ test_results.txt
 rules.txt
 libraries.txt
 coding_standards.txt
+
+# Exclude old Vivado projects (keep only tile)
+implementation/vivado_proj/
+implementation/vivado_proj_artys7/

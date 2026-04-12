@@ -1,0 +1,23 @@
+vhdl xil_defaultlib  \
+"../../../bd/cadc_system/ip/cadc_system_proc_sys_reset_0_0/sim/cadc_system_proc_sys_reset_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_protocol_0_0/sim/cadc_system_axi_protocol_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_smartconnect_0_0/bd_0/ip/ip_1/sim/bd_fda1_psr_aclk_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_ps_0/sim/cadc_system_axi_gpio_ps_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_qc_0/sim/cadc_system_axi_gpio_qc_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_tat_0/sim/cadc_system_axi_gpio_tat_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_analog_0/sim/cadc_system_axi_gpio_analog_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_digital_0/sim/cadc_system_axi_gpio_digital_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_out_0_0/sim/cadc_system_axi_gpio_out_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_out_1_0/sim/cadc_system_axi_gpio_out_1_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_out_2_0/sim/cadc_system_axi_gpio_out_2_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_axi_gpio_out_3_0/sim/cadc_system_axi_gpio_out_3_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_clock_divider_0_0/sim/cadc_system_clock_divider_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_cadc_top_0_0/sim/cadc_system_cadc_top_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_system_ila_0_0/bd_0/ip/ip_0/sim/bd_8dad_ila_lib_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_system_ila_0_0/bd_0/sim/bd_8dad.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_system_ila_0_0/sim/cadc_system_system_ila_0_0.vhd" \
+"../../../bd/cadc_system/ip/cadc_system_uart_0_0/sim/cadc_system_uart_0_0.vhd" \
+"../../../bd/cadc_system/sim/cadc_system.vhd" \
+
+# Do not sort compile order
+nosort

@@ -47,8 +47,8 @@ entity axi_protocol_wrapper is
 end entity axi_protocol_wrapper;
 
 architecture rtl of axi_protocol_wrapper is
-
-    component axi_protocol is
+ 
+    component axi_protocol is  
         generic(
             G_AXIL_DATA_WIDTH  : integer := 32;
             G_AXI_ADDR_WIDTH   : integer := 32;
