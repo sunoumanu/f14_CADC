@@ -43,9 +43,9 @@ Detailed design documents including:
 
 ### FPGA Implementation (`implementation/`)
 Vivado project for the [Adiuvo Tile](https://www.adiuvoengineering.com/) (Spartan-7 based SoM) with:
-- AXI-GPIO wrapper for MicroBlaze integration
-- UART bridge for host communication
-- Constraints and implementation scripts
+- UART-to-AXI bridge for host access to the AXI network
+- AXI-GPIO peripherals for stimulus injection and result capture
+- No processor required — direct register access via UART commands
 
 ## Quick Start
 
