@@ -2,549 +2,113 @@
 
 A modern FPGA implementation of the F-14A Tomcat's Central Air Data Computer, originally designed by Ray Holt at Garrett AiResearch in 1968-1970. This was arguably **the world's first microprocessor**, predating the Intel 4004 by two years but remaining classified until 1998.
 
-## Overview
+## History
 
-The CADC computes real-time air data parameters for the F-14A fighter aircraft:
-- **Inputs:** Static pressure (Ps), impact pressure (Qc), total air temperature (TAT), angle of attack
-- **Outputs:** Mach number, altitude, airspeed, vertical speed, wing sweep commands, flap/glove vane positions
+In 1968, the U.S. Navy commissioned Garrett AiResearch to develop a digital air data computer for the new F-14A Tomcat fighter. Engineer Ray Holt, just 23 years old, led the design of a revolutionary single-chip processor architecture that would compute critical flight parameters in real-time.
 
-### Original System Specifications
+The CADC was:
+- **First microprocessor** - Designed 1968-1970, two years before Intel's 4004
+- **Classified for 28 years** - Military secrecy prevented public recognition until 1998
+- **Still flying today** - The F-14 flew operationally until 2006 (US Navy)
+
+The system computed Mach number, altitude, airspeed, and commanded the F-14's distinctive variable-sweep wings based on flight conditions.
+
+## What's Included
+
+### HDL Source (`hdl/`)
+Complete synthesizable VHDL implementation of all six original CADC chips:
+
+| Module | Original Part | Function |
+|--------|---------------|----------|
+| PMU | 944111 | 20×20-bit serial multiplier |
+| PDU | 944112 | 20÷20-bit serial divider |
+| SLF | 944113 | ALU (add/sub/logic/shift/Gray code) |
+| RAS | 944114 | 64×20-bit register file |
+| SL | 944118 | Data routing/steering logic |
+| ROM Sequencer | 944125 | Microcode control unit |
+
+### Testbenches (`tb/`)
+VHDL testbenches for each module with automated verification.
+
+### Specifications (`specs/`)
+Detailed design documents including:
+- System requirements and traceability
+- Module-level specifications
+- Interface definitions
+
+### Verification (`verification/`)
+- `cadc_interactive.py` — Interactive visualization tool with F-14 wing sweep display
+- `test_cadc_uart.py` — Automated FPGA test suite via UART
+- Polynomial verification notebooks
+
+### FPGA Implementation (`implementation/`)
+Vivado project targeting AMD/Xilinx Spartan-7 (Digilent Arty S7 / PYNQ Tile) with:
+- AXI-GPIO wrapper for processor integration
+- UART bridge for host communication
+- Constraints and implementation scripts
+
+## Quick Start
+
+### Simulation (ModelSim/Questa)
+```bash
+cd sim
+run_cadc_top.bat      # Run full system testbench
+run_pmu.bat           # Test multiplier
+run_pdu.bat           # Test divider
+```
+
+### Interactive Visualization
+```bash
+cd verification
+python cadc_interactive.py              # Simulation mode
+python cadc_interactive.py --live       # Connected to FPGA
+```
+
+The visualization displays:
+- Real-time computed outputs (Mach, altitude, airspeed)
+- Animated F-14 wing sweep position
+- Physical units (feet, knots, degrees)
+- UART terminal for live FPGA communication
+
+### FPGA Build
+Open `implementation/vivado_proj_tile/` in Vivado 2024.1+.
+
+## Original System Specifications
 
 | Parameter | Value |
 |-----------|-------|
-| Word Width | 20 bits (1 sign + 19 fractional) |
-| Number Format | 2's complement, fractional fixed-point |
+| Word Width | 20 bits (Q1.19 fixed-point) |
 | Master Clock | 1.5 MHz |
-| Frame Time | ~54.6 ms (18.3 Hz update rate) |
-| Operations/Frame | 512 (multiplies, divides, adds, sqrt, I/O) |
-| Total Transistors | 74,442 (62,092 in ROM) |
-| Unique Chip Types | 6 |
-| Power | ≤10 watts |
-| PCB Size | 4" × 10" |
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      CADC TOP LEVEL                             │
-│                                                                 │
-│   ┌──────────────┐    ┌─────────────┐    ┌─────────────┐       │
-│   │   Timing     │    │  Control    │    │    I/O      │       │
-│   │  Generator   │───►│    ROM +    │◄──►│   Bridge    │◄─► Sensors
-│   │              │    │  Sequencer  │    │             │◄─► Displays
-│   └──────────────┘    └──────┬──────┘    └─────────────┘       │
-│                              │                                  │
-│         ┌────────────────────┼────────────────────┐            │
-│         ▼                    ▼                    ▼            │
-│   ┌───────────┐       ┌───────────┐        ┌───────────┐       │
-│   │    PMU    │       │    SL     │        │    SLF    │       │
-│   │ (Multiply)│◄─────►│ (Steering │◄──────►│   (ALU)   │       │
-│   │  944111   │       │   Logic)  │        │  944113   │       │
-│   └───────────┘       │  944118   │        └─────┬─────┘       │
-│                       │           │              │             │
-│   ┌───────────┐       │           │        ┌─────┴─────┐       │
-│   │    PDU    │◄─────►│           │◄──────►│    RAS    │       │
-│   │  (Divide) │       │           │        │ (Register │       │
-│   │  944112   │       └───────────┘        │   File)   │       │
-│   └───────────┘                            │  944114   │       │
-│                                            └───────────┘       │
-└─────────────────────────────────────────────────────────────────┘
-```
+| Frame Rate | 18.3 Hz (54.6 ms/frame) |
+| Operations/Frame | 512 |
+| Original Transistors | 74,442 |
+| Original Power | ≤10 watts |
 
 ## Project Structure
 
 ```
 f14-CADC/
-├── hdl/                    # Synthesizable VHDL modules
-│   ├── cadc_top.vhd       # Top-level integration
-│   ├── cadc_wrapper.vhd   # AXI-GPIO wrapper for FPGA
-│   ├── clock_divider.vhd  # Clock division utilities
-│   ├── timing_generator.vhd
-│   ├── pmu.vhd            # Parallel Multiplier Unit (bit-serial)
-│   ├── pdu.vhd            # Parallel Divider Unit (bit-serial)
-│   ├── slf.vhd            # Special Logic Function (ALU, bit-serial)
-│   ├── ras.vhd            # Random Access Storage (64×20 registers)
-│   ├── sl.vhd             # Steering Logic (data routing)
-│   ├── control_rom_sequencer.vhd
-│   └── io_bridge.vhd
-├── tb/                     # VHDL testbenches
-│   └── *_tb.vhd           # One testbench per module
-├── sim/                    # Simulation batch files
-│   ├── run_*.bat          # Questa GUI simulation launchers
-│   └── vis_run_*.bat      # Questa Visualizer launchers
-├── specs/                  # Design specifications
-│   ├── CADC_System_Requirements.md
-│   ├── CADC_Top_Level_Spec.md
-│   └── *_Module_Spec.md   # Per-module specifications
-├── verification/          # Polynomial verification notebook
-├── implementation/        # Vivado FPGA implementation
-├── ocr_text/              # OCR'd text from original documents
-└── original_docs/         # Original Ray Holt design PDFs
+├── hdl/                 # Synthesizable VHDL source
+├── tb/                  # Testbenches
+├── sim/                 # Simulation scripts
+├── specs/               # Design specifications (detailed docs)
+├── verification/        # Python tools and notebooks
+├── implementation/      # Vivado FPGA project
+├── ocr_text/            # OCR'd original design notes
+└── original_docs/       # Ray Holt's original design PDFs
 ```
-
-## Modules
-
-| Module | Part # | Function | Devices |
-|--------|--------|----------|---------|
-| **PMU** | 944111 | 20×20 bit-serial multiply, Q1.19 result | 1,063 |
-| **PDU** | 944112 | 20÷20 bit-serial fractional division (Q1.19) | 1,241 |
-| **SLF** | 944113 | ALU (add/sub/and/or/xor/shift/Gray), flags (Z/N/C) | 743 |
-| **RAS** | 944114 | 64×20-bit register file with serial I/O | 2,330 |
-| **SL** | 944118 | 3-channel data multiplexer/router | 771 |
-| **ROM** | 944125 | 128×20-bit microcode storage | 1,269–3,268 |
-
----
-
-## Timing Architecture
-
-### Master Clock Hierarchy
-
-```
-Master Clock: 1.5 MHz (667 ns period)
-    │
-    ├── Phase Counter (4 states per bit time = 2.666 µs)
-    │       Phase 0: Setup / bit_clk pulse
-    │       Phase 1: PHI1 active
-    │       Phase 2: Hold (register timing signals)
-    │       Phase 3: PHI2 active (data shifts/latches)
-    │
-    ├── Bit Counter: T0-T19 (20 bits per word = 53.33 µs)
-    │
-    ├── Word Type: WA/WO alternating (2 words per operation = 106.67 µs)
-    │
-    └── Operation Counter: 0-511 (512 ops per frame = 54.6 ms)
-```
-
-### Phase Clock Generation
-
-```
-           Phase 0    Phase 1    Phase 2    Phase 3    Phase 0
-              │          │          │          │          │
-    clk ──────┐  ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌──
-              └──┘   └──┘   └──┘   └──┘   └──┘   └──┘   └──┘
-
-    phi1 ─────────────┐                       ┌─────────────────
-                      └───────────────────────┘
-
-    phi2 ─────────────────────────┐                       ┌─────
-                                  └───────────────────────┘
-
-    bit_clk ──┐                                        ┌────────
-              └────────────────────────────────────────┘
-
-              ◄───────── One Bit Time (2.666 µs) ─────────►
-```
-
-### Phase Clock Operation
-
-The CADC uses a **4-phase non-overlapping clock scheme** derived from the 1.5 MHz master clock. Each bit time consists of four sequential phases, ensuring proper setup/hold times and preventing race conditions in the bit-serial datapath:
-
-| Phase | Name | Function |
-|-------|------|----------|
-| **0** | Setup | `bit_clk` pulses high. Prepares data for the upcoming bit cycle. The bit counter increments on the rising edge of `bit_clk`. |
-| **1** | PHI1 | First clock phase active. Used by some modules for internal latching and pre-computation. Control signals stabilize during this phase. |
-| **2** | Hold | Transition period. `wr_addr_latch` and `rd_addr_latch` signals fire here to capture RAS addresses from the bit stream. Provides setup time before PHI2. |
-| **3** | PHI2 | Second clock phase active. **Primary data transfer phase** — shift registers advance, accumulators update, and serial data propagates between modules. |
-
-**Why 4 phases?**
-
-1. **Non-overlapping guarantee**: PHI1 and PHI2 never overlap, preventing through-current and ensuring clean handoffs
-2. **Setup time**: Phase 0 and 2 provide natural setup windows before active clock edges
-3. **Deterministic timing**: Every module knows exactly when data is valid vs. transitioning
-4. **Power efficiency**: Original PMOS logic required careful timing to minimize static current
-
-**Implementation in timing_generator.vhd:**
-
-```vhdl
--- 2-bit phase counter cycles 0→1→2→3→0...
-PROCESS (i_clk, i_rst)
-BEGIN
-    IF i_rst = '1' THEN
-        phase_cnt <= (OTHERS => '0');
-    ELSIF rising_edge(i_clk) THEN
-        phase_cnt <= phase_cnt + 1;  -- Wraps at 4
-    END IF;
-END PROCESS;
-
--- Decode phases
-o_phi1    <= '1' WHEN phase_cnt = "01" ELSE '0';
-o_phi2    <= '1' WHEN phase_cnt = "11" ELSE '0';
-o_bit_clk <= '1' WHEN phase_cnt = "00" ELSE '0';
-```
-
-### Word Timing (WA/WO)
-
-Each operation consists of two 20-bit words:
-- **WA (Word A)**: Control phase - microcode decoded, ALU computes
-- **WO (Word O)**: Data phase - serial data flows between modules
-
-```
-                        One Operation (106.67 µs)
-    ├─────────────────── WA ──────────────────┼─────────────────── WO ──────────────────┤
-    
-    T0  T1  T2  T3  T4  T5  T6  T7  T8 ... T18 T19 │ T0  T1  T2  T3 ... T18 T19
-    ───┬───┬───┬───┬───┬───┬───┬───┬───────┬───┬───┼───┬───┬───┬───────┬───┬───
-       │   │   │   │   │   │   │   │       │   │   │   │   │   │       │   │
-       │   │   │   │   │   │   │   │       │   │   │   │   │   │       │   └── Last bit
-       └───┴───┴───┴───┴───┴───┴───┘       │   │   │   │   │   │       │
-       ◄── SLF receives CW bits 0-6 ──►    │   │   └───┴───┴───┴───────┴── Data shifts
-                                           │   │
-                      ALU compute at T8 ───┘   │
-                                               │
-                      Update regs at T18 ──────┘
-```
-
----
-
-## Inter-Module Timing
-
-### Serial Data Output Compensation
-
-All modules use timing compensation for serial outputs:
-
-```
-    Output Pattern: sr(0) WHEN t0='1' ELSE sr(1)
-    
-    ┌─────────────────────────────────────────────────────────────────────┐
-    │ T0:  Output sr(0) directly (just loaded, shift hasn't happened)    │
-    │ T1+: Output sr(1) (shift register already advanced by one)         │
-    └─────────────────────────────────────────────────────────────────────┘
-    
-    This ensures the consuming module samples correct data after its PHI2 edge.
-```
-
-### PMU (Multiplier) Pipeline
-
-```
-    ┌────────────────── WO_N ──────────────────┐┌──────── WA_N+1 ────────┐
-    │                                          ││                        │
-    │ T0 ──────────────────────────────── T19  ││ T0 ───────────── T19 │
-    │  │                                    │  ││  │                     │
-    │  │  ◄── Shift in mcand (from ACC) ─►  │  ││  │                     │
-    │  │  ◄── Shift in mplier (from TMP) ►  │  ││  │                     │
-    │  │                                    │  ││  │                     │
-    │  │                Latch at T19 ──────┘  ││  │ Parallel multiply   │
-    │  │                                       ││  │ Load product → sr   │
-    └──┼─────────────────────────────────────┘└──┼────────────────────┘
-       │                                          │
-       │◄──── Operands shifting in ────────────►│
-       │                                          │◄── Product ready ──►
-       
-    Product available during WO_N+1 (1 operation latency)
-```
-
-### PDU (Divider) Pipeline
-
-```
-    ┌────────────────── WO_N ──────────────────┐┌──────── WA_N+1 ────────┐
-    │                                          ││                        │
-    │ T0 ──────────────────────────────── T19  ││ T0 ───────────── T19 │
-    │  │                                    │  ││  │                     │
-    │  │  ◄ Shift in dividend (from ACC) ►  │  ││  │                     │
-    │  │  ◄ Shift in divisor (from TMP) ─►  │  ││  │                     │
-    │  │                                    │  ││  │                     │
-    │  │                Latch at T19 ──────┘  ││  │ Parallel divide     │
-    │  │                                       ││  │ Load quotient → sr  │
-    └──┼─────────────────────────────────────┘└──┼────────────────────┘
-       │                                          │
-       │◄──── Operands shifting in ────────────►│
-       │                                          │◄─ Quotient ready ──►
-       
-    Quotient available during WO_N+1 (1 operation latency)
-```
-
-### SLF (ALU) Pipeline
-
-```
-    ┌──────────────────────────── WA ─────────────────────────────┐
-    │                                                             │
-    │  T0  T1  T2  T3  T4  T5  T6  T7   T8 .............. T18 T19 │
-    │   │   │   │   │   │   │   │   │    │                 │   │  │
-    │   │   │   │   │   │   │   │   │    │                 │   │  │
-    │   └───┴───┴───┴───┴───┴───┴───┘    │                 │   │  │
-    │   ◄── Receive CW bits 0-6 ────►    │                 │   │  │
-    │              (serial)              │                 │   │  │
-    │                                    │                 │   │  │
-    │              Latch CW at T7 ───────┘                 │   │  │
-    │                                                      │   │  │
-    │              ALU compute at T8 ──────────────────────┘   │  │
-    │                                                          │  │
-    │              Update ACC/TMP at T18 ──────────────────────┘  │
-    │              compute_done pulse ────────────────────────────┘
-    └─────────────────────────────────────────────────────────────┘
-    
-    ┌──────────────────────────── WO ─────────────────────────────┐
-    │                                                             │
-    │  T0   T1 ......................................... T19      │
-    │   │    │                                           │        │
-    │   │    │ ◄─── Shift in data_bit to input_sr ────► │        │
-    │   │    │ ◄─── Shift out acc_bit, tmp_bit ───────► │        │
-    │   │    │                                           │        │
-    │   │    │                   Latch input_lat at T19 ─┘        │
-    │   │    │                                                    │
-    │   │ Load acc_out_sr, tmp_out_sr from regs (compute_done)    │
-    └───┼─────────────────────────────────────────────────────────┘
-        │
-        └── Used by PMU/PDU as operand sources during this WO
-```
-
-### RAS (RAM) Timing
-
-```
-    ┌─────────────────── WA ───────────────────┐┌─────────────────── WO ───────────────────┐
-    │                                          ││                                          │
-    │  T0                                      ││  T0 ─────────────────────────────── T19  │
-    │   │                                      ││   │                                  │   │
-    │   │ Latch rd_addr, wr_addr               ││   │ READ:  rd_data shifts out        │   │
-    │   │ (from parallel microword)            ││   │        (from parallel latch)     │   │
-    │   │                                      ││   │                                  │   │
-    │   │ Load rd_data to shift register       ││   │ WRITE: wr_data shifts in         │   │
-    │   │                                      ││   │        Set wr_pending at T19 ────┘   │
-    └───┼──────────────────────────────────────┘└───┼──────────────────────────────────────┘
-        │                                           │
-        │                                           ▼
-    ┌───┴───────────────── Next WA ────────────────────────────────┐
-    │                                                              │
-    │  PHI2 edge: If wr_pending, complete write to RAM             │
-    │             Clear wr_pending                                 │
-    │                                                              │
-    └──────────────────────────────────────────────────────────────┘
-    
-    Write completes ONE PHI2 cycle AFTER T19 (ensures all 20 bits shifted in)
-```
-
-### SL (Steering Logic) Timing
-
-```
-    ┌─────────────────── WA ───────────────────┐┌─────────────────── WO ───────────────────┐
-    │                                          ││                                          │
-    │  T0                                      ││                                          │
-    │   │                                      ││   COMBINATIONAL MUX:                     │
-    │   │ Latch sel_acc, sel_ras, sel_io       ││                                          │
-    │   │ from parallel microword              ││   acc_in_bit  ← selected source          │
-    │   │                                      ││   ras_wr_bit  ← selected source          │
-    │   │                                      ││   io_out_bit  ← selected source          │
-    │   │                                      ││                                          │
-    └───┴──────────────────────────────────────┘└──────────────────────────────────────────┘
-```
-
-**SL IO Output Mux Encoding:**
-
-| sel_io | Source |
-|--------|--------|
-| 00 | ACC |
-| 01 | RAS |
-| 10 | PMU |
-| 11 | PDU_Q |
-
-### I/O Bridge Timing
-
-```
-    ┌─────────────────── WA ───────────────────┐┌─────────────────── WO ───────────────────┐
-    │                                          ││                                          │
-    │  io_ctrl ACTIVE (gated by word_type=0)   ││  io_ctrl = NOP (gated off)               │
-    │                                          ││                                          │
-    │  READ:  Latch sensor → io_data_out_par   ││  Serialize: io_in_sr loads at T0         │
-    │                                          ││             shifts out T1-T19            │
-    │  WRITE: Capture io_out_sr → output reg   ││                                          │
-    │                                          ││  Collect:   io_out_sr shifts in T0-T19   │
-    │                                          ││                                          │
-    └──────────────────────────────────────────┘└──────────────────────────────────────────┘
-    
-    ┌─────────────────────────────────────────────────────────────────────────────────────┐
-    │ CRITICAL: io_ctrl is gated with word_type='0' (WA only)                             │
-    │           Prevents write command from re-triggering during WO when io_out_sr is     │
-    │           still shifting and contains partially-assembled data.                     │
-    └─────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Data Flow Pipeline
-
-### Instruction N vs N+1 Pipeline
-
-The CADC uses a **pipelined architecture** where routing and computation are offset by one operation:
-
-```
-    ┌──────────────────────────────────────────────────────────────────────────────────┐
-    │                          PIPELINE RULE                                           │
-    │                                                                                  │
-    │  To LOAD data from source X to ACC:                                              │
-    │    Instruction N:   Set ACC_SRC = X in microword (routes during WO_N)           │
-    │    Instruction N+1: Set ALU_OP = LOAD, acc_we = 1 (uses data latched at WO_N)   │
-    └──────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```
-    Instruction N:    ┌────── WA_N ──────┐┌────── WO_N ──────┐
-                      │ SL latches       ││ Data routes via  │
-                      │ sel_acc from     ││ SL to SLF input  │
-                      │ microword        ││                  │
-                      └──────────────────┘└────────┬─────────┘
-                                                   │
-                                                   ▼ Data latched in SLF
-    Instruction N+1:  ┌────── WA_N+1 ────┐┌────── WO_N+1 ────┐
-                      │ ALU computes     ││ New data routing │
-                      │ using latched    ││                  │
-                      │ input_lat        ││                  │
-                      └──────────────────┘└──────────────────┘
-```
-
----
-
-## Polynomial Computation Example
-
-Computing `E = ((a3*X + a2)*X + a1)*X + a0` via Horner's method:
-
-```
-┌──────┬────────────────────────────────────┬──────────────────────────────┬───────────┐
-│ Inst │ WA Action                          │ WO Action                    │ ACC After │
-├──────┼────────────────────────────────────┼──────────────────────────────┼───────────┤
-│  0   │ sel_acc=IO, io_ctrl=read_ps        │ X routes to SLF              │    -      │
-│  1   │ LOAD, acc_we=1                     │ (X arrives from WO0)         │    X      │
-│  2   │ tmp_we=1                           │ -                            │ X, TMP=X  │
-│  3   │ sel_acc=CONST[0]                   │ a3 routes to SLF             │    X      │
-│  4   │ LOAD, acc_we=1                     │ (a3 arrives), PMU←(ACC,TMP)  │   a3      │
-│  5   │ sel_acc=PMU, WAIT_PMU              │ a3*X computes, routes        │   a3      │
-│  6   │ LOAD, sel_acc=CONST[1]             │ a3*X to ACC, a2 routes       │  a3*X     │
-│  7   │ ADD, acc_we=1                      │ (a2 arrives), PMU←(v,X)      │ a3*X+a2   │
-│  8   │ sel_acc=PMU, WAIT_PMU              │ (a3*X+a2)*X computes         │ a3*X+a2   │
-│  9   │ LOAD, sel_acc=CONST[2]             │ result to ACC, a1 routes     │(a3X+a2)*X │
-│ 10   │ ADD, acc_we=1                      │ (a1 arrives), PMU←(v,X)      │  ...+a1   │
-│ 11   │ sel_acc=PMU, WAIT_PMU              │ final mult computes          │  ...+a1   │
-│ 12   │ LOAD, sel_acc=CONST[3]             │ result to ACC, a0 routes     │((...)*X)  │
-│ 13   │ ADD, acc_we=1                      │ (a0 arrives)                 │    E      │
-│ 14   │ sel_io=ACC (NOP)                   │ E routes to io_out_sr        │    E      │
-│ 15   │ sel_io=ACC (NOP)                   │ E fully collected            │    E      │
-│ 16   │ sel_io=ACC, io_ctrl=write_mach     │ Capture E to output reg      │    E      │
-│ 17   │ JUMP 17 (halt)                     │ -                            │    E      │
-└──────┴────────────────────────────────────┴──────────────────────────────┴───────────┘
-```
-
----
-
-## Simulation
-
-### Prerequisites
-- **Questa** (or ModelSim) 2025.3 or later
-- VHDL-2008 support
-
-### Running Simulations
-
-Each module has a dedicated batch file in `sim/`:
-
-```batch
-# Run individual module testbench with GUI and waveforms
-sim\run_pmu.bat
-sim\run_pdu.bat
-sim\run_slf.bat
-sim\run_ras.bat
-sim\run_sl.bat
-sim\run_timing_generator.bat
-sim\run_control_rom_sequencer.bat
-sim\run_io_bridge.bat
-sim\run_cadc_top.bat
-```
-
-The batch files:
-1. Compile the HDL and testbench
-2. Generate a `.do` script with relevant signals
-3. Launch Questa GUI with waveform viewer
-
-### Questa Visualizer
-
-For the modern Visualizer GUI, use the `vis_run_*.bat` scripts:
-
-```batch
-# Run with Questa Visualizer (logs all signals for waveform analysis)
-sim\vis_run_pmu.bat
-sim\vis_run_pdu.bat
-sim\vis_run_cadc_top.bat
-# ... etc
-```
-
-### Command Line Simulation
-
-```powershell
-# Compile all HDL and testbenches
-vlib work
-vcom -2008 hdl/timing_generator.vhd hdl/pmu.vhd hdl/pdu.vhd hdl/ras.vhd `
-           hdl/sl.vhd hdl/slf.vhd hdl/io_bridge.vhd `
-           hdl/control_rom_sequencer.vhd hdl/cadc_top.vhd
-vcom -2008 tb/*.vhd
-
-# Run top-level polynomial test
-vsim -c work.cadc_top_tb -do "run -all; quit -f"
-
-# Run individual module tests
-vsim -c work.pmu_tb -do "run -all; quit -f"
-vsim -c work.pdu_tb -do "run -all; quit -f"
-vsim -c work.slf_tb -do "run -all; quit -f"
-```
-
-### Test Results
-
-| Module | Test Groups | Description |
-|--------|------------|-------------|
-| timing_generator | TIM-T-001..009 | Reset, counters, sync, clock enable |
-| pmu | PMU-T-001..024 | Multiply ops, boundary cases, timing |
-| pdu | PDU-T-001..044 | Divide ops, div-by-zero, remainder |
-| slf | SLF-T-001..062 | ALU ops, flags, Gray/binary conversion |
-| ras | RAS-T-001..041 | Read/write, all addresses, reset |
-| sl | SL-T-001..043 | MUX selection, independence, integrity |
-| io_bridge | IO-T-001..051 | Input capture, output shift, BIT |
-| control_rom_sequencer | ROM-T-001..RST | Sequencing, jumps, JSR/RET, decode |
-| cadc_top | TOP-T-001..051 | Integration, computation, timing |
-
-### Polynomial Verification (E = a3·X³ + a2·X² + a1·X + a0)
-
-Coefficients: a3=0.125, a2=0.25, a1=0.375, a0=0.0625
-
-| Input X | Hex | Result E | Hex | Decimal |
-|---------|-----|----------|-----|---------|
-| 0.5 | 0x40000 | 0.328125 | 0x2A000 | ✅ |
-| 0.25 | 0x20000 | 0.173828 | 0x16400 | ✅ |
-| 0.75 | 0x60000 | 0.537109 | 0x44C00 | ✅ |
-
-## Coding Standards
-
-All VHDL follows project coding standards:
-- **Ports:** `i_` (input), `o_` (output), `io_` (bidirectional)
-- **Generics:** `g_` prefix
-- **Signals:** `s_` prefix
-- **Constants:** `c_` prefix
-- **Variables:** `v_` prefix
-- **Types:** `t_` prefix
-- **Keywords:** UPPERCASE
-- **Identifiers:** lowercase with underscores
-
-## Historical Significance
-
-The CADC represents a pivotal moment in computing history:
-
-- **1968:** Garrett AiResearch wins contract for F-14A air data computer
-- **1970:** Ray Holt completes the 6-chip MOS-LSI design
-- **1971:** CADC enters production — two years before Intel 4004 ships
-- **1998:** Design declassified after 28 years of military secrecy
-- **2026:** This FPGA reconstruction project
-
-The CADC was a complete microprogrammed computer on six chips, computing complex aerodynamic equations in real-time. It pioneered concepts like:
-- Microprogrammed control
-- Pipelined parallel processing
-- Serial/parallel hybrid arithmetic
-- Purpose-built DSP architecture
 
 ## References
 
-- Ray Holt's Design Notebooks (Chapters 1–7)
-- AiResearch Report 71-7266
-- "The Untold Story of the Invention of the Microprocessor" — Ray Holt, 1998
+- Ray Holt's original design documentation (included in `original_docs/`)
+- [The Holt Chip](http://www.firstmicroprocessor.com/) — Ray Holt's website
+- F-14 Tomcat NATOPS Flight Manual
 
 ## License
 
-This is an educational reconstruction for historical preservation. Original design by Ray Holt, Garrett AiResearch Division.
+This reconstruction is provided for educational and historical preservation purposes.
 
-## Author
+## Acknowledgments
 
-FPGA reconstruction by Adam Taylor, Adiuvo Engineering & Training Ltd.
+- **Ray Holt** — Original CADC designer at Garrett AiResearch
+- The engineers and technicians who built and maintained the F-14 Tomcat
