@@ -42,8 +42,8 @@ Detailed design documents including:
 - Polynomial verification notebooks
 
 ### FPGA Implementation (`implementation/`)
-Vivado project targeting AMD/Xilinx Spartan-7 (Digilent Arty S7 / PYNQ Tile) with:
-- AXI-GPIO wrapper for processor integration
+Vivado project for the [Adiuvo Tile](https://www.adiuvoengineering.com/) (Spartan-7 based SoM) with:
+- AXI-GPIO wrapper for MicroBlaze integration
 - UART bridge for host communication
 - Constraints and implementation scripts
 
@@ -70,7 +70,7 @@ The visualization displays:
 - Physical units (feet, knots, degrees)
 - UART terminal for live FPGA communication
 
-### FPGA Build
+### FPGA Build (Adiuvo Tile)
 Open `implementation/vivado_proj_tile/` in Vivado 2024.1+.
 
 ## Original System Specifications
